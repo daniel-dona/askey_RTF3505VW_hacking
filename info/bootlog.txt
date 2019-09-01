@@ -1,0 +1,882 @@
+HELO
+CPUI
+L1CI
+PLLI
+PMCB
+HELO
+CPUI
+L1CI
+4.1404ACCUpatch4-1.0.38-117.002 134
+DRAM
+----
+PHYS
+ZQDN
+PHYE
+DINT
+TST1
+TST2
+PASS
+----
+ZBSS
+L12F
+MAIN
+FPS0
+BT04
+0001
+BT05
+0300
+NAN3
+RFS2
+NAN5
+
+Base: 4.14_04ACCUpatch4
+CFE version 1.0.38-117.2 for BCM96838 (32bit,SP,BE)
+Build Date: Fri Mar 16 15:28:16 CST 2018 (openwrt@sw3-pc)
+Copyright (C) 2000-2013 Broadcom Corporation.
+
+Chip ID: BCM68380_B0, MIPS: 600MHz, DDR: 533MHz, Bus: 240MHz
+RDP: 800MHz
+Main Thread: TP0
+Total Memory: 134217728 bytes (128MB)
+Boot Address: 0xbfc00000
+
+NAND flash device: Spansion S34ML01G1, id 0x01f1 block 128KB size 131072KB
+Configuring RGMII pinpux
+ddr_tm_base_address = 0xa0800000
+f_initialize_bbh_dma_sdma_related_arrays:(967) errorenable IH Wan-Wan forwarding...
+Initializing port 0
+Initializing port 1
+Initializing port 2
+Initializing port 3
+Initializing port 4
+oren_data_path_go done!!!
+Power On Self Test - DRAM         : OK
+Board IP address                  : 192.168.1.1:ffffff00  
+Host IP address                   : 192.168.1.100  
+Gateway IP address                :   
+Run from flash/host/tftp (f/h/c)  : f  
+Default host run file name        : vmlinux  
+Default host flash file name      : bcm963xx_fs_kernel  
+Boot delay (0-9 seconds)          : 1  
+Boot image (0=latest, 1=previous) : 0  
+Default host ramdisk file name    :   
+Default ramdisk store address     :   
+Board Id (0-27)                   : 3505VW  
+Number of MAC Addresses (1-32)    : 15  
+Base MAC Address                  : d8:fb:5e:30:a9:34  
+PSI Size (1-64) KBytes            : 64  
+Enable Backup PSI [0|1]           : 1  
+System Log Size (0-256) KBytes    : 256  
+Auxillary File System Size Percent: 0  
+Main Thread Number [0|1]          : 0  
+GPON Serial Number                : "ASKY000D4F60"  
+GPON Password                     : "f2019012227467000000"  
+MC memory allocation (MB)         : 0  
+TM memory allocation (MB)         : 0  
+Voice Board Configuration (0-1)   : LE9540  
+rtf hw version                    : REV4_B5  
+bosa_sn                           : 663800036326  
+gpon_regs (hex, the format is XX:XX:...): 00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:43:07:00:00:00:00:00:00:14:00:FF:97:00:11:E2:00:FF:FF:00:00:22:01:00:00:39:32:18:33:01:35:A0:D1:04:00:41:00:73:00:28:11:EA:EA:00:07:09:00:B4:02:66:2B:8C:38:42:02:41:99:CC:00:14:AA:70:27:02:00:00:00:00:FF:FF:01:35:08:03:07:1A:AF:06:FF:01:20  
+bosa_vapd (integer, unit:0.0001)        : 372400  
+bosa_apd_a (integer, unit:0.0001)       : 800  
+bosa_apd_b (integer, unit:0.0001)       : 1200  
+bosa_apd_r1 (integer, unit:0.0001)      : 1100000  
+bosa_apd_r2 (integer, unit:0.0001)      : 43000  
+temp_offset (integer, unit:1)           : 16777215  
+
+Creating CPU ring for queue number 0 with 32 packets descriptor=0x8066b194
+ Done initializing Ring 0 Base=0xa220f690K End=0xa220f890K calculated entries= 32 RDD Base=0x0220f690K descriptor=0x8066b194
+Open PHY 1 on MAC 0 : link state = Down
+Open PHY 2 on MAC 1 : link state = Down
+Open PHY 3 on MAC 2 : link state = Down
+Open PHY 4 on MAC 3 : link state = Down
+Open PHY 25 on MAC 4 : link state = 1000M Full
+*** Press any key to stop auto run (1 seconds) ***
+Auto run second count down: 110
+seq1 = 4, seq2 = 5, bootPartition = 0x30, rootfsA = 2
+Booting from latest image (0xc2180000) ...
+Decompression OK!
+Entry at 0x8032dae0
+Closing network.
+Starting program at 0x8032dae0
+Linux version 3.4.11-rt19+ (openwrt@sw3-pc) (gcc version 4.6.2 (Buildroot 2011.11) ) #2 SMP PREEMPT Fri Mar 16 15:24:30 CST 2018
+rtfHwVersionNum of wifi srom table is 0
+3505VW prom init
+CPU revision is: 0002a080 (Broadcom BMIPS4350)
+Determined physical RAM map:
+ memory: 01400000 @ 06c00000 (reserved)
+ memory: 00400000 @ 06800000 (reserved)
+ memory: 06800000 @ 00000000 (usable)
+Zone PFN ranges:
+  DMA      0x00000000 -> 0x00001000
+  Normal   0x00001000 -> 0x00006800
+Movable zone start PFN for each node
+Early memory PFN ranges
+    0: 0x00000000 -> 0x00006800
+On node 0 totalpages: 26624
+free_area_init_node: node 0, pgdat 8040eb80, node_mem_map 81000000
+  DMA zone: 32 pages used for memmap
+  DMA zone: 0 pages reserved
+  DMA zone: 4064 pages, LIFO batch:0
+  Normal zone: 176 pages used for memmap
+  Normal zone: 22352 pages, LIFO batch:3
+PERCPU: Embedded 7 pages/cpu @810d3000 s5088 r8192 d15392 u32768
+pcpu-alloc: s5088 r8192 d15392 u32768 alloc=8*4096
+pcpu-alloc: [0] 0 [0] 1 
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 26416
+Kernel command line: ro noinitrd  irqaffinity=0
+PID hash table entries: 512 (order: -1, 2048 bytes)
+Dentry cache hash table entries: 16384 (order: 4, 65536 bytes)
+Inode-cache hash table entries: 8192 (order: 3, 32768 bytes)
+Primary instruction cache 64kB, VIPT, 4-way, linesize 16 bytes.
+Primary data cache 32kB, 2-way, VIPT, cache aliases, linesize 16 bytes
+Memory: 100908k/106496k available (3245k kernel code, 5588k reserved, 847k data, 200k init, 0k highmem)
+Preemptible hierarchical RCU implementation.
+NR_IRQS:256
+console [ttyS0] enabled
+Allocating memory for DSP module core and initialization code
+Allocated DSP module memory - CORE=0x0 SIZE=0, INIT=0x0 SIZE=0
+Calibrating delay loop... 599.04 BogoMIPS (lpj=1198080)
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 512
+--Kernel Config--
+  SMP=1
+  PREEMPT=1
+  DEBUG_SPINLOCK=0
+  DEBUG_MUTEXES=0
+Broadcom Logger v0.1 Mar 16 2018 15:20:54
+CPU revision is: 0002a080 (Broadcom BMIPS4350)
+Primary instruction cache 64kB, VIPT, 4-way, linesize 16 bytes.
+Primary data cache 32kB, 2-way, VIPT, cache aliases, linesize 16 bytes
+Brought up 2 CPUs
+NET: Registered protocol family 16
+PMC Driver Init... done.
+registering PCI controller with io_map_base unset
+registering PCI controller with io_map_base unset
+registering PCI controller with io_map_base unset
+bio: create slab <bio-0> at 0
+PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [mem 0xeff00000-0xefffffff]
+pci_bus 0000:00: root bus resource [io  0xf1000000-0xf100ffff]
+PCI host bridge to bus 0000:01
+pci_bus 0000:01: root bus resource [mem 0xd0000000-0xdfffffff]
+pci_bus 0000:01: root bus resource [??? 0x00000000 flags 0x0]
+pci 0000:01:00.0: [14e4:6838] type 01 class 0x060400
+pci 0000:01:00.0: PME# supported from D0 D3hot
+pci 0000:02:00.0: [14e4:a8db] type 00 class 0x028000
+pci 0000:02:00.0: reg 10: [mem 0x00000000-0x00007fff 64bit]
+pci 0000:02:00.0: supports D1 D2
+pci 0000:01:00.0: BAR 8: assigned [mem 0xd0000000-0xd00fffff]
+pci 0000:02:00.0: BAR 0: assigned [mem 0xd0000000-0xd0007fff 64bit]
+pci 0000:01:00.0: PCI bridge to [bus 02-02]
+pci 0000:01:00.0:   bridge window [mem 0xd0000000-0xd00fffff]
+PCI: Enabling device 0000:01:00.0 (0000 -> 0002)
+PCI host bridge to bus 0000:03
+pci_bus 0000:03: root bus resource [mem 0xe0000000-0xefefffff]
+pci_bus 0000:03: root bus resource [??? 0x00000000 flags 0x0]
+pci 0000:03:00.0: [14e4:6838] type 01 class 0x060400
+pci 0000:03:00.0: PME# supported from D0 D3hot
+pci 0000:03:00.0: PCI bridge to [bus 04-04]
+bcmhs_spi bcmhs_spi.1: master is unqueued, this is deprecated
+skbFreeTask created successfully
+[0;34mBLOG v3.0 Initialized[0m
+BLOG Rule v1.0 Initialized
+Broadcom IQoS v0.1 Mar 16 2018 15:24:07 initialized
+Broadcom GBPM v0.1 Mar 16 2018 15:24:08 initialized
+Switching to clocksource MIPS
+NET: Registered protocol family 2
+IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
+TCP established hash table entries: 4096 (order: 3, 32768 bytes)
+TCP bind hash table entries: 4096 (order: 3, 32768 bytes)
+TCP: Hash tables configured (established 4096 bind 4096)
+TCP: reno registered
+UDP hash table entries: 128 (order: 0, 4096 bytes)
+UDP-Lite hash table entries: 128 (order: 0, 4096 bytes)
+NET: Registered protocol family 1
+PCI: CLS 0 bytes, default 16
+init_bcm_tstamp: unhandled mips_hpt_freq=300000000, adjust constants in bcm_tstamp.c
+bcm_tstamp initialized, (hpt_freq=300000000 2us_div=300 2ns_mult=0 2ns_shift=0)
+squashfs: version 4.0 (2009/01/31) Phillip Lougher
+jffs2: version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+msgmni has been set to 197
+io scheduler noop registered (default)
+Broadcom NAND controller (BrcmNand Controller)
+mtd->oobsize=0, mtd->eccOobSize=0
+NAND_CS_NAND_XOR=00000000
+B4: NandSelect=40000001, nandConfig=15142200, chipSelect=0
+brcmnand_read_id: CS0: dev_id=01f1001d
+After: NandSelect=40000001, nandConfig=15142200
+Block size=00020000, erase shift=17
+NAND Config: Reg=15142200, chipSize=128 MB, blockSize=128K, erase_shift=11
+busWidth=1, pageSize=2048B, page_shift=11, page_mask=000007ff
+timing1 not adjusted: 6574845b
+timing2 not adjusted: 00001e96
+BrcmNAND mfg 1 f1 SPANSION_S30ML01GP_08 128MB on CS0
+
+Found NAND on CS0: ACC=f7441010, cfg=15142200, flashId=01f1001d, tim1=6574845b, tim2=00001e96
+BrcmNAND version = 0x80000500 128MB @00000000
+brcmnand_scan: B4 nand_select = 40000001
+brcmnand_scan: After nand_select = 40000001
+handle_acc_control: default CORR ERR threshold  1 bits
+ACC: 16 OOB bytes per 512B ECC step; from ID probe: 16
+page_shift=11, bbt_erase_shift=17, chip_shift=27, phys_erase_shift=17
+Brcm NAND controller version = 5.0 NAND flash size 128MB @18000000
+ECC layout=brcmnand_oob_bch4_2k
+brcmnand_scan:  mtd->oobsize=64
+brcmnand_scan: oobavail=35, eccsize=512, writesize=2048
+brcmnand_scan, eccsize=512, writesize=2048, eccsteps=4, ecclevel=4, eccbytes=7
+-->brcmnand_default_bbt
+brcmnand_default_bbt: bbt_td = bbt_slc_bch4_main_descr
+Bad block table Bbt0 found at page 0000ffc0, version 0x01 for chip on CS0
+Bad block table 1tbB found at page 0000ff80, version 0x01 for chip on CS0
+brcmnand_reset_corr_threshold: default CORR ERR threshold  1 bits for CS0
+brcmnand_reset_corr_threshold: CORR ERR threshold changed to 3 bits for CS0
+nand_read_bbt: Bad block at 0x05ca0000
+brcmnandCET: Status -> Deferred
+Creating 7 MTD partitions on "brcmnand.0":
+0x000002580000-0x000004ae0000 : "rootfs"
+0x000000020000-0x000002580000 : "rootfs_update"
+0x000007b00000-0x000007f00000 : "data"
+0x000000000000-0x000000020000 : "nvram"
+0x000002580000-0x000004ae0000 : "image"
+0x000000020000-0x000002580000 : "image_update"
+0x000004b00000-0x000007b00000 : "aux_fs"
+PPP generic driver version 2.4.2
+PPP BSD Compression module registered
+PPP Deflate Compression module registered
+NET: Registered protocol family 24
+i2c /dev entries driver
+brcmboard: brcm_board_init entry
+SES: ses_5g_Btn_irq 0x8002
+SES: ses_5g_Btn_gpio 0x8004
+SES: 5g Button Interrupt 0x8002 is enabled
+SES: 5g_ext_irq_idx 0x2
+SES: 5g Button Interrupt gpio is 4
+SES: 5g_external_irq 0x8a
+SES: 5g_dev_id = 80406188 
+SES: 5g LED GPIO 0x9007 is enabled
+SES: 2.4g_sesBtn_irq 0x1
+SES: 2.4g_sesBtn_gpio 0x800e
+SES: Button Interrupt 0x1 is enabled
+SES: 2.4g_external_irq 0x89
+SES: 2.4g_dev_id = 8040618c 
+At booting process.....
+brcm_board_init: Reset config Interrupt gpio is 69
+Serial: BCM63XX driver $Revision: 3.00 $
+[0;33mMagic SysRq with Auxilliary trigger char enabled (type ^ h for list of supported commands)[0m
+ttyS0 at MMIO 0xb4e00500 (irq = 9) is a BCM63XX
+ttyS1 at MMIO 0xb4e00520 (irq = 10) is a BCM63XX
+BPM: tot_mem_size=134217728B (128MB), buf_mem_size <10%> =13421770B (12MB), num of buffers=5178, buf size=2592
+Broadcom BPM Module Char Driver v0.1 Mar 16 2018 15:21:16 Registered<244>[0m
+TCP: cubic registered
+NET: Registered protocol family 10
+IPv6 over IPv4 tunneling driver
+NET: Registered protocol family 17
+Bridge firewalling registered
+Initializing MCPD Module
+Ebtables v2.0 registered
+ebt_time registered
+ebt_ftos registered
+ebt_wmm_mark registered
+8021q: 802.1Q VLAN Support v1.8
+VFS: Mounted root (jffs2 filesystem) readonly on device 31:0.
+Freeing unused kernel memory: 200k freed
+init started: BusyBox v1.17.2 (2018-03-16 15:26:19 CST)
+starting pid 202, tty '': '/bin/sh -l -c "bcm_boot_launcher start"'
+Mounting filesystems...
+UBI: attaching mtd6 to ubi2
+UBI: physical eraseblock size:   131072 bytes (128 KiB)
+UBI: logical eraseblock size:    126976 bytes
+UBI: smallest flash I/O unit:    2048
+UBI: VID header offset:          2048 (aligned 2048)
+UBI: data offset:                4096
+UBI: max. sequence number:       1213
+UBI: attached mtd6 to ubi2
+UBI: MTD device name:            "aux_fs"
+UBI: MTD device size:            48 MiB
+UBI: number of good PEBs:        383
+UBI: number of bad PEBs:         1
+UBI: number of corrupted PEBs:   0
+UBI: max. allowed volumes:       128
+UBI: wear-leveling threshold:    4096
+UBI: number of internal volumes: 1
+UBI: number of user volumes:     1
+UBI: available PEBs:             0
+UBI: total number of reserved PEBs: 383
+UBI: number of PEBs reserved for bad PEB handling: 3
+UBI: max/mean erase counter: 6/3
+UBI: image sequence number:  0
+UBI: background thread "ubi_bgt2d" started, PID 225
+UBI device number 2, total 383 LEBs (48631808 bytes, 46.4 MiB), available 0 LEBs (0 bytes), LEB size 126976 bytes (124.0 KiB)
+UBIFS: recovery needed
+UBIFS: recovery completed
+UBIFS: mounted UBI device 2, volume 0, name "aux_fs"
+UBIFS: file system size:   46346240 bytes (45260 KiB, 44 MiB, 365 LEBs)
+UBIFS: journal size:       9023488 bytes (8812 KiB, 8 MiB, 72 LEBs)
+UBIFS: media format:       w4/r0 (latest is w4/r0)
+UBIFS: default compressor: zlib
+UBIFS: reserved for root:  0 bytes (0 KiB)
+Z7GsXkRD
+Configuring system...
+Loading drivers and kernel modules... 
+
+i2c i2c-0: Failed to register i2c client laser_i2c at 0x4f (-16)
+i2c i2c-0: Failed to register i2c client laser_i2c at 0x4f (-16)
+bosa_drv: module license 'Proprietary' taints kernel.
+Disabling lock debugging due to kernel taint
+/home/Public/_Build/release/BRCMGPON/RTF35XX/414L04A_n27_r2043/bcmdrivers/broadcom/char/rtfdef/bosa/bosa_drv.c:bosa_tx_power_enable[LN359] enable gpon tx power, gpio[72]
+m2099_register_init[LN554]Mod_DAC_L = 0x7f0
+m2099_register_init[LN566]Mod_DAC_H = 0x810
+m2099_register_init[LN578]Mod_DAC_M = 0x800
+m2099_register_init[LN590]FreezeTempR1 = 1280 (1/256 C)
+m2099_register_init[LN602]FreezeTempR2 = 1280 (1/256 C)
+m2099_register_init[LN618]Mod_DAC_Int = 1
+m2099_register_init[LN628] Read table 4 reg 0xA5 = 0x92
+m2099_register_init[LN641]BOSA_vendor = EZCONN
+Start RPE for QWE radio
+LOGGER driver Init Done : 0x8664f380
+START GPON SerDes Init script
+ !!!!   PLL locked !!!!!!     !!!!   RX CDR locked !!!!!!     !!!!   TX CDR locked !!!!!!    GPON BEN Calibration Done 
+GPON SerDes Initialization Sequence Done 
+f_initialize_bbh_dma_sdma_related_arrays:(967) errorenable IH Wan-Wan forwarding...
+Initializing port 0
+Initializing port 1
+Initializing port 2
+Initializing port 3
+Initializing port 4
+oren_data_path_go done!!!
+# Created object <system>
+RDPA lan init
+# Created object <port/index=lan0>
+# Created object <port/index=lan1>
+# Created object <port/index=lan2>
+# Created object <port/index=lan3>
+# Created object <port/index=lan4>
+# Created object <egress_tm/dir=ds,index=0>
+# Created object <egress_tm/dir=ds,index=1>
+# Created object <egress_tm/dir=ds,index=2>
+# Created object <egress_tm/dir=ds,index=3>
+# Created object <egress_tm/dir=ds,index=4>
+RDPA lan init end
+Creating CPU ring for queue number 0 with 128 packets descriptor=0xc05c26d0
+ Done initializing Ring 0 Base=0xa52b5080 End=0xa52b5880 calculated entries= 128 RDD Base=0x052b5080 descriptor=0xc05c26d0
+rdpa filter init start!!
+# Created object <filter>
+rdpa filter init end
+# Created object <iptv>
+Bridge fastpath module. compiled Mar 16 2018 , 15:23:45
+brcmchipinfo: brcm_chipinfo_init entry
+NBUFF v1.0 Initialized
+[0;36;44mInitialized fcache state[0m
+[0;36;44mBroadcom Packet Flow Cache  Char Driver v2.2 Mar 16 2018 15:21:20 Registered<242>[0m
+Created Proc FS /procfs/fcache
+[0;36;44mBroadcom Packet Flow Cache registered with netdev chain[0m
+[0;36;44mBroadcom Packet Flow Cache learning via BLOG enabled.[0m
+[0;35m[FHW]  pktDbgLvl[0xc0674880]=0[0m
+[0;34m[FHW]  fhw_construct: [0m
+[0;36;44mInitialized Fcache HW accelerator layer state[0m
+flwStatsThread created
+[0;36;44mConstructed Broadcom Packet Flow Cache v2.2 Mar 16 2018 15:21:20[0m
+[0;36;44mBroadcom Packet Flow Cache HW acceleration enabled.[0m
+[0;36;44mBroadcom Packet Flow Cache HW acceleration enabled.[0m
+i2c i2c-0: new_device: Instantiated device gpon_i2c at 0x50
+i2c i2c-0: new_device: Instantiated device gpon_i2c at 0x51
+Broadcom BCM68380_B0 Ethernet Network Device v0.1 Mar 16 2018 15:23:45
+dgasp: kerSysRegisterDyingGaspHandler: bcmsw registered 
+eth0: MAC Address: D8:FB:5E:30:A9:34
+eth1: MAC Address: D8:FB:5E:30:A9:34
+eth2: MAC Address: D8:FB:5E:30:A9:34
+eth3: MAC Address: D8:FB:5E:30:A9:34
+eth4: MAC Address: D8:FB:5E:30:A9:34
+Creating CPU ring for queue number 3 with 896 packets descriptor=0xc05c2754
+ Done initializing Ring 3 Base=0xa459c080 End=0xa459f880 calculated entries= 896 RDD Base=0x0459c080 descriptor=0xc05c2754
+eth4 Link UP 1000 mbps full duplex
+message received before monitor task is initialized kerSysSendtoMonitorTask 
+cpu Ring 3 has been flushed
+Creating CPU ring for queue number 8 with 1024 packets descriptor=0xc05c2830
+ Done initializing Ring 8 Base=0xa3f50080 End=0xa3f54080 calculated entries= 1024 RDD Base=0x03f50080 descriptor=0xc05c2830
+[1m[34m Wifi Forwarding Driver initialized !
+timer = 500, threshold = 1024 number_of_packets_to_read = 128 fist pci queue 8 number_of_queues = 1
+[0m--SMP support
+wl: dsl_tx_pkt_flush_len=338
+wl: norm_wmark_tot=3365, pktc_wmark_tot=2048
+Initializing WLCSM Module
+PCI: Enabling device 0000:02:00.0 (0000 -> 0002)
+wl: passivemode=1
+wl0: creating kthread wl0-kthrd
+wl: napimode=0
+Neither SPROM nor OTP has valid image
+wl:srom/otp not programmed, using main memory mapped srom info(wombo board)
+wl: ID=pci/2/0/
+wl: ID=pci/2/0/
+wl: loading /etc/wlan/bcm43217_map.bin
+srom rev:8
+wl0: wlc_bsscfg_ap_init: bsscfg 83f5e000
+wl0: allocskbmode=1 currallocskbsz=1024
+wl0: Broadcom BCMa8db 802.11 Wireless Controller 6.37.14.4803.cpe4.14L04ACCUpatch4.0-kdb
+rtl_init_rpeLN1686
+dgasp: kerSysRegisterDyingGaspHandler: wl0 registered 
+Loading PCM shim driver
+Endpoint: endpoint_init entry
+Endpoint: endpoint_init COMPLETED
+Creating CPU ring for queue number 2 with 32 packets descriptor=0xc05c2728
+ Done initializing Ring 2 Base=0xa286dc80 End=0xa286de80 calculated entries= 32 RDD Base=0x0286dc80 descriptor=0xc05c2728
+[0;34m[NTC ploamFsm] printSerialPasswd: SN=41:53:4b:59:00:0d:4f:60[0m
+[0;34m[NTC ploamFsm] printSerialPasswd: PW=f2:01:90:12:22:74:67:00:00:00[0m
+dgasp: kerSysRegisterDyingGaspHandler: gpon0 registered 
+[0;34m[NTC ploamFsm] bcm_ploamCreate: ploam driver created.[0m
+Creating CPU ring for queue number 4 with 64 packets descriptor=0xc05c2780
+ Done initializing Ring 4 Base=0xa3092880 End=0xa3092c80 calculated entries= 64 RDD Base=0x03092880 descriptor=0xc05c2780
+
+Ploam init and Tx disable !
+Broadcom 802.1Q VLAN Interface, v0.1
+PCIe1: No device found - Powering down
+[0;32m[INF rdpadrv] rdpa_cmd_drv_init: Broadcom Runner Packet Processor Char Driver v0.2 Mar 16 2018 15:23:36 Registered. Device: bcmrdpa Ver:<251>
+[0m
+[0;32m[INF rdpadrv] rdpa_cmd_drv_init: RDPA driver init: OK[0m
+Writing to memory done
+rtfGpioSet(16, 1), ret = 0
+Setting tftpd socket option SO_REUSEADDR
+Loading GRE kernel modules...
+gre: GRE over IPv4 demultiplexor driver
+ip_gre: GRE over IPv4 tunneling driver
+Saving kernel bootup messages for dumpsysinfo...
+Starting CMS smd...
+coredump enable !!
+
+===== Release Version 4.14L.04ACCUpatch4 (build timestamp 180316_1525) =====
+
+====== Create /tmp/system_boot_tr69c 
+/bin/smd:error:43.949:symbol_to_value:374:Could not find symbol HTTPD_PORT_REGION_SPECIFIC in eid_symbol_table
+gpondef: MAC Address: D8:FB:5E:30:A9:36
+netdev path : gpon0 -> gpondef
+BCMVLAN : gpondef mode was set to ONT
+netdev path : gpon0.0 -> gpon0 -> gpondef
+BCMVLAN : gpon0 mode was set to ONT
+gpon0.0 MAC address set to D8:FB:5E:30:A9:34
+device gpon0 entered promiscuous mode
+device gpondef entered promiscuous mode
+netdev path : veip0 -> gpon0.0 -> gpon0 -> gpondef
+BCMVLAN : gpon0.0 mode was set to ONT
+veip0 MAC address set to D8:FB:5E:30:A9:34
+Initializing CMS MDM in Legacy98 mode
+convertConfigFileForUpgrade[LN2482] mkdir -p /var/cfg_convert/
+convertConfigFileForUpgrade[LN2487] cp -f /etc/default.cfg /var/
+convertConfigFileForUpgrade[LN2500] cp /var/cfg_convert/orig_config.cfg /var/cfg_convert/new_config.cfg
+convertConfigFileForUpgrade[LN2559] sed -n '/<WLANConfiguration instance="1">/,/<\/WLANConfiguration>/ p' /var/cfg_convert/new_config.cfg | sed -n '/<WlVirtIntfCfg instance="1">/,/<\/WlVirtIntfCfg>/ p' > /var/cfg_convert/tmp_virtIntf_config.cfg
+convertConfigFileForUpgrade[LN2728] sed -n '/<WlIfcname>wl1.1</,/<\/WlMaxAssoc>/ p' /var/cfg_convert/new_config.cfg | sed '1d' | sed '/<WlEnblSsid/d' | sed '$a \            <WlEnblSsid>1<\/WlEnblSsid>' > /var/cfg_convert/tmp_config.cfg
+convertConfigFileForUpgrade[LN2734] sed -i '$a <RTF_FLAG><\/RTF_FLAG>' /var/cfg_convert/tmp_config.cfg
+convertConfigFileForUpgrade[LN2740] sed -i '/<WlIfcname>wl1.1<\/WlIfcname>/ r /var/cfg_convert/tmp_config.cfg' /var/cfg_convert/new_config.cfg
+convertConfigFileForUpgrade[LN2746] sed -i '/<RTF_FLAG></,/<\/WlMaxAssoc>/d' /var/cfg_convert/new_config.cfg
+convertConfigFileForUpgrade[LN2814] rm -rf /var/cfg_convert
+gpon0.0: no IPv6 routers present
+Active partition = 2, Next partition = 2
+ASCII version string R3505VWSTD203 extracted from software image 0
+
+ASCII version string R3505VWSTD203 extracted from software image 1
+
+Ignoring fakeImage
+addDefaultGponSoftwareImageObject[LN1763] set to MDM, Inst 0, C=0, A=0, V=1
+addDefaultGponSoftwareImageObject[LN1763] set to MDM, Inst 1, C=1, A=1, V=1
+ssk:error:70.570:lck_checkBeforeEntry:232:lBOS: Enter bosInit 
+BOS: Exit bosInit 
+endpoint_open COMPLETED
+ock required during cmsObj_getNextInSubTreeFlags
+getNumberOfLineHost MIPS Clock divider pwrsaving is enabled
+Ethernet Auto Power Down and Sleep is disabled
+Instances[LN2164] count = 1
+rutVoice_getMaxPhysEndpt[LN694] maxPhysEndpt = 1
+ssk:error:70.580:fixNumberOfEntriesLan6IpIntf:1057:fixed MDMOID_I_PV6_INTERFACE_NUMBER_OF_ENTRIES {1} IPIntf count=1
+open file error!!
+sendto: Network is unreachable
+ssk:error:70.796:rutEbt_loadProtectionRule:493:@@@@@@ Warning, WL1 protection rules were loaded.
+Netfilter messages via NETLINK v0.30.
+ip_tables: (C) 2000-2006 Netfilter Core Team
+ip6_tables: (C) 2000-2006 Netfilter Core Team
+ADDRCONF(NETDEV_UP): br0: link is not ready
+ssk:error:72.479:rcl_ipv6LanHostCfgObject:633:startup condition
+[Jan 01 00:01:12] radvd: no linklocal address configured for br0
+/bin/smd:error:78.544:collectApp:1819:Could not collect radvd (pid=849 timeout=5000ms), ret=9809.  Kill it with SIGKILL.
+ADDRCONF(NETDEV_UP): eth0: link is not ready
+netdev path : eth0.0 -> eth0
+BCMVLAN : eth0 mode was set to RG
+Created new Tag Rule: dev=eth0, dir=1, tags=0, id=0
+
+Created new Tag Rule: dev=eth0, dir=1, tags=1, id=0
+
+Created new Tag Rule: dev=eth0, dir=1, tags=2, id=0
+
+Created new Tag Rule: dev=eth0, dir=0, tags=0, id=0
+
+Created new Tag Rule: dev=eth0, dir=0, tags=1, id=0
+
+Created new Tag Rule: dev=eth0, dir=0, tags=2, id=0
+
+[Jan 01 00:01:18] radvd: no linklocal address configured for br0
+device eth0.0 entered promiscuous mode
+device eth0 entered promiscuous mode
+br0: port 1(eth0.0) entered forwarding state
+br0: port 1(eth0.0) entered forwarding state
+ADDRCONF(NETDEV_CHANGE): br0: link becomes ready
+ADDRCONF(NETDEV_UP): eth1: link is not ready
+netdev path : eth1.0 -> eth1
+BCMVLAN : eth1 mode was set to RG
+Created new Tag Rule: dev=eth1, dir=1, tags=0, id=0
+
+Created new Tag Rule: dev=eth1, dir=1, tags=1, id=0
+
+Created new Tag Rule: dev=eth1, dir=1, tags=2, id=0
+
+Created new Tag Rule: dev=eth1, dir=0, tags=0, id=0
+
+Created new Tag Rule: dev=eth1, dir=0, tags=1, id=0
+
+Created new Tag Rule: dev=eth1, dir=0, tags=2, id=0
+
+device eth1.0 entered promiscuous mode
+device eth1 entered promiscuous mode
+br0: port 2(eth1.0) entered forwarding state
+br0: port 2(eth1.0) entered forwarding state
+mcpd:error:79.988:mcpd_process_cms_msg:803:unrecognized msg 0x100007c0
+ADDRCONF(NETDEV_UP): eth2: link is not ready
+netdev path : eth2.0 -> eth2
+BCMVLAN : eth2 mode was set to RG
+Created new Tag Rule: dev=eth2, dir=1, tags=0, id=0
+
+Created new Tag Rule: dev=eth2, dir=1, tags=1, id=0
+
+Created new Tag Rule: dev=eth2, dir=1, tags=2, id=0
+
+Created new Tag Rule: dev=eth2, dir=0, tags=0, id=0
+
+Created new Tag Rule: dev=eth2, dir=0, tags=1, id=0
+
+Created new Tag Rule: dev=eth2, dir=0, tags=2, id=0
+
+device eth2.0 entered promiscuous mode
+device eth2 entered promiscuous mode
+br0: port 3(eth2.0) entered forwarding state
+br0: port 3(eth2.0) entered forwarding state
+ADDRCONF(NETDEV_UP): eth3: link is not ready
+netdev path : eth3.0 -> eth3
+BCMVLAN : eth3 mode was set to RG
+Created new Tag Rule: dev=eth3, dir=1, tags=0, id=0
+
+Created new Tag Rule: dev=eth3, dir=1, tags=1, id=0
+
+Created new Tag Rule: dev=eth3, dir=1, tags=2, id=0
+
+Created new Tag Rule: dev=eth3, dir=0, tags=0, id=0
+
+Created new Tag Rule: dev=eth3, dir=0, tags=1, id=0
+
+Created new Tag Rule: dev=eth3, dir=0, tags=2, id=0
+
+device eth3.0 entered promiscuous mode
+device eth3 entered promiscuous mode
+br0: port 4(eth3.0) entered forwarding state
+br0: port 4(eth3.0) entered forwarding state
+netdev path : eth4.0 -> eth4
+BCMVLAN : eth4 mode was set to RG
+Created new Tag Rule: dev=eth4, dir=1, tags=0, id=0
+
+Created new Tag Rule: dev=eth4, dir=1, tags=1, id=0
+
+Created new Tag Rule: dev=eth4, dir=1, tags=2, id=0
+
+Created new Tag Rule: dev=eth4, dir=0, tags=0, id=0
+
+Created new Tag Rule: dev=eth4, dir=0, tags=1, id=0
+
+Created new Tag Rule: dev=eth4, dir=0, tags=2, id=0
+
+device eth4.0 entered promiscuous mode
+device eth4 entered promiscuous mode
+br0: port 5(eth4.0) entered forwarding state
+br0: port 5(eth4.0) entered forwarding state
+netdev path : eth4.2 -> eth4
+Created new Tag Rule: dev=eth4, dir=0, tags=1, id=1
+
+Created new Tag Rule: dev=eth4, dir=0, tags=2, id=1
+
+Created new Tag Rule: dev=eth4, dir=1, tags=0, id=netdev path : eth4.3 -> eth4
+1
+
+Created new Tag Rule: dev=eth4, dir=1, tags=1, id=1
+
+Created new Tag Rule: dev=eth4, dir=1, tags=2, id=1
+
+Created new Tag Rule: dev=eth4, dir=0, tags=1, id=2
+
+Created new netdev path : eth4.4 -> eth4
+Tag Rule: dev=eth4, dir=0, tags=2, id=2
+
+Created new Tag Rule: dev=eth4, dir=1, tags=0, id=2
+
+Created new Tag Rule: dev=eth4, dir=1, tags=1, id=2
+
+Created new Tag Rule: dev=eth4, dir=1, tags=2, id=2
+
+Created new Tag Rule: dev=eth4, dir=0, tags=1, id=3
+
+Created new Tag Rule: dev=eth4, dir=0, tags=2, id=3
+
+Created new Tag Rule: dev=eth4, dir=1, tags=0, id=3
+
+Created new Tag Rule: dev=eth4, dir=1, tags=1, id=3
+
+Created new Tag Rule: dev=eth4, dir=1, tags=2, id=3
+
+veip0.2 MAC address set to D8:FB:5E:30:A9:38
+netdev path : veip0.2 -> veip0 -> gpon0.0 -> gpon0 -> gpondef
+BCMVLAN : veip0 mode was set to RG
+veip0.3 MAC address set to D8:FB:5E:30:A9:39
+netdev path : veip0.3 -> veip0 -> gpon0.0 -> gpon0 -> gpondef
+BCMVLAN : veip0 mode was set to RG
+veip0.1 MAC address set to D8:FB:5E:30:A9:37
+netdev path : veip0.1 -> veip0 -> gpon0.0 -> gpon0 -> gpondef
+BCMVLAN : veip0 mode was set to RG
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<3> RDPA_IOC_SYS arg<0x7FE428F0>[0m
+nf_conntrack version 0.5.0 (1579 buckets, 6316 max, 6000 ip_forward_max, 5000 limited_l4_port_max)
+ctnetlink v0.93: registering with nfnetlink.
+ssk:error:83.519:rutIpt_configALGObj:3415:Disable SIPEnable. Remove module: nf_nat_sip, nf_conntrack_sip
+
+NF_TPROXY: Transparent proxy support initialized, version 4.1.0
+NF_TPROXY: Copyright (c) 2006-2007 BalaBit IT Ltd.
+ip_set: protocol 6
+callerFuncName = rutGpon_getOmciPromiscInfo, fail to lock (timeout)
+CMS MDM lock is held by ssk (pid=703) for 17 seconds.
+Lock acquired in function cmsMdm_initWithAcc
+Currently in rcl handler function for oid 4000
+ssk:error:92.562:rutIpt_configALGObj:3415:Disable SIPEnable. Remove module: nf_nat_sip, nf_conntrack_sip
+
+
+---------hz_service Enable---------
+
+rutVoice_getMaxLineInstances[LN1549] maxLine = 1
+Jan  1 00:01:32 homezone[1915]: homezone is starting
+
+rutVoice_getMaxLineInstances[LN1549] maxLine = 1
+ssk:error:92.710:rcl_voiceLineRingerDescriptionObject:1279:newObj->entryID=1
+ssk:error:92.710:rcl_voiceLineRingerPatternObject:1310:newObj->entryID=1
+ssk:error:92.710:rcl_voiceLineRingerPatternObject:1310:newObj->entryID=2
+ssk:error:92.714:mdm_activateObjects:753:rcl handler reports error=9802 on X_TELEFONICA_COM_GPON oid=4039 iidStack={}
+Jan  1 00:01:32 homezone[1915]: homezone is started
+
+monitor task is initialized pid= 703 
+/sbin/ifconfig br0:2 1.1.1.1 netmask 255.255.255.0
+[Tr69c_BoundIfName] 665, ifName = ppp0.1
+/bin/smd:error:93.767:initInetServerSocketBindToDev:488:fail to setsockopt(SO_BINDTODEVICE), ifName = ppp0.1, errno = No such device
+[Tr69c_BoundIfName] 689, bind to device, ifName = ppp0.1, fd = -1
+/bin/smd:error:93.950:initDls:408:don't launch telnetd by default
+kill early starting tftpd process for 5G download
+initDls(ln437) kill -9 `cat /var/run/tftpd_pid`
+initDls(ln440) /sbin/ifconfig eth4 0.0.0.0
+/bin/smd:error:94.105:rutEbt_unloadProtectionPrerule:246:@@@@@@ Warning, WL1 protection pre-rules were unloaded start.
+/bin/smd:error:94.289:rutEbt_unloadProtectionPrerule:264:@@@@@@ Warning, WL1 protection pre-rules were unloaded end.
+/bin/smd:error:94.324:initDls:415:don't launch eid with 5009 by default; its port is 0.
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<0> RDPA_IOC_TM arg<0x7FDB39F0>[0m
+ssk:error:102.343:initializeVoice:404:@@@@@ just warning, vodsl being initialized
+[initializeVoice, 464] cmdBuf=echo 5070 > /proc/sys/net/ipv4/nf_nat_sip_local_port
+starting pid 2530, tty '': '-/bin/sh -l -c consoled'
+[initializeVoice, 467] Set sipUserAgentPort=5070
+ssk:error:102.388:initializeVoice:538:@@@@@ just warning, Vodsl cannot bind any interface, so vodsl is down
+ssk:error:102.389:dalIsSipSupported:12153:dalIsSipSupported: @@@@@ just warning,  Voice Profile State=Enabled
+ssk_init[LN1701] /bin/bs /bdmf/configure filter entry[{filter=mcast,ports=wan0}]={enabled=yes,action=host}
+[rtf_i2c_post_test, LN319] i2c post test OK chip ID: 0x9
+Power On Self Test: DRAM [ OK ]
+Power On Self Test: I2C  [ OK ]
+[writePostTestLog, 292] DRAM Post test OK.
+[writePostTestLog, 292] I2C Post test OK.
+mii register 28 is 0x2418
+mii register 28 is 0x2418
+mii register 28 is 0x2418
+mii register 28 is 0x2418
+ssk:error:102.760:ssk_main:1247:cannot handle msg type 0x10000802 from 20 (flags=0x200024d0)
+omcid:error:102.764:mib_data_reset:1367:failed to get me info for meClass=351 error = 4 
+omcid:error:102.765:mib_data_reset:1367:failed to get me info for meClass=357 error = 4 
+initOmciSystemObject[LN145] omciSys.numberOfPotsPorts = 1
+/bin/mapa_red_local(pid=2546): optarg=0 shmId=0 
+swd(pid=2528): optarg=0 shmId=0 
+[0;32m[INF rdpadrv] rdpa_cmdOpen: OPEN RDPA Char Device[0m
+[0;32m[INF rdpadrv] rdpa_cmdIoctl: RDPA Char Device: cmd<3> RDPA_IOC_SYS arg<0x7FCE1570>[0m
+[0;34m[NTC ploam] ploamIOCgetState: rdpa_gpon_link_state_get: error=0, state=1[0m
+sh: cmf: not found
+[0;36;44mBroadcom Packet Flow Cache learning via BLOG enabled.[0m
+Broadcom GPON OMCI Stack v0.1 (Mar 16 2018, 15:25:50)
+Broadband Router 3505VW
+
+OMCI message capture enabled.
+omcid_timeout_init: gOmcidTimeout = 5000
+swd:error:103.596:main:278:cannot handle msg type 0x10000250 from 20 (flags=0x80000000)
+WLmngr Daemon is running
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+swd:error:114.869:PeriodicInformer:298:pcRetSummarized=0, ctRet=0, utRet=0.
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+Waiting for 5G initial...
+wlmngr:5G initial failed
+[writePostTestLog, 292] 5G WIFI Post test NG.
+wlevt is ready for new msg...
+[WLMNGR]wl0 restarting...
+There is no Predefined DevicePin in CFE
+WPS Device PIN = xxxxxxxx
+wlmngr:error:158.260:wlmngr_ctl_Led_by_status:9631:cmsLed_setWifiEnabled()
+killall: hspotap: no process killed
+killall: bsd: no process killed
+_wl_add_if
+wl0: wlc_bsscfg_ap_init: bsscfg 818a6000
+_wl_add_if
+wl0: wlc_bsscfg_ap_init: bsscfg 8319c000
+_wl_add_if
+wl0: wlc_bsscfg_ap_init: bsscfg 8628f000
+wl0: wl_set_mac_address
+wl0: wl_set_mac_address
+wl0: wl_set_mac_address
+wl0: wl_set_mac_address
+rtl_init_rpeLN1686
+rtl_init_rpeLN1686
+rtl_init_rpeLN1686
+acsd: selected channel spec: 0x1001
+modify the interference to be 3.
+[writePostTestLog, 292] 2.4G WIFI Post test OK.
+Setting SSID: "MOVISTAR_A934"
+Setting SSID: "MOVISTAR_A934_INV"
+Setting SSID: "wl0_Guest2"
+Setting SSID: "wl0_Guest3"
+device wl0 is not a slave of br0
+
+device wl0 entered promiscuous mode
+br0: port 6(wl0) entered forwarding state
+br0: port 6(wl0) entered forwarding state
+[(, )=>(psk2, disabled)]2.4G Security still join roaming, wlEnblSsid=1, 5G2ND wlEnblSsid=1
+roaming_sync_config=>Sync
+[WLMNGR]wl0 restart finish!!!
+[RoamingRole]  => Master
+killall: csmd: no process killed
+killall: rpecat: no process killed
+1.1.1.2: RPC: Port mapper failure - RPC: Unable to receive
+1.1.1.2: RPC: Port mapper failure - RPC: Unable to receive
+rpecat: option requires an argument -- r
+usage: rpecat [OPTIONS]
+   concatenate CSM and remote RPE
+   options are:
+     -h,--help		print this message.
+     -v,--version	show version of this program.
+     -d,--dbglevel	assign the debug level(0 ~ 5, 0:ERR 1:WARN 2:NOTICE 3:INFO 4:DEBUG 5:DUMP)
+     -i,--interface	assign interface name
+     -c,--csm		assign the link to csm, the parameters can be 'netlink' or 'rawlink'
+     -r,--rpe		assign the link to rpe, the parameters can be 'netlink' or the MAC address of the slave
+1.1.1.2: RPC: Port mapper failure - RPC: Unable to receive
+[WLMNGR] propagate force.
+[post_propagate]
+qcsapi_adapter_get_client: client is null!
+[csmd]: (2.0.2-93d6d27-35d16af) started(0xb2f758)
+0000000181 [Info..] [CSM ] (csm_create_bss_db   :0774) Create BSS database with max size = 0
+0000000181 [Info..] [CSM ] (csm_create_station_d:0706) Create station database with max size = 1024
+0000000181 [Info..] [QSL ] (sl_send_internal_msg:0081) send internal msg 0
+0000000181 [Info..] [CSM ] (csm_attach_logic_to_:0480) Mobility domain:[aa:aa] created with logic:sl.qtn attached.
+0000000181 [Info..] [QSL ] (sl_process_internal_:0019) process internal msg 0
+0000000181 [Info..] [QSL ] (sl_register_timer   :0072) register <steer_checking> timer [0x77ad2be0/0xb351c8], timeout 120 secs
+0000000181 [Info..] [QSL ] (sl_register_timer   :0072) register <sta_flushing> timer [0x77ad67b8/0xb351c8], timeout 60 secs
+0000000181 [Info..] [QSL ] (sl_send_internal_msg:0081) send internal msg 0
+0000000181 [Info..] [CSM ] (csm_attach_logic_to_:0480) Mobility domain:[00:00] created with logic:sl.qtn attached.
+0000000181 [Info..] [QSL ] (sl_process_internal_:0019) process internal msg 0
+0000000181 [Info..] [QSL ] (sl_register_timer   :0072) register <steer_checking> timer [0x77ad2be0/0xb371a8], timeout 120 secs
+0000000181 [Info..] [QSL ] (sl_register_timer   :0072) register <sta_flushing> timer [0x77ad67b8/0xb371a8], timeout 60 secs
+0000000181 [Info..] [CSM ] (csm_attach_drv      :0507) driver:driver.qtn.netlink loaded.
+0000000181 [Info..] [CSM ] (qnetlink_start      :0205) send start to RPE.
+0000000181 [Notice] [CSM ] (csm_process_event_in:0648) csmmsg: BSS[d8:fb:5e:30:a9:35] is up.
+0000000181 [Info..] [CSM ] (csm_attach_comm     :0539) communication:comm.qtn loaded.
+0000000181 [Info..] [CSM ] (csm_attach_misc     :0569) misc:misc.qtn.csmdcli loaded.
+0000000185 [Info..] [COMM] (switch_state        :0300) Role change from unconfigured to master
+initIntfStatus:166> 5G secondary status: 0
+initIntfStatus:180> 2.4G main status: 1
+initIntfStatus:210> Propagate 2.4G ? 1 
+get_cfg:844> Sync from 2.4G to 5G 
+rtf_5G_ssid_cfg:537> 5g main ssid is enable
+rtf_5G_ssid_cfg:601> wl1_ssid ssid is null 
+rtf_5G_ssid_cfg:565> En5G2 is 0, and propagate2G is 1 
+rtf_5G_ssid_cfg:601> (null) ssid is null 
+rtf_24G_ssid_cfg:443> 2.4G ssid MOVISTAR_A934
+
+
+
+Output to /tmp/in_ap_cfg
+sendto: Network is unreachable
+[post_propagate] run!!
+Roaming is disable 
+0000000301 [Info..] [QSL ] (sl_steering_process :1790) [master] period steering process for [aa:aa]
+0000000301 [Info..] [QSL ] (sl_steering_overload:1657) Checking for overloaded BSSes (5 remainig steering attemps)
+0000000301 [Info..] [QSL ] (sl_steering_sufferin:1693) Checking for suffering STAs (5 remaining steering attempts)
+0000000301 [Info..] [QSL ] (sl_register_timer   :0072) register <steer_checking> timer [0x77ad2be0/0xb351c8], timeout 120 secs
+0000000301 [Info..] [QSL ] (sl_steering_process :1790) [master] period steering process for [00:00]
+0000000301 [Info..] [QSL ] (sl_steering_overload:1657) Checking for overloaded BSSes (5 remainig steering attemps)
+0000000301 [Info..] [QSL ] (sl_steering_sufferin:1693) Checking for suffering STAs (5 remaining steering attempts)
+0000000301 [Info..] [QSL ] (sl_register_timer   :0072) register <steer_checking> timer [0x77ad2be0/0xb371a8], timeout 120 secs
