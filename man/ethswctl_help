@@ -1,0 +1,164 @@
+more than 1 or no exclusive option is entered 
+Usage: 
+       ethswctl {-c|--command} hw-switching
+
+       ethswctl {-c|--command} hw-switching {-o|--operation} <enable|disable>
+
+       ethswctl {-c|--command} mibdump {-p|--port} <port> [{-s}]
+
+       ethswctl {-c|--command} mibdump {-p|--port} <port> {-a|--all} [{-s}]
+
+       ethswctl {-c|--command} pagedump {-P|--Page} <page> [{-s}]
+
+       ethswctl {-c|--command} iudmadump 
+
+       ethswctl {-c|--command} iudmasplit -p <port> {-q <iudma>}
+
+       ethswctl {-c|--command} swctrl {-t|--type} <type> [{-v|--value} <val>] 
+         type = 0(BUFF_CTRL); val = 0x1(TXQ_PAUSE_EN), 0x2(TXQ_DROP_EN), 
+         0x4(TOT_PAUSE_EN), 0x8(TOT_DROP_EN)
+         type = 1(8021Q_CTRL); val = 0x1(ENABLE), 0(DISABLE), 
+
+       ethswctl {-c|--command} swprioctrl {-q|--priority} <prio> 
+                {-t|--type} <type> {-v|--value} [val]
+         type = 0(TOT_DROP), 1(TOT_PAUSE), 2(TOT_HYST), 3(TXQ_HI_DROP),
+         TXQ_HI_PAUSE(4), TXQ_HI_HYST(5), TXQ_LO_DROP
+
+       ethswctl {-c|--command} rxscheduling {-v|--value} [val]
+         val = 0 (SP), 1(WRR) 
+
+       ethswctl {-c|--command} wrrparams {-t|--type} <type> {-v|--value} [val]
+         type = 0 (interval_in_pkts), 1 (weight1), 2 (weight2), 3 (weight3), 4 (weight4)
+         val: interval_in_pkts: <1-1280> ;weight: <1-16> 
+
+       ethswctl {-c|--command} vlan {-v|--value} vlan_id {-f|--fwdmap} 
+                fwd_map {-u|-untagmap} untag_map
+
+       ethswctl {-c|--command} replacetagval {-p|--port} <port> 
+                {-t|--type} <type> [{-v|--value} <val>] 
+         type = 0(TAG), 1(TPID), 2(TCI), 3(VID), 4(8021P), 5(CFI), 6(MATCH_VID) 
+
+       ethswctl {-c|--command} replacetagop {-p|--port} <port> 
+                {-t|--type} <type> [{-v|--value} <val>] 
+         type = EN_REPLACE_8021P(0), EN_REPLACE_CFI(1), EN_REPLACE_VID(2), 
+         EN_REPLACE_TPID(3), EN_TAG_STRIP (4) 
+         val = 1 (Enable), 0 (Disable) 
+
+       ethswctl {-c|--command} pbvlanmap {-p|--port} <port> [{-v|--value} <val>] 
+         val = port_map; Bit8: MIPS, Bit7: GPON; Bit5: MoCA: Bits3-0: UNI 
+
+       ethswctl {-c|--command} getstat -p port -t type 
+
+       ethswctl {-c|--command} getstat32 -p port -t type 
+
+       ethswctl {-c|--command} pause -p port -v val 
+
+       ethswctl {-c|--command} cosq -v val 
+
+       ethswctl {-c|--command} cosq -p port -q priority -v val 
+
+       ethswctl {-c|--command} cosq -q priority -v val 
+
+       ethswctl {-c|--command} costxq -v channel -q queue 
+
+       ethswctl {-c|--command} costxq -t method 
+         method = 0(USE_BD_PRIO), 1(USE_TX_IUDMA), 
+
+       ethswctl {-c|--command} byteratecfg -v channel -x 0(disable)|1(enable) 
+
+       ethswctl {-c|--command} byterate -v channel -x rate 
+
+       ethswctl {-c|--command} pktratecfg -v channel -x 0(disable)|1(enable) 
+
+       ethswctl {-c|--command} pktrate -v channel -x rate 
+
+       ethswctl {-c|--command} deftxq -i if_name -v val 
+
+       ethswctl {-c|--command} deftxqen -i if_name -o enable|disable 
+
+       ethswctl {-c|--command} getrxcntrs 
+
+       ethswctl {-c|--command} resetrxcntrs 
+
+       ethswctl {-c|--command} pad [{-l|--length} <len> 
+                {-v|--value} <0(disable)|1(enable)>]
+
+       ethswctl {-c|--command} arl -m mac -v vid [-x data] 
+
+       ethswctl {-c|--command} arldump 
+
+       ethswctl {-c|--command} arlflush 
+
+       ethswctl -c untaggedprio -p port [-v val] 
+
+       ethswctl -c cosqpriomethod [-v val]
+         val = 0(PORT_QOS), 1(MAC_QOS), 2(8021P_QOS), 3(DIFFSERV_QOS) 
+
+       ethswctl -c cosqsched -v [val] -t sp_endq -x weight1 
+        -y weight2 -z weight3 -w weight4 
+         val = 0 (SP), 1(WRR), 2(COMBO) 
+         sp_endq: queue where SP scheduling ends. Valid only for COMBO 
+
+       ethswctl {-c|--command} portctrl {-p|--port} <port> [-v val] 
+         val bit-0:  1 (Rx Disable), 0 (Rx Enable) 
+         val bit-1:  1 (Tx Disable), 0 (Tx Enable) 
+
+       ethswctl {-c|--command} portloopback {-p|--port} <port> [-v val] 
+         val:  1 (Enable), 0 (Disable) 
+
+       ethswctl {-c|--command} phymode {-p|--port} <port> [-y speed] [-z duplex]
+         speed:  0 (auto), 1000, 100, 10 
+         duplex: 0 (halfduplex), 1 (fullduplex)
+
+       ethswctl {-c|--command} test -t type [-x param] [-v val] [-s]
+         type = 0(ISR config); param=channel; val=1|0 
+         type = 1(Enable Rx Dump); val=1|0 
+         type = 2(Reset MIB) 
+         type = 3(Reset Switch); -s for SPI interface 
+
+       ethswctl {-c|--command} jumbo {-p|--port} <port> 
+                [{-v|--value} <0(disable)|1(enable)>]
+         port = 9(ALL), 8(MIPS), 7(GPON), 6(USB), 5(MOCA),
+                4(GPON_SERDES), 3(GMII_2), 2(GMII_1), 1(GPHY_1), 0(GPHY_0)
+
+       ethswctl {-c|--command} dscp2prio -v dscpVal [-q prio] > 
+                dscpVal is the DSCP value
+                prio is the switch priority
+         channel = dma channel number. needed when type = 0(ISRCFG)
+
+       ethswctl {-c|--command} regaccess -v offset -l len [-d data]
+
+       ethswctl {-c|--command} spiaccess -x addr -l len [-d data]
+
+       ethswctl {-c|--command} pmdioaccess -x addr -l len [-d data]
+
+       ethswctl {-c|--command} switchinfo -v switch_number
+
+       ethswctl {-c|--command} setlinkstatus -n unit -p port -x linkstatus -y speed -z duplex
+
+       ethswctl {-c|--command} rxratectrl -p port [-x limit-kbps -y burst-kbps]
+
+       ethswctl {-c|--command} txratectrl -p port [-x limit-kbps -y burst-kbps]
+
+       ethswctl {-c|--command} dosctrl -v bit-value as below
+       IP_LAN=1;TCP_BLAT=2;UDP_BLAT=3;TCP_NULL=4;TCP_XMAS=5;TCP_SYNFIN=6;TCP_SYNERR=7;
+       TCP_SHORTHDR=8;TCP_FRAGERR=9;ICMPv4_FRAG=10;ICMPv6_FRAG=11;ICMPv4_LONGPING=12;ICMPv6_LONGPING=13;DOS_LRN=14
+
+       ethswctl {-c|--command} softswitch [-i] <if_name> [-o] <enable|disable>
+
+       ethswctl {-c|--command} txsoftswitch [-i] <if_name> [-o] <enable|disable>
+
+       ethswctl {-c|--command} hwstp [-i] <if_name> [-o] <enable|disable>
+
+       ethswctl {-c|--command} wan [ -i if_name -o <enable|disable> ] 
+
+
+ethswctl commands without - && -- options 
+Usage: ethctl <command> [arguments...]
+
+  getifname : Get the interface name for the given port
+  ethswctl getifname <port>
+
+  debug : Get/Set Debug level
+  ethswctl debug <level>
+
