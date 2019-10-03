@@ -1,0 +1,78 @@
+#!/bin/sh
+
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+# A script to monitor if watchdogd is running or not
+#
+# Author : Eswar Yaganti
+# Date : 10-Mar-2016
+
+. /etc/shgw/shgw.constants
+
+MONIT_PID_FILE=${SHGW_TMPFS_PATH}/.shgw_wd_monit_pid
+
+start_and_monitor_WD() {
+	while true ; do
+		wd_pid=$(${PS} | ${GREP} -i "shgw_watchdogd" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+		if [ ! -z ${wd_pid} ]; then
+			${ECHO} "[$$] $0 killing previous WD, pid=${wd_pid}, at `uptime`"
+			${ECHO} "[$$] $0 killing previous WD, pid=${wd_pid}, at `uptime`" >> ${SHGW_STARTUP_LOG}
+			${KILL} -9 ${wd_pid}
+			${SLEEP} 2
+		fi
+
+		${ECHO} "[$$] $0 starting ${SHGW_WD} ${SHGW_WD_CONF}, at `uptime`"
+		${ECHO} "[$$] $0 starting ${SHGW_WD} ${SHGW_WD_CONF}, at `uptime`" >> ${SHGW_STARTUP_LOG}
+		${SHGW_WD} ${SHGW_WD_CONF} 2>>${SHGW_ERROR_FILE} &
+		SHGW_WD_PID=$!
+		wait ${SHGW_WD_PID}
+
+		# Is this required?
+		${SLEEP} 2
+done
+}
+
+exit_if_running() {
+	if [ ! -f ${MONIT_PID_FILE} ]; then
+		${ECHO} "[$$] Fresh instance at `uptime`"
+		${ECHO} "[$$] Fresh instance at `uptime`"  >> ${SHGW_STARTUP_LOG}
+		${ECHO} $$ > ${MONIT_PID_FILE}
+	else
+		_PID=$(${CAT} ${MONIT_PID_FILE})
+		if [ ! -z $(${CAT} /proc/${_PID}/cmdline | ${GREP} shgw_wd_monit) ];then
+			${ECHO} "[$$] Another instance running, pids=[${_PID}] at `uptime`"
+			${ECHO} "[$$] Another instance running, pids=[${_PID}] at `uptime`" >> ${SHGW_STARTUP_LOG}
+			exit 1
+		else
+			${ECHO} "[$$] Overwriting ${MONIT_PID_FILE} at `uptime`"
+			${ECHO} "[$$] Overwriting ${MONIT_PID_FILE} at `uptime`"  >> ${SHGW_STARTUP_LOG}
+			${ECHO} $$ > ${MONIT_PID_FILE}
+		fi
+	fi
+}
+
+exit_if_running
+start_and_monitor_WD
+

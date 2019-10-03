@@ -1,0 +1,2 @@
+ES_R3505VWSTD203_n41
+cp -a /data/scratchpad /usr/local/auxfs/scratchpad_bak

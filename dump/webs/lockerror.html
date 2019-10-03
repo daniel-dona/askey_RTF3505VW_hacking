@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+function backtoindex() {
+   var enblPopWin = '<%ejGet(enblPopWin)%>';
+   var loc = 'main.html';
+   var code = 'window.top.location="' + loc + '"';
+
+   if ( enblPopWin == '1' ) {
+      loc = 'index.html';
+      code = 'location="' + loc + '"';
+   }
+
+   eval(code);
+}
+
+function frmLoad() {
+   setTimeout("backtoindex()", 60000);
+}
+
+// done hiding -->
+</script>
+</head>
+
+<body onLoad='frmLoad()'>
+<blockquote>
+<b>Broadband Router Error</b><br><br>
+Another management entity is currently configuring the Broadband Router.<br><br>
+Please close the Broadband Router Configuration window, and try again in a few minutes.
+</blockquote>
+</body>
+</html>

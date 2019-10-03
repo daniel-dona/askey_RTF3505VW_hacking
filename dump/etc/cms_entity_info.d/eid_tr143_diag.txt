@@ -1,0 +1,17 @@
+BEGIN
+  eid         = EID_DOWNLOAD_DIAG
+  name        = tr143DownloadDiag
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_UPLOAD_DIAG
+  name        = tr143UploadDiag
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_UDPECHO
+  name        = tr143EchoCfgServer
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE
+END

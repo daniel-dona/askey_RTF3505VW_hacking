@@ -1,0 +1,1434 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicesip_advanced.html
+  Author:
+  Creation Date: 2008
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+      <style type="text/css">
+      ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
+      ul#tabs li { display: inline; }
+      ul#tabs li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }
+      ul#tabs li a:hover { background-color: #f1f0ee; }
+      ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }
+      div.tabContent { border: 1px solid #c9c3ba; padding: 0.5em; background-color: #f1f0ee; }
+      div.tabContent.hide { display: none; }
+      </style>
+
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+      <script language="javascript" src="util.js"></script>
+      <script language="javascript" src="te_util.js"></script>
+<script language="javascript">
+/*
+var maxLines = '<%ejGetVoice(maxLines)%>';
+if ( maxLines.search("ejGetVoice") >= 0 ) {
+   maxLines = 2; // if not provided by provisioning, hard-code maxLines
+}
+*/
+
+var maxLines = new Array();
+var maxSp = '<%ejGetVoice(maxSp)%>';
+
+var voiceRunning = '<%ejGetVoice(voiceStatus)%>';
+var transportList = '<%ejGetVoice(transportList)%>';
+var srtpOptionList = '<%ejGetVoice(srtpOptionList)%>';
+var confOptionList = '<%ejGetVoice(confOptionList)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var fxoBuild = 0;
+
+if ( isFinite( parseInt( '<%ejGetVoice(numFxo)%>' ,10 ) ) ) 
+{
+   fxoBuild = parseInt( '<%ejGetVoice(numFxo)%>' ,10 );
+}
+
+var prt = '<%ejGetVoice(pstnRouteRule)%>';
+var pd  = '<%ejGetVoice(pstnRouteData)%>';
+var pdp = '<%ejGetVoice(pstnDialPlan)%>';
+var flexibleAssignment = '<%ejGetVoice(flexTerms)%>';
+var numDect = '<%ejGetVoice(dectCurHset)%>';
+var tmpFxs = '<%ejGetVoice(numFxs)%>';
+var dectMaxHsetVal  = '<%ejGetVoice(dectMaxHset)%>';
+//Offset FXS numbering by amount of dect for correct indexing.
+if ( numDect > 0)
+   var numFxs = Number(tmpFxs) + Number(dectMaxHsetVal);
+else
+   var numFxs = Number(tmpFxs);
+
+for (var i = 0; i < maxSp; i++) {
+   eval( "var vbd" + i + " \= \"\" " );
+   eval( "var vet" + i + " \= \"\" " );
+   eval( "var rt" + i + " \= \"\" " );
+   eval( "var rrt" + i + " \= \"\" " );
+   eval( "var tosSip" + i + " \= \"\" " );
+   eval( "var tosRtp" + i + " \= \"\" " );   
+   eval( "var dr" + i + " \= \"\" " );
+   eval( "var hr" + i + " \= \"\" " );
+   eval( "var trp" + i + " \= \"\" " );
+   eval( "var srtp" + i + " \= \"\" " );
+   eval( "var tagMatch" + i + " \= \"\" " );
+   eval( "var mss" + i + " \= \"\" " );
+   eval( "var msp" + i + " \= \"\" " );
+   eval( "var confuri" + i + " \= \"\" " );
+   eval( "var confopt" + i + " \= \"\" " );
+   eval( "var ml" + i + " \= \"\" " );
+   
+   var tmpml = '<%ejGetVoice(maxLines)%>';
+   eval(tmpml);
+   
+   eval("maxLines[" + i + "] = ml" + i);
+
+   for (var j = 0; j < maxLines[i]; j++) {
+      eval( "var cw" + i + "_" + j + " \= \"\" " );
+      eval( "var cfnum" + i + "_" + j + " \= \"\" " );
+      eval( "var cfall" + i + "_" + j + " \= \"\" " );
+      eval( "var cfbus" + i + "_" + j + " \= \"\" " );
+      eval( "var cfnoa" + i + "_" + j + " \= \"\" " );
+      eval( "var be" + i + "_" + j + " \= \"\" " );
+      eval( "var bpin" + i + "_" + j + " \= \"\" " );
+      eval( "var bdmp" + i + "_" + j + " \= \"\" " );
+      eval( "var wle" + i + "_" + j + " \= \"\" " );
+      eval( "var wln" + i + "_" + j + " \= \"\" " );
+      eval( "var wlt" + i + "_" + j + " \= \"\" " ); // #ifdef RTF_DEF, warm line timer
+      eval( "var acb" + i + "_" + j + " \= \"\" " );
+      eval( "var anc" + i + "_" + j + " \= \"\" " );
+      eval( "var dnd" + i + "_" + j + " \= \"\" " );
+   }
+}
+
+var tmpvbd     = '<%ejGetVoice(vbdEnabled)%>';
+var tmpvet     = '<%ejGetVoice(v18Enable)%>';
+var tmprrt     = '<%ejGetVoice(regRetryInt)%>';
+var tmprt      = '<%ejGetVoice(regExpTmr)%>';
+var tmptosSip  = '<%ejGetVoice(tosByteSip)%>';
+var tmptosRtp  = '<%ejGetVoice(tosByteRtp)%>';
+var tmpdr      = '<%ejGetVoice(dtmfRelay)%>';
+var tmphr      = '<%ejGetVoice(hookFlashRelay)%>';
+var tmptrp     = '<%ejGetVoice(transport)%>';
+var tmpsrtp    = '<%ejGetVoice(srtpOption)%>';
+var tmptagMatch = '<%ejGetVoice(enblTagMat)%>';
+var tmpmss     = '<%ejGetVoice(musicServerAddr)%>';
+var tmpmsp     = '<%ejGetVoice(musicServerPort)%>';
+var tmpconfuri = '<%ejGetVoice(confUri)%>';
+var tmpconfopt = '<%ejGetVoice(confOption)%>';
+//var tmpml = '<%ejGetVoice(maxLines)%>';
+
+var tmpcw      = '<%ejGetVoice(callwait)%>';
+var tmpcfnum   = '<%ejGetVoice(fwdNum)%>';
+var tmpcfbus   = '<%ejGetVoice(fwdBusy)%>';
+var tmpcfall   = '<%ejGetVoice(fwdAll)%>';
+var tmpcfnoa   = '<%ejGetVoice(fwdNoAns)%>';
+var tmpbe      = '<%ejGetVoice(barEnabled)%>';
+var tmpbpin    = '<%ejGetVoice(barPin)%>';
+var tmpbdmp    = '<%ejGetVoice(barDmap)%>';
+var tmpwle     = '<%ejGetVoice(wlEnabled)%>';
+var tmpwln     = '<%ejGetVoice(wlNum)%>';
+// #ifdef RTF_DEF, warm line timer
+var tmpwlt     = '<%ejGetVoice(wlTimer)%>';
+var tmpacb     = '<%ejGetVoice(anonBlock)%>';
+var tmpanc     = '<%ejGetVoice(anonCall)%>';
+var tmpdnd     = '<%ejGetVoice(doNotDisturb)%>';
+var tmpsipalg  = '<%ejGetVoice(sipALGEnable)%>';
+
+eval( tmpvbd );
+eval( tmpvet );
+eval( tmprt );
+eval( tmprrt );
+eval( tmptosSip );
+eval( tmptosRtp );
+eval( tmpdr );
+eval( tmphr );
+eval( tmptrp );
+eval( tmpsrtp );
+eval( tmptagMatch );
+eval( tmpmss );
+eval( tmpmsp );
+eval( tmpconfuri );
+eval( tmpconfopt );
+//eval( tmpml );
+eval( tmpsipalg );
+
+if ( tmpcw.search("ejGetVoice") < 0 ) {
+   eval( tmpcw );
+}
+if ( tmpcfnum.search("ejGetVoice") < 0 ) {
+   eval( tmpcfnum );
+}
+if ( tmpcfbus.search("ejGetVoice") < 0 ) {
+   eval( tmpcfbus );
+}
+if ( tmpcfall.search("ejGetVoice") < 0 ) {
+   eval( tmpcfall );
+}
+if ( tmpcfnoa.search("ejGetVoice") < 0 ) {
+   eval( tmpcfnoa );
+}
+if ( tmpbe.search("ejGetVoice") < 0 ) {
+   eval( tmpbe );
+}
+if ( tmpbpin.search("ejGetVoice") < 0 ) {
+   eval( tmpbpin );
+}
+if ( tmpbdmp.search("ejGetVoice") < 0 ) {
+   eval( tmpbdmp );
+}
+if ( tmpwle.search("ejGetVoice") < 0 ) {
+   eval( tmpwle );
+}
+if ( tmpwln.search("ejGetVoice") < 0 ) {
+   eval( tmpwln );
+}
+// #ifdef RTF_DEF
+if ( tmpwlt.search("ejGetVoice") < 0 ) {
+   eval( tmpwlt );
+}
+if ( tmpacb.search("ejGetVoice") < 0 ) {
+   eval( tmpacb );
+}
+if ( tmpanc.search("ejGetVoice") < 0 ) {
+   eval( tmpanc );
+}
+if ( tmpdnd.search("ejGetVoice") < 0 ) {
+   eval( tmpdnd );
+}
+if ( tmpsipalg.search("ejGetVoice") < 0 ) {
+   eval( tmpsipalg );
+}
+
+function printTransportListBox(){
+   var tokTransportList = transportList.split(" ");
+
+   for(i = 0; i < tokTransportList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokTransportList[i] + "\" selected>");  
+      document.writeln(tokTransportList[i]);
+   }
+}
+
+function printSrtpOptionListBox(){
+   var tokSrtpOptionList = srtpOptionList.split(" ");
+
+   for(i = 0; i < tokSrtpOptionList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokSrtpOptionList[i] + "\" selected>");  
+      document.writeln(tokSrtpOptionList[i]);
+   }
+}
+
+function printConfOptionListBox(){
+   var tokConfOptionList = confOptionList.split(" ");
+
+   for(i = 0; i < tokConfOptionList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokConfOptionList[i] + "\" selected>");  
+      document.writeln(tokConfOptionList[i]);
+   }
+}
+
+function btnStartSip() {
+   var loc = 'voicesipstart.cmd?';
+
+   loc += addParamsToQuery( loc, "advanced" );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnStopSip() {
+   var loc = 'voicesipstop.cmd?';
+      
+   loc += addParamsToQuery( loc, "advanced" );  
+ 
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+   }
+
+
+function btnApplySip() {
+   var loc = 'voicesipapply.cmd?';
+   
+   loc += addParamsToQuery( loc, "advanced" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+ 
+   eval(code);
+}
+
+
+function addParamsToQuery( loc_init, current_view) {
+   var loc = loc_init;
+   with ( document.forms[0] ) {
+      loc += 'currentview=' + current_view;
+      
+      for (var sp = 0; sp < maxSp; sp++) {
+	     if( selectedTab == -1 )
+		 {
+		    selectedTab = 0;
+		 }
+         eval( "loc += \'&musicServerAddr" + sp + "=\' + musicServerAddr" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+
+         eval( "loc += \'&musicServerPort" + sp + "=\' + musicServerPort" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+
+         eval( "loc += \'&confUri" + sp + "=\' + confUri" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+		 eval( "loc += \'&confOption" + sp + "=\' + confOption" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+               
+         var temp = eval( "isValidIpAddress(musicServerAddr" + selectedTab + ".value) == false" );
+         
+         if ( temp ) {
+            eval( "musicServerAddr" + sp + ".value = '0.0.0.0'" );
+            eval( "musicServerPort" + sp + ".value = '0'");
+         }
+         
+         temp = eval( "enblTagMat" + sp + ".checked == true" );
+         if ( temp ) {
+            loc += "&enblTagMat" + selectedTab + "=on";
+         }
+         else {
+            loc += "&enblTagMat" + selectedTab + "=off";
+         }
+
+         temp = eval( "t38Enable" + sp + ".checked == true" );
+         if ( temp ) {
+            loc += "&t38Enable" + sp + "=on";
+         }
+         else {
+            loc += "&t38Enable" + sp + "=off";
+         }
+
+         temp = eval( "v18Enable" + sp + ".checked == true" );
+         if ( temp ) {
+            loc += "&v18Enable" + sp + "=on";
+         }
+         else {
+            loc += "&v18Enable" + sp + "=off";
+         }
+         
+         temp = eval( "sipALGEnable" + sp + ".checked == true" );
+         if ( temp ) {
+            loc += "&sipALGEnable" + sp + "=on";
+         }
+         else {
+            loc += "&sipALGEnable" + sp + "=off";
+         }
+
+         eval( "loc += \'&transport" + sp + "=\' + transport" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&srtpOption" + sp + "=\' + srtpOption" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&regRetryInt" + sp + "=\' + regRetryInt" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&regExpTmr" + sp + "=\' + regExpTmr" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&tosByteRtp" + sp + "=\' + tosByteRtp" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&tosByteSip" + sp + "=\' + tosByteSip" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&dtmfRelay" + sp + "=\' + dtmfRelay" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&hookFlashRelay" + sp + "=\' + hookFlashRelay" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+
+         var checkMarkTest;
+
+         for (var i = 0; i < maxLines[sp]; i++) {
+
+            checkMarkTest = eval("callwait" + sp + "_" + i + ".checked == true");
+            
+            if ( checkMarkTest ){
+               loc+= "&callwait" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&callwait" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("fwdAll" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&fwdAll" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&fwdAll" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("fwdBusy" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&fwdBusy" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&fwdBusy" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("fwdNoAns" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&fwdNoAns" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&fwdNoAns" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("barEnabled" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&barEnabled" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&barEnabled" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("wlEnabled" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&wlEnabled" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&wlEnabled" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("anonBlock" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&anonBlock" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&anonBlock" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("anonCall" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&anonCall" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&anonCall" + sp + "_" + i + "=off";
+            }
+
+            checkMarkTest = eval("doNotDisturb" + sp + "_" + i + ".checked == true");
+            if ( checkMarkTest ){
+               loc+= "&doNotDisturb" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&doNotDisturb" + sp + "_" + i + "=off";
+            }
+
+            eval( "loc += \'&fwdNum" + sp + "_" + i + "=\' + fwdNum" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+            eval( "loc += \'&barPin" + sp + "_" + i + "=\' + barPin" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+            eval( "loc += \'&barDmap" + sp + "_" + i + "=\' + barDmap" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+            eval( "loc += \'&wlNum" + sp + "_" + i + "=\' + wlNum" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+            // #ifdef RTF_DEF, warm line timer
+            eval( "loc += \'&wlTimer" + sp + "_" + i + "=\' + wlTimer" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+         }
+         
+      }
+
+      if ( fxoBuild )
+      {
+         loc += '&pstnDialPlan=' + encodeUrl(pstnDialPlan.value.replace(/['" ]/g,''));
+         loc += '&pstnRouteRule=' + pstnRouteRule.value.replace(/['" ]/g,'');
+         loc += '&pstnRouteData=';
+         
+         if( flexibleAssignment == '0' ) {
+            if ( pstnRouteRule.value != "Auto" )
+               loc += pstnRouteData.value.replace(/['" ]/g,'');
+         }
+         else {
+            if ( pstnRouteRule.value == "Voip" ) {
+               loc += pstnRouteDataVoip.value.replace(/['" ]/g,'');
+            }
+            else if ( pstnRouteRule.value == "Line") {
+               //loc += ''
+               var multiEndpts = false;
+               for ( var i = 0; i < numDect; i++ ) {
+                  var test = eval("pstnRouteDataLine" + i + "_dect.checked == true");
+                  if ( test ) {
+                     if ( !multiEndpts ) {
+                        loc += i;
+                        multiEndpts = true;
+                     }
+                     else {
+                        loc+= "," + i;
+                     }
+                  }
+               }
+               for ( ; i < numFxs; i++ ) {
+                  var test = eval("pstnRouteDataLine" + i + "_fxs.checked == true");
+                  if ( test ) {
+                     if ( !multiEndpts ) {
+                        loc += i;
+                        multiEndpts = true;
+                     }
+                     else {
+                        loc+= "," + i;
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+   //alert(loc);
+   return loc;
+}
+
+function frmLoad(current_view) {
+
+   init();
+   
+   for (var i = 0; i < maxSp; i++) {
+      generatePerLineTable(i);
+   }
+
+   with ( document.forms[0] ) {
+      
+      for (var i = -1; i < maxSp; i++) {
+         enableButtons(i);
+      }
+      
+      // Fill in values based on provisioning
+      for (var i = 0; i < maxSp; i++) {
+         for (var j = 0; j < maxLines[i]; j++) {
+            if ( eval("cw" + i + "_" + j + "==1") ){
+               eval("callwait" + i + "_" + j + ".checked = true");
+            } else {
+               eval("callwait" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("cfall" + i + "_" + j + "==1") ){
+               eval("fwdAll" + i + "_" + j + ".checked = true");
+            } else {
+               eval("fwdAll" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("cfbus" + i + "_" + j + "==1") ){
+               eval("fwdBusy" + i + "_" + j + ".checked = true");
+            } else {
+               eval("fwdBusy" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("cfnoa" + i + "_" + j + "==1") ){
+               eval("fwdNoAns" + i + "_" + j + ".checked = true");
+            } else {
+               eval("fwdNoAns" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("be" + i + "_" + j + "==1") ){
+               eval("barEnabled" + i + "_" + j + ".checked = true");
+            } else {
+               eval("barEnabled" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("wle" + i + "_" + j + "==1") ){
+               eval("wlEnabled" + i + "_" + j + ".checked = true");
+            } else {
+               eval("wlEnabled" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("acb" + i + "_" + j + "==1") ){
+               eval("anonBlock" + i + "_" + j + ".checked = true");
+            } else {
+               eval("anonBlock" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("anc" + i + "_" + j + "==1") ){
+               eval("anonCall" + i + "_" + j + ".checked = true");
+            } else {
+               eval("anonCall" + i + "_" + j + ".checked = false");
+            }
+
+            if ( eval("dnd" + i + "_" + j + "==1") ){
+               eval("doNotDisturb" + i + "_" + j + ".checked = true");
+            } else {
+               eval("doNotDisturb" + i + "_" + j + ".checked = false");
+            }            
+
+            eval("fwdNum" + i + "_" + j + ".value = cfnum" + i + "_" + j);
+            eval("barPin" + i + "_" + j + ".value = bpin" + i + "_" + j);
+            eval("barDmap" + i + "_" + j + ".value = bdmp" + i + "_" + j);
+            eval("wlNum" + i + "_" + j + ".value = wln" + i + "_" + j);
+            // #ifdef RTF_DEF, warm line timer
+            eval("wlTimer" + i + "_" + j + ".value = wlt" + i + "_" + j);
+         }
+         
+         eval( "regExpTmr" + i + ".value = rt" + i );
+         eval( "regRetryInt" + i + ".value = rrt" + i );
+         eval( "tosByteSip" + i + ".value = tosSip" + i );
+         eval( "tosByteRtp" + i + ".value = tosRtp" + i );
+         eval( "dtmfRelay" + i + ".value = dr" + i );
+         eval( "hookFlashRelay" + i + ".value = hr" + i );
+         eval( "transport" + i + ".value = trp" + i );
+		 eval( "srtpOption" + i + ".value = srtp" + i );
+         eval( "musicServerAddr" + i + ".value = mss" + i );
+         eval( "musicServerPort" + i + ".value = msp" + i );
+		 eval( "confUri" + i + ".value = confuri" + i );
+		 eval( "confOption" + i + ".value = confopt" + i );
+         
+         if ( eval("tagMatch" + i + "== '1'") ) {
+            eval( "enblTagMat" + i + ".checked = true");
+         } else {
+            eval( "enblTagMat" + i + ".checked = false");
+         }
+                  
+         eval( "t38Enable" + i + ".value = vbd" + i );
+         if ( eval("vbd" + i + "==0") ){
+            eval( "t38Enable" + i + ".checked = true" );
+         } else {
+            eval( "t38Enable" + i + ".checked = false" );
+         }
+
+         eval( "v18Enable" + i + ".value = vet" + i );
+         if ( eval("vet" + i + "==1") ){
+            eval( "v18Enable" + i + ".checked = true" );
+         } else {
+            eval( "v18Enable" + i + ".checked = false" );
+         }
+
+         eval( "sipALGEnable" + i + ".value = sipalg" + i );
+         if ( eval("sipalg" + i + "==1") ){
+            eval( "sipALGEnable" + i + ".checked = true" );
+         } else {
+            eval( "sipALGEnable" + i + ".checked = false" );
+         }
+      }
+      
+      if ( fxoBuild ) 
+      {
+         pstnDialPlan.value = pdp;
+         pstnRouteRule.value = prt;
+         if (flexibleAssignment == '0') {
+            pstnRouteData.value = pd;
+         } else {
+            pstnRouteDataVoip.value = pd;
+            
+            //If the VoIP line was set to include a SIP URI,
+            //do not set the 'Line' checkboxes.
+            if ( pstnRouteDataVoip.value.indexOf("@") != -1 ) {
+               return;
+            }
+         
+            //Handle DECT and FXS assigned checkboxes
+            var numTokens = 0;
+            if (pd.length != 0) {
+               var splitFxs = pd.split(",");
+               numTokens = splitFxs.length;
+            }
+            for (var i = 0; i < numDect; i++) {
+               for (var k = 0; k < numTokens; k++) {
+                  if ( eval(splitFxs[k] + " == " + i ) ) {
+                     eval("pstnRouteDataLine" + i + "_dect.checked = true");
+                     break;
+                  } else {
+                     eval("pstnRouteDataLine" + i + "_dect.checked = false");
+                  }
+               }
+            }
+            for ( ; i < numFxs; i++ ) {
+               for (var k = 0; k < numTokens; k++) {
+                  if ( eval(splitFxs[k] + " == " + i ) ) {
+                     eval("pstnRouteDataLine" + i + "_fxs.checked = true");
+                     break;
+                  } else {
+                     eval("pstnRouteDataLine" + i + "_fxs.checked = false");
+                  }
+               }
+            }
+         }
+         printFxoMenu();
+      }
+   }
+}
+
+function PstnRouteCbClick(cb) {
+   if ( cb.value == 'Auto' ) {
+      hidePstnRouteData(1);
+   } else {
+      hidePstnRouteData(0);
+      setPstnRouteDataTxt(cb.value);
+      if( flexibleAssignment == '1' ) {
+         switchPstnRouteData(cb.value);
+      }
+   }
+}
+
+function setPstnRouteDataTxt(txtMode){
+      var idName = "Table5";
+      var table = document.getElementById( idName );
+      var row = table.rows[0];
+      var cell = row.cells[0];
+      //Difference in terminology based on whether callctrl or CCTk is being used.
+      var terminology = ( flexibleAssignment == '1' ) ? "Terminal" : "Endpt";
+      
+      if ( txtMode == "Line" )
+         cell.innerHTML = "Physical " + terminology + " To Route Incoming PSTN Calls To:";
+      else if ( txtMode == "Voip" )
+         cell.innerHTML = "SIP URI of PSTN endpoint:";
+      else
+         cell.innerHTML = "";
+}
+
+function switchPstnRouteData(selected) {
+   var pstnAuto = document.getElementById('AutoPstn');
+   var pstnLine = document.getElementById('LinePstn');
+   var pstnVoip = document.getElementById('VoipPstn');
+   
+   if ( selected == "Auto") {
+      pstnAuto.style.display='inline'
+      pstnLine.style.display='none'
+      pstnVoip.style.display='none'
+   } else if (selected == "Line") {
+      pstnAuto.style.display='none'
+      pstnLine.style.display='inline'
+      pstnVoip.style.display='none'
+   } else {
+      pstnAuto.style.display='none'
+      pstnLine.style.display='none'
+      pstnVoip.style.display='inline'
+   }
+}
+
+function generateTerminalList() {
+   var termList = "";
+   for( var terminal = 0; terminal < numDect; terminal++ ) {
+      termList += "Dect " + terminal + " <input type='checkbox' name='pstnRouteDataLine" + terminal + "_dect'/> ";
+   }
+   //Start FXS numbering at end of Dect numbering.
+   for( ; terminal < numFxs; terminal++ ) {
+      termList += "FXS " + terminal + " <input type='checkbox' name='pstnRouteDataLine" + terminal + "_fxs'/> ";
+   }
+   return termList;
+}
+
+function hidePstnRouteData(hide) {
+   var status = ( hide ) ? 'hidden' : 'visible';
+   
+   //for (var i = 0; i < maxSp; i++) { //This is a GLOBAL parameter, no need for service providers.
+   var idName = "pstnRoutingData";// + i;
+   if (document.getElementById) { // DOM3 = IE5, NS6
+      document.getElementById( idName ).style.visibility = status;
+   }
+   else {
+      if (document.layers == false) {// IE4
+         document.all.pstnRoutingData.style.visibility = status;
+      }
+   }
+   //}
+}
+
+function printFxoMenu() {
+   var status = ( fxoBuild ) ? 'visible' : 'hidden';
+   
+   //for (var i = 0; i < maxSp; i++) { //This is a GLOBAL parameter, no need for service providers.
+   var idName = "pstnData";// + i;
+   if (document.getElementById) { // DOM3 = IE5, NS6
+      document.getElementById( idName ).style.visibility = status;
+   }
+   else {
+      if (document.layers == false) { // IE4
+         document.all.pstnData.style.visibility = status;
+      }
+   }
+}
+
+if ( status == 'visible') {         
+   if ( prt != "Line" && prt != "Voip" ){
+      hidePstnRouteData(1);
+   }
+   else {
+      hidePstnRouteData(0);
+      setPstnRouteDataTxt(prt);
+   }  
+}
+
+
+function generatePerLineTable(index) {
+
+   // Generate the table
+   if (document.body.innerHTML) {     
+      var tableHtmlOutput = "<table id='perLineTable" + index + "' border='1'><tbody id='perLineTbody" + index + "'>";
+
+      // Line row
+      if( flexibleAssignment == '1' )
+      {
+         tableHtmlOutput += "<tr> <td align=center colspan='" + maxLines[index] + "2'><b>Enabled SIP Call Features</b></td> </tr>";
+      }
+      else
+      {
+         tableHtmlOutput += "<tr> <td align=center colspan='" + maxLines[index] + "2'><b>Activated SIP Call Features</b></td> </tr>";
+      }
+      
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'><b>Feature </b><\/td>"
+      for (var line = 1; line <= maxLines[index]; line++) {
+         var data = line-1;
+         tableHtmlOutput += "<td align=center><b>" + "Account " + data + "</b></td>";
+      }
+      if( flexibleAssignment == '1' )
+      {
+         tableHtmlOutput += "<td align=center>" + "<b>Activation Instructions</b>" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call waiting row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Call waiting <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'callwait" + index + "_" + line + "\'>";
+         //var data = "<input type='checkbox' size=10 name=\'callwait" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }      
+      if( flexibleAssignment == '1' )
+      {
+         // tableHtmlOutput += "<td align=left>" + "When enabled, dial *61 to activate, *60 to deactivate" + "</td>";
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *43# to activate, #43# to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call forwarding number row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Call forwarding number <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=40 name=\'fwdNum" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "<td align=center>" + " " + "</td>";
+      tableHtmlOutput += "</tr>";
+      
+      // Call forwarding unconditionally row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Forward unconditionally <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'fwdAll" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {
+         // tableHtmlOutput += "<td align=left>" + "When enabled, dial *71 to activate, *75 to deactivate" + "</td>";
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *21*DN# to activate, #21# to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call forwarding on "busy" row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Forward on \"busy\"<\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'fwdBusy" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {
+         // tableHtmlOutput += "<td align=left>" + "When enabled, dial *71 to activate, *75 to deactivate" + "</td>";
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *67*DN# to activate, #67# to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call forwarding on "no answer" row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Forward on \"no answer\"<\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'fwdNoAns" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         // tableHtmlOutput += "<td align=left>" + "When enabled, dial *71 to activate, *75 to deactivate" + "</td>";
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *61*DN# to activate, #61# to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call barring row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Call barring <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'barEnabled" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *85[PIN]0/*85[PIN]1/*85[PIN]2 to deactivate/activate/activate per digitmap" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Call barring pin row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Call barring pin <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=20 name=\'barPin" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "<td align=center>" + " " + "</td>";
+      tableHtmlOutput += "</tr>";
+
+      // Call barring digitmap row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Call barring digit map <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=20 name=\'barDmap" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "<td align=center>" + " " + "</td>";
+      tableHtmlOutput += "</tr>";
+
+      // Warm line row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Warm line <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'wlEnabled" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + " " + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Warm line number row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Warm line number <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=40 name=\'wlNum" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "Default Number:1210" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // #ifdef RTF_DEF, warm line timer
+      // Warm line timer row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Warm line timer <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=40 name=\'wlTimer" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "Default timer:10 seconds" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Anonymous call blocking row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Anonymous call blocking <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'anonBlock" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *80 to activate, *81 to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Anonymous calling
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Anonymous calling <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'anonCall" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *82<number> to activate for current call" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Anonymous calling
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>DND <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'doNotDisturb" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      if( flexibleAssignment == '1' )
+      {      
+         tableHtmlOutput += "<td align=left>" + "When enabled, dial *86 to activate, *87 to deactivate" + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      //End of table
+      tableHtmlOutput += "</tbody></table>";
+
+      document.getElementById("perLineTablePlaceholder" + index).innerHTML = tableHtmlOutput;
+   } else {
+      alert("Cannot create per line table in this browser.");
+   }
+
+}
+
+function enableButtons(index){
+   var idName = "StartButton" + index;
+   var buttonStart = document.getElementById( idName );
+   idName = "StopButton" + index;
+   var buttonStop = document.getElementById( idName );
+   idName = "ApplyButton" + index;
+   var buttonApply = document.getElementById( idName );
+
+   if ( voiceRunning == 1 ) {
+      buttonStart.disabled = true;
+      buttonStop.disabled = false;
+      buttonApply.disabled = false;
+   } else {
+      buttonStart.disabled = false;
+      buttonStop.disabled = true;
+      buttonApply.disabled = false;
+   }
+}
+
+var tabLinks = new Array();
+var contentDivs = new Array();
+var selectedTab;
+
+function init() {
+
+  // Grab the tab links and content divs from the page
+  var tabListItems = document.getElementById('tabs').childNodes;
+  for ( var i = 0; i < tabListItems.length; i++ ) {
+    if ( tabListItems[i].nodeName == "LI" ) {
+      var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+      var id = getHash( tabLink.getAttribute('href') );
+      tabLinks[id] = tabLink;
+      contentDivs[id] = document.getElementById( id );
+    }
+  }
+
+  // Assign onclick events to the tab links, and
+  // highlight the first tab
+  var i = 0;
+  selectedTab = 0;
+
+  for ( var id in tabLinks ) {
+    tabLinks[id].onclick = showTab;
+    tabLinks[id].onfocus = function() { this.blur() };
+    if ( i == 0 ) tabLinks[id].className = 'selected';
+    i++;
+  }
+
+  // Hide all content divs except the first
+  var i = 0;
+  
+  for ( var id in contentDivs ) {
+    if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
+    i++;
+  }
+}
+
+
+function showTab() {
+  var selectedId = getHash( this.getAttribute('href') );
+
+  // Highlight the selected tab, and dim all others.
+  // Also show the selected content div, and hide all others.
+  for ( var id in contentDivs ) {
+    if ( id == selectedId ) {
+      selectedTab = selectedId;
+      tabLinks[id].className = 'selected';
+      contentDivs[id].className = 'tabContent';
+    } else {
+      tabLinks[id].className = '';
+      contentDivs[id].className = 'tabContent hide';
+    }
+  }
+
+  // Stop the browser following the link
+  return false;
+}
+
+function getFirstChildWithTagName( element, tagName ) {
+  for ( var i = 0; i < element.childNodes.length; i++ ) {
+    if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+  }
+}
+
+function getHash( url ) {
+  var hashPos = url.lastIndexOf ( '#' );
+  return url.substring( hashPos + 1 );
+}
+
+function createTabs() {
+  document.writeln("<ul id='tabs'>");
+  document.writeln("<li><a href='#" + -1 + "'>Global parameters</a></li>");
+    
+  for ( var i = 0; i < maxSp; i++ ) {
+     document.writeln("<li><a href='#" + i + "'>Service Provider " + i + "</a></li>");
+  } 
+}
+
+function createGlobal() {
+   document.writeln("<div class='tabContent' id='" + -1 + "'>");
+   document.writeln("<div>");
+   document.writeln("   <b>Global parameters</b><br>");
+   document.writeln("   <br>");
+   if( fxoBuild )
+   {
+      document.writeln("   <div id='pstnData'>");
+      document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table'>");
+      document.writeln("         <tr>");
+      document.writeln("            <td class='txt' width='150'>Incoming PSTN Call Routing:</td>");
+      document.writeln("            <td class='txt' ><select name='pstnRouteRule' id='pstnRouteRule' size='1' onClick='PstnRouteCbClick(this)'>");
+      document.writeln("               <option value='Auto' selected>");
+      
+      if (flexibleAssignment == '0') {
+      document.writeln("               Auto -  PSTN Call switch to idle line");
+      document.writeln("               <option value='Line'>");
+      document.writeln("               Line -  PSTN Call switch to Physical Line");
+      } else {
+      document.writeln("               Auto -  PSTN Call switch to idle terminal");
+      document.writeln("               <option value='Line'>");
+      document.writeln("               Line -  PSTN Call switch to specific terminal");
+      }
+      document.writeln("               <option value='Voip'>");
+      document.writeln("               Voip -   PSTN Call switch to voip call");
+      document.writeln("            </td>");
+      document.writeln("            <td class='txt'>");
+      document.writeln("               <div id='pstnRoutingData'>");
+      document.writeln("               <table border='0' cellpadding='0' cellspacing='20' ID='Table5'>");
+      document.writeln("                  <tr>");
+      document.writeln("                     <td class='txt' width='175'></td>");
+      document.writeln("                     <td>");
+      if (flexibleAssignment == '0') {
+      document.writeln("                        <input type='text' name='pstnRouteData'>");
+      } else {
+      document.writeln("                        <span id='AutoPstn' style='display:none;'></span>");
+      document.writeln("                        <span id='LinePstn' style='display:none;'>" + generateTerminalList() + "</span>");
+      document.writeln("                        <span id='VoipPstn' style='display:none;'><input type='text' name='pstnRouteDataVoip'/></span>");
+      }
+      document.writeln("                     </td>");
+      document.writeln("                  </tr>");
+      document.writeln("               </table>");
+      document.writeln("               </div>");
+      document.writeln("            </td>");
+      document.writeln("         </tr>");
+      document.writeln("         <tr>");
+      document.writeln("            <td class='txt' width='150'>PSTN DialPlan For Outgoing Calls:</td>");
+      document.writeln("            <td class='txt'><input type='text' name='pstnDialPlan'></td>");
+      document.writeln("         </tr>");
+      document.writeln("      </table>");
+      document.writeln("   <br>");
+      document.writeln("   </div>");
+   }
+   document.writeln("   <center>");
+   document.writeln("      <input type='button' onClick='btnStartSip()' value='Start SIP client' id='StartButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("      <br>");
+   document.writeln("      <input type='button' onClick='btnStopSip()' value='Stop SIP client' id='StopButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("      <br>");
+   document.writeln("      <input type='button' onClick='btnApplySip()' value='Apply' id='ApplyButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("   </center>");
+   document.writeln("   <br>");
+   document.writeln("</div>");
+   document.writeln("</div>");
+}
+
+function createContent() {
+  
+  for (var index = 0; index < maxSp; index++) {
+    document.writeln("<div class='tabContent' id='" + index + "'>");
+    document.writeln("<div>");
+    document.writeln("   <b>Voice -- SIP Advanced configuration</b><br>");
+    document.writeln("   <br>");      
+    document.writeln("   <br>");
+    document.writeln("   <div class='tableWrapper' id='perLineTablePlaceholder" + index + "'>");
+    document.writeln("   <table></table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>" );
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'>");
+    document.writeln("            <input type='checkbox' name='t38Enable" + index + "' ID='Checkbox" + index + "' value='YES' checked></td>");
+    document.writeln("         <td class='txt' colspan='2'>");
+    document.writeln("            Enable T38 support</td>");
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'>");
+    document.writeln("            <input type='checkbox' name='v18Enable" + index + "' ID='Checkbox" + index + "' value='YES' checked></td>");
+    document.writeln("         <td class='txt' colspan='2'>");
+    document.writeln("            Enable V18 support</td>");
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'>");
+    document.writeln("            <input type='checkbox' name='sipALGEnable" + index + "' ID='Checkbox" + index + "' value='YES' checked></td>");
+    document.writeln("         <td class='txt' colspan='2'>");
+    document.writeln("            Enable SIP_ALG support</td>");
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <div id='regExpTmr" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' width='150'>Registration Expire Timeout*</td>");
+    document.writeln("         <td><input type='text' name='regExpTmr" + index + "'></td>");
+    document.writeln("      </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='regRetryInt" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' width='150'>Registration Retry Interval</td>");
+    document.writeln("         <td><input type='text' name='regRetryInt" + index + "'></td>");
+    document.writeln("      </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='tosByteSip" + i + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>DSCP for SIP*:</td>");
+    document.writeln("            <td><select name='tosByteSip" + index + "' size='1'>");
+    document.writeln("               <option value='46' selected>");
+    document.writeln("               EF   (101110)");
+    document.writeln("               <option value='14' >");
+    document.writeln("               AF13 (001110)");
+    document.writeln("               <option value='12' >");
+    document.writeln("               AF12 (001100)");
+    document.writeln("               <option value='10' >");
+    document.writeln("               AF11 (001010)");
+    document.writeln("               <option value='8' >");
+    document.writeln("               CS1  (001000)");
+    document.writeln("               <option value='22' >");
+    document.writeln("               AF23 (010110)");
+    document.writeln("               <option value='20' >");
+    document.writeln("               AF22 (010100)");
+    document.writeln("               <option value='18' >");
+    document.writeln("               AF21 (010010)");
+    document.writeln("               <option value='16' >");
+    document.writeln("               CS2  (010000)");
+    document.writeln("               <option value='30' >");
+    document.writeln("               AF33 (011110)");
+    document.writeln("               <option value='28' >");
+    document.writeln("               AF32 (011100)");
+    document.writeln("               <option value='26' >");
+    document.writeln("               AF31 (011010)");
+    document.writeln("               <option value='24' >");
+    document.writeln("               CS3  (011000)");
+    document.writeln("               <option value='38' >");
+    document.writeln("               AF43 (100110)");
+    document.writeln("               <option value='36' >");
+    document.writeln("               AF42 (100100)");
+    document.writeln("               <option value='34' >");
+    document.writeln("               AF41 (100010)");
+    document.writeln("               <option value='32' >");
+    document.writeln("               CS4  (100000)");
+    document.writeln("               <option value='40' >");
+    document.writeln("               CS5  (101000)");
+    document.writeln("               <option value='48' >");
+    document.writeln("               CS6  (110000)");
+    document.writeln("               <option value='56' >");
+    document.writeln("               CS7  (111000)");
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='tosByteRtp" + i + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>DSCP for RTP*:</td>");
+    document.writeln("            <td><select name='tosByteRtp" + index + "' size='1'>");
+    document.writeln("               <option value='46' selected>");
+    document.writeln("               EF   (101110)");
+    document.writeln("               <option value='14' >");
+    document.writeln("               AF13 (001110)");
+    document.writeln("               <option value='12' >");
+    document.writeln("               AF12 (001100)");
+    document.writeln("               <option value='10' >");
+    document.writeln("               AF11 (001010)");
+    document.writeln("               <option value='8' >");
+    document.writeln("               CS1  (001000)");
+    document.writeln("               <option value='22' >");
+    document.writeln("               AF23 (010110)");
+    document.writeln("               <option value='20' >");
+    document.writeln("               AF22 (010100)");
+    document.writeln("               <option value='18' >");
+    document.writeln("               AF21 (010010)");
+    document.writeln("               <option value='16' >");
+    document.writeln("               CS2  (010000)");
+    document.writeln("               <option value='30' >");
+    document.writeln("               AF33 (011110)");
+    document.writeln("               <option value='28' >");
+    document.writeln("               AF32 (011100)");
+    document.writeln("               <option value='26' >");
+    document.writeln("               AF31 (011010)");
+    document.writeln("               <option value='24' >");
+    document.writeln("               CS3  (011000)");
+    document.writeln("               <option value='38' >");
+    document.writeln("               AF43 (100110)");
+    document.writeln("               <option value='36' >");
+    document.writeln("               AF42 (100100)");
+    document.writeln("               <option value='34' >");
+    document.writeln("               AF41 (100010)");
+    document.writeln("               <option value='32' >");
+    document.writeln("               CS4  (100000)");
+    document.writeln("               <option value='40' >");
+    document.writeln("               CS5  (101000)");
+    document.writeln("               <option value='48' >");
+    document.writeln("               CS6  (110000)");
+    document.writeln("               <option value='56' >");
+    document.writeln("               CS7  (111000)");
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='dtmfRelay" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>Dtmf Relay setting*:</td>");
+    document.writeln("            <td><select name='dtmfRelay" + index + "' size='1'>");
+    document.writeln("               <option value='SIPInfo' >");
+    document.writeln("               SIPInfo");
+    document.writeln("               <option value='RFC2833' >");
+    document.writeln("               RFC2833");
+    document.writeln("               <option value='InBand' selected>");
+    document.writeln("               InBand");
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='hookFlashRelay" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>Hook Flash Relay setting*:</td>");
+    document.writeln("            <td><select name='hookFlashRelay" + index + "' size='1'>");
+    document.writeln("               <option value='SIPInfo' >");
+    document.writeln("               SIPInfo");
+    document.writeln("               <option value='None' selected>");
+    document.writeln("               None");
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='transport" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>SIP Transport protocol*:</td>");
+    document.writeln("            <td><select name='transport" + index + "' size='1'>");
+                                  printTransportListBox();
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <div id='srtpOption" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>SRTP Configuration*:</td>");
+    document.writeln("            <td><select name='srtpOption" + index + "' size='1'>");
+                                  printSrtpOptionListBox();
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>");
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'>");
+    document.writeln("            <input type='checkbox' name='enblTagMat" + index + "' ID='Checkbox" + index + "_6' value='Yes' checked></td>");
+    document.writeln("         <td class='txt' colspan='2'>");
+    document.writeln("            Enable SIP tag matching* (Uncheck for Vonage Interop).");
+    document.writeln("         </td>");
+	document.writeln("         <td class='txt' width='450'><b>(Note: Requires the SIP client to be stopped and then started to take affect)</b></td>");    //RTF_DEF , #7857 , add comment
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <div id='musicServerInfo" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>Music Server*:</td>");
+    document.writeln("            <td><input type='text' name='musicServerAddr" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt'>Music Server port*:</td>");
+    document.writeln("            <td><input type='text' name='musicServerPort" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+	document.writeln("   <br>");
+    document.writeln("   <div id='conferencingInfo" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>Conference URI*:</td>");
+    document.writeln("            <td><input type='text' name='confUri" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>Conference Option*:</td>");
+    document.writeln("            <td><select name='confOption" + index + "' size='1'>");
+                                  printConfOptionListBox();
+    document.writeln("            </select></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <center>");
+    document.writeln("      <input type='button' onClick='btnStartSip()' value='Start SIP client' id='StartButton" + index + "' disabled=true>");
+    document.writeln("      <br>");
+    document.writeln("      <br>");
+    document.writeln("      <input type='button' onClick='btnStopSip()' value='Stop SIP client' id='StopButton" + index + "' disabled=true>");
+    document.writeln("      <br>");
+    document.writeln("      <br>");
+    document.writeln("      <input type='button' onClick='btnApplySip()' value='Apply' id='ApplyButton" + index + "' disabled=true>");
+    document.writeln("      <br>");
+    document.writeln("   </center>");
+    document.writeln("    <br>");
+    document.writeln("    * Changing this parameter for one service provider affects all other service providers.");
+    document.writeln("</div>");
+    document.writeln("</div>");
+    
+  }
+}
+
+</script>
+<body onLoad="frmLoad('advanced')">
+   <blockquote>
+      <form>
+      <script TYPE="text/javascript">
+        createTabs();
+        createGlobal();
+        createContent();
+     </script>  
+     
+     </form>
+   </blockquote>
+</body>
+</html>

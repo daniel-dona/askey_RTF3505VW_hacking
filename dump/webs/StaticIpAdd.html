@@ -1,0 +1,63 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function btnApply() {
+   var loc = 'dhcpdstaticlease.cmd?action=add';
+   with ( document.forms[0] ) {
+
+      if (isValidIpAddress(IpAddr.value) == false) {
+	      alert( 'Address "' + IpAddr.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (isValidMacAddress(MacAddr.value) == false) {
+	      alert( 'Address "' + MacAddr.value + '" is invalid MAC address.');
+	      return;
+      }
+      else {
+	      loc += '&mac=' + MacAddr.value;
+
+    	      loc += '&static_ip=' + IpAddr.value;
+            loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   	      var code = 'location="' + loc + '"';
+   	      eval(code);
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>DHCP Static IP Lease </b><br>
+            <br>
+	    Enter the Mac address and Static IP address then click "Apply/Save" .<br>
+            <br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="180">MAC Address:</td>
+                  <td><input type='text' name='MacAddr'></td>
+               </tr>
+               <tr>
+                  <td>IP Address:</td>
+                  <td><input type='text' name='IpAddr'> </td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

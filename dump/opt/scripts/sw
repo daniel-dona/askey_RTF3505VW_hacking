@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ ! -n "$2" ] ; then
+  echo "Usage: $0 <hexaddr> <val>: Write word to address"
+else
+  echo w $1 $2 1 w > /proc/bcmlog
+fi

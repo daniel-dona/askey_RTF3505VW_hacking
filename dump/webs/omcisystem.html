@@ -1,0 +1,415 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var currEthNum= '<%ejGet(omciEthNum)%>';
+var currMocaNum= '<%ejGet(omciMocaNum)%>';
+
+function frmLoad() {
+   var num = 0;
+
+   with ( document.forms[0] ) {
+      tcontNum.value = '<%ejGet(omciTcontNum)%>';
+      tcontMeId.value = '<%ejGet(omciTcontMeId)%>';
+      ethNum.value = currEthNum;
+      num = parseInt(currEthNum);
+      for (var i = 0; i < num; i++) {
+         switch (i) {
+            case 0:
+               ethMeId1.value = '<%ejGet(omciEthMeId1)%>';
+               break;
+            case 1:
+               ethMeId2.value = '<%ejGet(omciEthMeId2)%>';
+               break;
+            case 2:
+               ethMeId3.value = '<%ejGet(omciEthMeId3)%>';
+               break;
+            case 3:
+               ethMeId4.value = '<%ejGet(omciEthMeId4)%>';
+               break;
+            default:
+               break;
+         }
+      }
+      mocaNum.value = currMocaNum;
+      num = parseInt(currMocaNum);
+      if (num == 1)
+         mocaMeId1.value = '<%ejGet(omciMocaMeId1)%>';
+      dsPrioQueueNum.value = '<%ejGet(omciDsPrioQueueNum)%>';
+
+      if (<%ejGet(omciDbgOmciEnable)%> == 1)
+         chkOmci.checked = true;
+      if (<%ejGet(omciDbgModelEnable)%> == 1)
+         chkModel.checked = true;
+      if (<%ejGet(omciDbgVlanEnable)%> == 1)
+         chkVlan.checked = true;
+      if (<%ejGet(omciDbgCmfEnable)%> == 1)
+         chkCmf.checked = true;
+      if (<%ejGet(omciDbgFlowEnable)%> == 1)
+         chkFlow.checked = true;
+      if (<%ejGet(omciDbgRuleEnable)%> == 1)
+         chkRule.checked = true;
+      if (<%ejGet(omciDbgMcastEnable)%> == 1)
+         chkMcast.checked = true;
+      if (<%ejGet(omciDbgFileEnable)%> == 1)
+         chkFile.checked = true;
+
+      if (chkOmci.checked == true &&
+          chkModel.checked == true &&
+          chkVlan.checked == true &&
+          chkCmf.checked == true &&
+          chkFlow.checked == true &&
+          chkRule.checked == true &&
+          chkMcast.checked == true &&
+          chkFile.checked == true)
+         chkAll.checked = true;
+
+      mode = <%ejGet(omciPathMode)%>;
+      switch (mode)
+      {
+         case 3:
+            chkAllPath.checked = true;
+            chkSwPath.checked = true;
+            chkHwPath.checked = true;
+            break;
+         case 2:
+            chkAllPath.checked = false;
+            chkSwPath.checked = true;
+            chkHwPath.checked = false;
+            break;
+         case 1:
+            chkAllPath.checked = false;
+            chkSwPath.checked = false;
+            chkHwPath.checked = true;
+            break;
+         default:
+            chkAllPath.checked = false;
+            chkSwPath.checked = false;
+            chkHwPath.checked = false;
+            break;
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'omcisystem.cgi?';
+   var num = 0, val = 0;
+
+   with ( document.forms[0] ) {
+      num = parseInt(tcontNum.value);
+
+      if (num > 32 || num < 0) {
+         alert('The number of TCONTs (' + num + ') is out of range [0-32].');
+         return;
+      }
+      loc += 'omciTcontNum=' + num;
+
+      num = parseInt(tcontMeId.value);
+      if (num > 65535 || num < 0) {
+         alert('TCONT managed entity ID (' + num + ') is out of range [0-65535].');
+         return;
+      }
+      loc += '&omciTcontMeId=' + num;
+
+      num = parseInt(ethNum.value);
+      if (num > 4 || num < 0) {
+         alert('The number of Ethernet ports (' + num + ') is out of range [0-4].');
+         return;
+      }
+      loc += '&omciEthNum=' + num;
+
+      for (var i = 0; i < parseInt(currEthNum); i++)
+      {
+         switch (i)
+         {
+            case 0:
+               val = parseInt(ethMeId1.value);
+               if (val > 65535 || val < 0) {
+                  alert('1st Ethernet managed entity ID (' + val + ') is out of range [0-65535].');
+                  return;
+               }
+               loc += '&omciEthMeId1=' + val;
+               break;
+            case 1:
+               val = parseInt(ethMeId2.value);
+               if (val > 65535 || val < 0) {
+                  alert('2nd Ethernet managed entity ID (' + val + ') is out of range [0-65535].');
+                  return;
+               }
+               loc += '&omciEthMeId2=' + val;
+               break;
+            case 2:
+               val = parseInt(ethMeId3.value);
+               if (val > 65535 || val < 0) {
+                  alert('3rd Ethernet managed entity ID (' + val + ') is out of range [0-65535].');
+                  return;
+               }
+               loc += '&omciEthMeId3=' + val;
+               break;
+            case 3:
+               val = parseInt(ethMeId4.value);
+               if (val > 65535 || val < 0) {
+                  alert('4th Ethernet managed entity ID (' + val + ') is out of range [0-65535].');
+                  return;
+               }
+               loc += '&omciEthMeId4=' + val;
+               break;
+            default:
+               break;
+         }
+      }
+
+      num = parseInt(mocaNum.value);
+      if (num > 1 || num < 0) {
+         alert('The number of MoCA ports (' + num + ') is out of range [0-1].');
+         return;
+      }
+      loc += '&omciMocaNum=' + num;
+
+      if (num == 1 && num == parseInt(currMocaNum)) {
+         val = parseInt(mocaMeId1.value);
+         if (val > 65535 || val < 0) {
+            alert('1st Ethernet managed entity ID (' + val + ') is out of range [0-65535].');
+            return;
+         }
+         loc += '&omciMocaMeId1=' + val;
+      }
+
+      num = parseInt(dsPrioQueueNum.value);
+      if (num > 255 || num < 0) {
+         alert('The number of downstream prioirty queues (' + num + ') is out of range [0-255].');
+         return;
+      }
+      loc += '&omciDsPrioQueueNum=' + num;
+
+      if (chkOmci.checked == true)
+         loc += '&omciDbgOmciEnable=1';
+      else
+         loc += '&omciDbgOmciEnable=0';
+      if (chkModel.checked == true)
+         loc += '&omciDbgModelEnable=1';
+      else
+         loc += '&omciDbgModelEnable=0';
+      if (chkVlan.checked == true)
+         loc += '&omciDbgVlanEnable=1';
+      else
+         loc += '&omciDbgVlanEnable=0';
+      if (chkCmf.checked == true)
+         loc += '&omciDbgCmfEnable=1';
+      else
+         loc += '&omciDbgCmfEnable=0';
+      if (chkFlow.checked == true)
+         loc += '&omciDbgFlowEnable=1';
+      else
+         loc += '&omciDbgFlowEnable=0';
+      if (chkRule.checked == true)
+         loc += '&omciDbgRuleEnable=1';
+      else
+         loc += '&omciDbgRuleEnable=0';
+      if (chkMcast.checked == true)
+         loc += '&omciDbgMcastEnable=1';
+      else
+         loc += '&omciDbgMcastEnable=0';
+      if (chkFile.checked == true)
+         loc += '&omciDbgFileEnable=1';
+      else
+         loc += '&omciDbgFileEnable=0';
+
+      if (chkAllPath.checked == true)
+         loc += '&omciPathMode=3';
+      else if (chkSwPath.checked == true)
+         loc += '&omciPathMode=2';
+      else if (chkHwPath.checked == true)
+         loc += '&omciPathMode=1';
+      else
+         loc += '&omciPathMode=0';
+   }
+
+   loc += '&sessionKey=' + sessionKey;
+
+   var code = 'location.assign("' + loc + '")';
+   eval(code);
+}
+
+function allClick(cb) {
+   with ( document.forms[0] ) {
+      if (cb.checked == true)
+      {
+         chkOmci.checked = true;
+         chkModel.checked = true;
+         chkVlan.checked = true;
+         chkCmf.checked = true;
+         chkFlow.checked = true;
+         chkRule.checked = true;
+         chkMcast.checked = true;
+         chkFile.checked = true;
+      }
+      else
+      {
+         chkOmci.checked = false;
+         chkModel.checked = false;
+         chkVlan.checked = false;
+         chkCmf.checked = false;
+         chkFlow.checked = false;
+         chkRule.checked = false;
+         chkMcast.checked = false;
+         chkFile.checked = false;
+      }
+   }
+}
+
+function allPathClick(cb) {
+   with ( document.forms[0] ) {
+      if (cb.checked == true)
+      {
+         chkHwPath.checked = true;
+         chkSwPath.checked = true;
+      }
+      else
+      {
+         chkHwPath.checked = false;
+         chkSwPath.checked = false;
+      }
+   }
+}
+
+function checkPathClick() {
+   with ( document.forms[0] ) {
+      if (chkHwPath.checked == true && chkSwPath.checked == true)
+         chkAllPath.checked = true;
+      else
+         chkAllPath.checked = false;
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>OMCI System - Configuration<br>
+            </b>
+            <br>
+            Select the desired values and click "Apply/Save" to configure the OMCI System options.
+            <br><br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="240">Number of TCONTs:</td>
+                  <td><input type='text' name='tcontNum' size="20" maxlength="256"></td>
+               </tr>
+               <tr>
+                  <td>The first TCONT managed entity ID:</td>
+                  <td><input type='text' name='tcontMeId' size="20" maxlength="256"></td>
+               </tr>
+               <tr>
+                  <td>Number of Ethernet ports:</td>
+                  <td><input type='text' name='ethNum' size="20" maxlength="256"></td>
+               </tr>
+<script language="javascript">
+<!-- hide
+{
+   for (var i = 0; i < parseInt(currEthNum); i++)
+   {
+      document.writeln("               <tr>");
+      document.writeln("                  <td>Ethernet managed entity ID #" + (i+1) + ":</td>");
+      document.writeln("                  <td><input type='text' name='ethMeId" + (i+1) + "' size='20' maxlength='256'></td>");
+      document.writeln("               </tr>");
+   }
+}
+// done hiding -->
+</script>
+               <tr>
+                  <td>Number of MoCA ports:</td>
+                  <td><input type='text' name='mocaNum' size="20" maxlength="256"></td>
+               </tr>
+<script language="javascript">
+<!-- hide
+{
+   for (var i = 0; i < parseInt(currMocaNum); i++)
+   {
+      document.writeln("               <tr>");
+      document.writeln("                  <td>MoCA managed entity ID #" + (i+1) + ":</td>");
+      document.writeln("                  <td><input type='text' name='mocaMeId" + (i+1) + "' size='20' maxlength='256'></td>");
+      document.writeln("               </tr>");
+   }
+}
+// done hiding -->
+</script>
+               <tr>
+                  <td>Number of downstream priority queues:</td>
+                  <td><input type='text' name='dsPrioQueueNum' size="20" maxlength="256"></td>
+               </tr>
+            </table>
+            <br><br>
+            Select the desired checkbox to enable or disable specific debug messages
+            <br>
+            <table border="0" cellpadding="0" cellspacing="10">
+               <tr>
+                  <td><input type='checkbox' name='chkAll' onClick='allClick(this)'></td>
+                  <td> Enable or disable ALL debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkOmci'></td>
+                  <td> Enable or disable OMCI debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkModel'></td>
+                  <td> Enable or disable MODEL debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkVlan'></td>
+                  <td> Enable or disable VLAN debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkCmf'></td>
+                  <td> Enable or disable CMF debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkFlow'></td>
+                  <td> Enable or disable FLOW debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkRule'></td>
+                  <td> Enable or disable RULE debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkMcast'></td>
+                  <td> Enable or disable MULTICAST debug messages.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkFile'></td>
+                  <td> Store debug messages to file.</td>
+               </tr>
+            </table>
+            <br><br>
+            Select the desired checkbox to enable or disable specific data paths
+            <br>
+            <table border="0" cellpadding="0" cellspacing="10">
+               <tr>
+                  <td><input type='checkbox' name='chkAllPath' onClick='allPathClick(this)'></td>
+                  <td> Enable or disable OMCI configuration for ALL data paths.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkHwPath' onClick='checkPathClick()'></td>
+                  <td> Enable or disable OMCI configuration for hardware path.</td>
+               </tr>
+               <tr>
+                  <td><input type='checkbox' name='chkSwPath' onClick='checkPathClick()'></td>
+                  <td> Enable or disable OMCI configuration for software path.</td>
+               </tr>
+            </table>
+            <br><br>
+            <p align="center">
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </P>
+         </form>
+      </blockquote>
+   </body>
+</html>

@@ -1,0 +1,70 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      var igmpTvServices = '<%ejGetOther(igmpTvServices)%>';
+
+      var enblTvServices = '<%ejGet(igmpTvServicesEnabled)%>';
+
+      if (enblTvServices == '1')
+         chkTvServicesEnabled.checked = true;
+      else 
+         chkTvServicesEnabled.checked = false;
+   }
+}
+
+function btnApplySave() {
+   var loc = 'cmdIgmpTvServices.cmd?';
+
+   with ( document.forms[0] ) {
+
+     if (chkTvServicesEnabled.checked == true)
+        loc += 'igmpTvServicesEnabled=1';
+     else
+        loc += 'igmpTvServicesEnabled=0';
+
+   }
+
+   
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+               <b>TV Services</b><br><br>
+               <b>TV Services allow access Movistar TV multicast contents from a smart TV, an Android device or other UPnP/DLNA-capable devices.
+            Select desired values and "Apply/Save".<br><br>
+            </P>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr align ="left">
+                  <td width="30" height="30">
+                     <input type='checkbox' name='chkTvServicesEnabled'></td>
+                  <td colspan="2">
+                  Enable TV Services</td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnApplySave()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

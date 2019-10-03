@@ -1,0 +1,208 @@
+#!/bin/sh
+
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+. /etc/shgw/shgw.constants
+. /etc/shgw/shgw.common
+
+#
+# variables
+__NOW=$(${DATE})
+
+############################################################
+################################################ COMMON
+############################################################
+__pre() {
+	${ECHO} "-------------------- ${1} ----------------------" >> ${DEBUG_DATA_FILE}
+}
+
+__post() {
+	${ECHO} "---------------------------------------------------" >> ${DEBUG_DATA_FILE}
+	${ECHO} >> ${DEBUG_DATA_FILE}
+}
+
+__cmd() {
+	__pre "${1}" >> ${DEBUG_DATA_FILE}
+	${1} >> ${DEBUG_DATA_FILE} 2>> ${DEBUG_DATA_FILE}
+	__post
+}
+
+
+############################################################
+################################################ SYSTEM
+############################################################
+get_version() {
+	${ECHO} "    ... OS Version"
+	__cmd "${CAT} /proc/version"
+}
+
+get_loadavg() {
+	${ECHO} "    ... Load Average"
+	__cmd "${CAT} /proc/loadavg"
+}
+
+get_meminfo() {
+	${ECHO} "    ... Memory Information"
+	__cmd "${CAT} /proc/meminfo"
+}
+
+get_top() {
+	${ECHO} "    ... Top data"
+	__cmd "top -b -n1"
+}
+
+
+get_route_ipv4() {
+	${ECHO} "    ... IPv4 Route"
+	__cmd "${ROUTE} -A inet"
+}
+
+get_route_ipv6() {
+	${ECHO} "    ... IPv6 Route"
+	__cmd "${ROUTE} -A inet6"
+}
+
+get_iptables() {
+	${ECHO} "    ... IPv4 Firewall Information"
+	__cmd "${IPTABLES} -t raw -nvL"
+	__cmd "${IPTABLES} -t filter -nvL"
+	__cmd "${IPTABLES} -t nat -nvL"
+	__cmd "${IPTABLES} -t mangle -nvL"
+	__cmd "${IPTABLES} -t security -nvL"
+}
+
+get_iptables6() {
+	${ECHO} "    ... IPv6 Firewall Information"
+	__cmd "${IP6TABLES} -t raw -nvL"
+	__cmd "${IP6TABLES} -t filter -nvL"
+	__cmd "${IP6TABLES} -t nat -nvL"
+	__cmd "${IP6TABLES} -t mangle -nvL"
+	__cmd "${IP6TABLES} -t security -nvL"
+}
+
+get_internet_status() {
+	${ECHO} "    ... Internet Status (via ping)"
+	__cmd "${PING} -c 1 8.8.8.8"
+	__cmd "${PING} -c 1 www.google.com"
+}
+
+
+############################################################
+################################################ SHGW
+############################################################
+get_shgw_version() {
+	${ECHO} "    ... SHGW version"
+	__cmd "${SHGW_BIN_STORE}""/shgw_version"
+}
+
+get_shgw_proc_info() {
+	${ECHO} "    ... SHGW Processes Information"
+	#__cmd "${PS} | ${GREP} shgw | ${GREP} -v grep"
+	__pre "${PS} | ${GREP} shgw | ${GREP} -v grep" >> ${DEBUG_DATA_FILE}
+	${PS} | ${GREP} shgw | ${GREP} -v grep >> ${DEBUG_DATA_FILE} 2>> ${DEBUG_DATA_FILE}
+	__post
+
+	__procs=`${PS} | ${GREP} shgw | ${GREP} -v grep | ${AWK} '{print $1}'`
+	for _pid in ${__procs}; do
+		_name=$(${CAT} /proc/${_pid}/cmdline)
+		__pre "${_name}"
+		${ECHO} "~~~~~~~~~~~~~~ status ~~~~~~~~~~~~~~~~~~" >> ${DEBUG_DATA_FILE}
+		${CAT} /proc/${_pid}/status >> ${DEBUG_DATA_FILE}
+		${ECHO} >> ${DEBUG_DATA_FILE}
+		
+		${ECHO} "~~~~~~~~~~~~~~ wchan ~~~~~~~~~~~~~~~~~~" >> ${DEBUG_DATA_FILE}
+		${CAT} /proc/${_pid}/wchan >> ${DEBUG_DATA_FILE}
+		${ECHO} >> ${DEBUG_DATA_FILE}
+		__post
+	done
+}
+
+get_shgw_var_shgw_files() {
+	${ECHO} "    ... SHGW files"
+	__cmd "${LS} -la ${SHGW_TMPFS_PATH}*"
+}
+
+get_shgw_persistent_db_dump() {
+	${ECHO} "    ... SHGW Persistent DB data"
+	__cmd "${SQLITE} ${SHGW_PERSISTANT_DB} .dump"
+}
+
+get_shgw_nonpersistent_db_dump() {
+	${ECHO} "    ... SHGW non-Persistent DB data"
+	__cmd "${SQLITE} ${SHGW_NON_PERSISTANT_DB} .dump"
+}
+
+get_shgw_log() {
+	SENSITIVITY_LEVEL=$($ECHO "select value from shgw_config_store where key = 'Sensitivity_level';" | $SQLITE $SHGW_PERSISTANT_DB)
+	[ "$?" != "0" -o "$SENSITIVITY_LEVEL" == "" ] && SENSITIVITY_LEVEL=2
+	
+	if [ ${SENSITIVITY_LEVEL} -eq 0 ]; then
+		REG_EXP=/H\|M\|L/
+	elif [ ${SENSITIVITY_LEVEL} -eq 1 ]; then
+		REG_EXP=/M\|L/
+	else
+		REG_EXP=/L/
+	fi
+	
+	${ECHO} "    ... SHGW Log"
+	__log_files=$(${LS} ${SHGW_TMPFS_PATH}/shgw.log*)
+	for _file in ${__log_files}
+	do
+		$($AWK '$5 ~ '"$REG_EXP"' {print}' ${_file} >> ${DEBUG_DATA_FILE})
+	done
+}
+
+main() {
+	${ECHO} > ${DEBUG_DATA_FILE}
+	${ECHO} "Data being collected: ${DEBUG_DATA_FILE}"
+
+	${ECHO} "==================== ${__NOW} ========================" >> ${DEBUG_DATA_FILE}
+	${ECHO} >> ${DEBUG_DATA_FILE}
+
+	#
+	# common data
+	get_version
+	get_loadavg
+	get_meminfo
+	get_top
+	get_route_ipv4
+	get_route_ipv6
+	get_iptables
+	get_iptables6
+	get_internet_status
+
+	#
+	# shgw data
+	get_shgw_version
+	get_shgw_proc_info
+	get_shgw_var_shgw_files
+	get_shgw_persistent_db_dump
+	get_shgw_nonpersistent_db_dump
+	get_shgw_log
+
+	${ECHO} "====================================================" >> ${DEBUG_DATA_FILE}
+}
+
+main

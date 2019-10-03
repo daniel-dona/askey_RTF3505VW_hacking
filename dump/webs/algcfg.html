@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+        <script language="javascript">
+<!-- hide
+var buildSiproxd = '<%ejGetOther(sysInfo, buildSiproxd)%>';
+var enblSiproxd = '<%ejGet(enblSiproxd)%>';
+var refresh = '<%ejGet(glbRefresh)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+if ( refresh == '1' ) {
+   var loc = 'algcfg.cgi?glbRefresh=0';
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      if ( buildSiproxd == '1' ) {
+         if ( enblSiproxd == '1' ) {
+            Siproxd.checked = true;
+         } else {
+            Siproxd.checked = false;
+         }
+         hideSiproxdInfo(0);
+      } else {
+         hideSiproxdInfo(1);
+      }
+   }
+}
+
+function hideSiproxdInfo(hide) {
+   var status = 'visible';
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('sipproxdInfo').style.visibility = status;
+   else {
+      if (document.layers) { // Netscape 4
+         if ( hide == 1 )
+            document.forms[0].Siproxd.value = '';
+         else
+            document.forms[0].Siproxd.value = enblSiproxd;
+      } else  // IE 4
+         document.all.sipproxdInfo.style.visibility = status;
+   }
+}
+
+function applyClick() {
+   var loc = 'algcfg.cgi?';
+   with ( document.forms[0] ) {
+      if ( buildSiproxd == '1' ) {
+         if ( Siproxd.checked == true )
+            loc += 'enblSiproxd=1';
+         else
+            loc += 'enblSiproxd=0';
+      }
+   }
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <blockquote>
+      <form>
+        <b>ALG</b><br>
+        <br>
+        Select the ALG below.<br>
+        <br>
+        <br>
+        <div id='sipproxdInfo'>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><input type="checkbox" name="Siproxd"> SIP Enabled</td>
+            </tr>
+          </table>
+          <br>
+        </div>
+        <center>
+          <input type='button' onClick='applyClick()' value='Save/Apply'>
+        </center>
+      </form>
+    </blockquote>
+  </body>
+</html>

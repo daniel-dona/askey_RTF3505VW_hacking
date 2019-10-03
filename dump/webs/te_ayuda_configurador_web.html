@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+$(function()
+{       
+    if(ismobile)
+    {
+        $("#PCformat").remove();
+    }
+    else
+    {
+        $("#mobileformat").remove();
+    }
+	$(".description").after("<br>");
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('.description > li').click(function(){	
+		if($(this).next('ul').css('display')=='none')
+			$(this).next('ul').css('display','inline-table');
+		else
+			$(this).next('ul').css('display','none');
+	});
+});
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+	<div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">        
+            <div class="title">Ayuda configurador web</div>
+            <p class="content_word">&iquest;Tienes dudas sobre las opciones que te mostramos para hacer las configuraciones? Desde aqu&iacute; te ayudamos a que entiendas qu&eacute; son y para qu&eacute; sirven:</p>          
+			<div class="description">
+				<!--<li>Introducci&oacute;n</li>
+				<ul>
+					<p>El presente documento detalla el contenido del apartado "Ayuda configurador Web". Este apartado establece a modo de tutorial toda la informaci&oacute;n necesaria para el usuario del Configurador Web de Movistar que necesite conocer el significado de opciones y par&aacute;metros.</p>
+					<p><b>Pautas generales para establecer este contenido en el Configurador Web</b></p>
+					<p>o   El idioma de este contenido debe ser castellano.</p>
+					<p>o   Cada vez que se utilice por primera vez un acr&oacute;nimo, &eacute;ste debe definirse. Todos los acr&oacute;nimos deber&aacute;n estar agrupados en un listado</p>
+					<p>o   Debe tratarse al usuario de "tu" y nunca de "usted"</p>
+					<p><b>A continuaci&oacute;n se detalla el contenido de cada una de las secciones de ayuda del configurador web. Por defecto, cuando el usuario acceda a la secci&oacute;n de ayuda, se mostrar&aacute;n &uacute;nicamente el t&iacute;tulo de las secciones principales, sin mostrar el contenido de &eacute;stas. Una vez el cliente seleccione la secci&oacute;n de la cual necesita conocer la informaci&oacute;n se desplegar&aacute; el correspondiente contenido.</b></p>
+				</ul>-->
+				<li>WiFi</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s configurar todos los bloques de tu red inal&aacute;mbrica</p>
+					<div>Identificador de Red inal&aacute;mbrica (nombre WiFi):</div>
+					<p>Nombre que recibe tu red inal&aacute;mbrica.  Cualquier equipo inal&aacute;mbrico que quiera conectarse a una red inal&aacute;mbrica debe conocer el nombre WiFi de la red. Es un c&oacute;digo incluido en todos los paquetes de una red inal&aacute;mbrica para identificarlos como parte de esa red. Mediante el nombre WiFi se pueden distinguir las distintas redes inal&aacute;mbricas existentes. Por defecto viene definido como: "MOVISTAR_XXXX".</p>
+					<div>Ocultar nombre WiFi:</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s ocultar el nombre WiFi para que no sea visible por nadie y evitar que alguien pueda localizar tu red inal&aacute;mbrica y conectarse a ella.</p> 
+					<div>Clave WiFi alfanum&eacute;rica:</div> 
+					<p>Combinaci&oacute;n de caracteres alfanum&eacute;ricos que te permite acceder a la red inal&aacute;mbrica. Adem&aacute;s se incluye una opci&oacute;n que permite visualizar el nivel de seguridad de la contrase&ntilde;a que has elegido de acceso a tu red inal&aacute;mbrica. Se indican 3 niveles de seguridad, Bajo, Medio y Alto. Te recomendamos siempre que sea posible que el nivel de seguridad de tu contrase&ntilde;a WiFi sea Alto.</p>
+					<div>Tipo de cifrado:</div>
+					<p>o   <b>WPA2:</b> sistema de cifrado m&aacute;s moderno para proteger las redes inal&aacute;mbricas. Se emplea para clientes inal&aacute;mbricos 802.11n. Con WPA2 puedes utilizar tanto el algoritmo de encriptaci&oacute;n AES como TKIP.</p>
+					<p>o   <b>WPA:</b> sistema de cifrado para la protecci&oacute;n de redes inal&aacute;mbricas que surgi&oacute; para corregir las deficiencias del cifrado WEP. Se emplea para clientes inal&aacute;mbricos 802.11g. Con WPA puedes emplear TKIP.</p>
+					<p>o   <b>WEP:</b> primer sistema  de cifrado incluido en el est&aacute;ndar IEEE 802.11. Actualmente ofrece una protecci&oacute;n demasiado d&eacute;bil y relativamente f&aacute;cil de vulnerar. Este tipo de cifrado funciona con clientes 802.11b y 802.11g.  Se recomienda no usar WEP para proteger tu red inal&aacute;mbrica si tienes alternativa, ya que su protecci&oacute;n es demasiado d&eacute;bil y f&aacute;cil de vulnerar.</p>
+					<p>o   <b>Sin cifrado:</b> tu red inal&aacute;mbrica no tiene ning&uacute;n tipo de cifrado. Te recomendamos no utilizar esta opci&oacute;n.</p>
+					<div>Tipo de encriptaci&oacute;n</div>
+					<p>o   <b>AES (Advanced Encription Standard):</b> es un algoritmo de cifrado por bloques, donde el tama&ntilde;o de la clave y del bloque son configurables. Se basa en varias operaciones realizadas en bloques de datos de 16 bytes. Actualmente es m&aacute;s seguro que TKIP.</p>
+					<p>o   <b>TKIP(Temporal Key Integrity Protocol):</b> este algoritmo fue especialmente dise&ntilde;ado para evitar los ataques se produc&iacute;an contra WEP. TKIP empieza con una clave temporal de 128 bits que comparte entre los clientes y los puntos de acceso. Combina esta clave temporal con la direcci&oacute;n MAC de cada cliente y a&ntilde;ade a su vez un vector de inicializaci&oacute;n para producir la clave final con la que se van a cifrar los datos.</p>
+					<p>o   <b>TKIP+AES:</b> combinaci&oacute;n de los dos algoritmos explicados anteriormente.</p> 
+					<div>N&uacute;mero canal WiFi:</div>
+					<p>Por defecto, el canal de radio est&aacute; en modo autom&aacute;tico (seleccionar&aacute; de manera autom&aacute;tica el canal WiFi disponible menos cargado). Tambi&eacute;n podr&aacute;s seleccionar de manera manual el canal en el cual quieres que opere tu red inal&aacute;mbrica.</p>
+					<div>C&oacute;digo QR:</div>  
+					<p>Escaneando el c&oacute;digo QR  mediante una aplicaci&oacute;n lectora de c&oacute;digos QR  que tengas 	instalada en tu equipo inal&aacute;mbrico, podr&aacute;s registrar los datos de la red inal&aacute;mbrica como nombre WiFi, clave inal&aacute;mbrica y tipo de cifrado para poder compartirlo con aquellas personas que quieras que  puedan conectarse a tu WiFi. Adem&aacute;s si tu aplicaci&oacute;n de escaneo lo permite, podr&aacute;s conectarte autom&aacute;ticamente a la red inal&aacute;mbrica con solo escanear este c&oacute;digo.</p>
+					<div>WPS (WiFi Protected Setup):</div>
+					<p>Mecanismo de intercambio seguro de configuraci&oacute;n inal&aacute;mbrica. Este m&eacute;todo permite facilitarte la asociaci&oacute;n de un cliente inal&aacute;mbrico (equipo que conecte con el router y sea compatible con WPS) sin necesidad de introducir la clave inal&aacute;mbrica en dicho cliente o tener que emplear complicados procesos de configuraci&oacute;n.</p>
+					<p>Para saber c&oacute;mo utilizar este m&eacute;todo consulta la Gu&iacute;a de instalaci&oacute;n  que te ha sido entregada junto al router.</p>
+					<div>Filtrado MAC:</div>
+					<p>Mediante esta opci&oacute;n puedes restringir los equipos que pueden acceder a tu red inal&aacute;mbrica. Para ello se crea una tabla con las direcciones MAC de los dispositivos que pueden acceder a la red. Para poder utilizar esta opci&oacute;n de manera correcta realiza los siguientes pasos:</p> 
+					<p>1&ordm;   Escribe la direcci&oacute;n MAC del equipo al cual quieres permitir el acceso en tu red inal&aacute;mbrica.</p>
+					<p>2&ordm;   Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con esa direcci&oacute;n MAC.</p>
+					<p>3&ordm;   Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos".</p>
+				</ul>
+				<li>Puertos</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s abrir los puertos que desees para equipos conectados a tu red.</p>				
+					<p><b>Nombre de la regla de puertos:</b> introduce el nombre que quieras asignarle a la regla de puertos y te permita identificarla de manera intuitiva. Cada una de estas reglas ocupar&aacute; una entrada en la tabla.</p>
+					<p><b>Protocolo:</b> selecciona el protocolo al que se aplica la regla: TCP, UDP o ambos.</p>
+					<p><b>Abrir el puerto o rango de puertos (externo) (WAN):</b> indicar si la regla est&aacute; definida por un puerto o por un rango de estos. Para abrir un  rango de puertos usar el  formato 5001: 5010.</p>
+					<p><b>Abrir el puerto o rango de puertos (interno)(LAN): </b> indicar si la regla est&aacute; definida por un puerto o por un rango de estos.  Para abrir un  rango de puertos usar el  formato 5001: 5010.</p>
+					<p><b>Direcci&oacute;n IP o Rango direcciones IP  local del dispositivo(s):</b> Indicar la direcci&oacute;n IP del equipo asociados al router para el cual se quiere aplicar la regla de puertos definida.</p>
+					<p>Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con la regla de puertos definida.</p>
+					<p>Si deseas deshabilitar temporalmente la regla de puertos, pulsa el bot&oacute;n "Desactivar". Cuando quieras volver a habilitarla  pulsa el bot&oacute;n "Activar".</p>
+					<p>Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos"</p>
+				</ul>
+				<li>Red Local</li>
+				<ul>
+					<p><b>Mapa de red local:</b></p>
+					<p>Opci&oacute;n que permite mostrar de manera gr&aacute;fica e intuitiva todos los dispositivos conectados tu red local. Te permitir&aacute; detectar elementos desconocidos  o intrusos que se hayan conectado a tu Router.</p>
+					<p><b>Configuraci&oacute;n red local:</b></p>
+					<p>Mediante este apartado podr&aacute;s configurar tu LAN, cambiar la IP local (LAN) y su m&aacute;scara de subred. Mediante este apartado tambi&eacute;n podr&aacute;s configurar el servidor DHCP. Aqu&iacute; vienen pre-configuradas la direcci&oacute;n inicial y final de rango de direcciones que el router otorgar&aacute; a los equipos que se conecten a &eacute;l. Tambi&eacute;n permite configurar los servidores DNS pero recomendamos no modificar los que vienen configurados por defecto</p>
+					<div>Direcci&oacute;n IP Gateway:</div>
+					<p>Es la direcci&oacute;n IP privada del router, es decir la direcci&oacute;n que toma el router dentro de la LAN. Por defecto tomar&aacute; el valor  192.168.1.1.</p>
+					<div>M&aacute;scara de subred:</div>
+					<p>Por defecto su valor es 255.255.255.0 lo que equivale a 253 direcciones IP posibles dentro de nuestra LAN. Para cambiar el n&uacute;mero podemos reducir el n&ordm; de ips disponibles en nuestra LAN modificando la m&aacute;scara de subred.</p>
+					<div>DHCP:</div>
+					<p>Se configurar&aacute; el estado del servidor DHCP del router (ACTIVADO/DESACTIVADO). Por defecto est&aacute; activado. En este caso es necesario configurar las direcciones inicial y final del rango de direcciones que el router otorgar&aacute; a los equipos que se conecten a &eacute;l.</p>
+					<div>Servidores DNS:</div>
+					<p>Estos servidores permiten traducir de un nombre de dominio a una direcci&oacute;n IP.</p>
+				</ul>
+				<li>Multipuesto/Monopuesto</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s configurar tu l&iacute;nea en "Multipuesto" o bien en "Monopuesto" seleccionando la opci&oacute;n deseada.</p>
+					<div>Multipuesto:</div>
+					<p>Mediante esta configuraci&oacute;n podr&aacute;s crear una red de varios ordenadores en tu LAN. Es la configuraci&oacute;n por defecto de tu Router.  En esta configuraci&oacute;n, en principio, todos los puertos est&aacute;n "cerrados" (salvo aquellos que siempre est&aacute;n abiertos para permitir la navegaci&oacute;n 	por ejemplo la navegaci&oacute;n por Internet y recibir correo electr&oacute;nico). La IP p&uacute;blica no se la queda el ordenador con el que vas a navegar, se la guarda el propio Router. Este a su vez tiene una IP privada (192.168.1.1), de esta manera cada ordenador o equipo para navegaci&oacute;n debemos 	configurarlo para que utilice como puerta de enlace la direcci&oacute;n IP del Gateway 192.168.1.1  Este modo de configuraci&oacute;n es m&aacute;s seguro que el m&eacute;todo monopuesto.</p>
+					<div>Monopuesto:</div>
+					<p>Mediante el uso de este modo podr&aacute;s tener tu ordenar o equipo cliente conectado directamente a Internet. Este modo permite que tu equipo adquiera directamente la IP p&uacute;blica evitando utilizar NAT  (Network Address Translation) para navegar por Internet. Este m&eacute;todo s&oacute;lo permite tener un 	equipo conectado al Router, consiguiendo una navegaci&oacute;n totalmente transparente. Esto es &uacute;til 	si s&oacute;lo dispones de un equipo en tu red y quieres utilizar programas avanzados que requieran 	configuraci&oacute;n de puertos. Debes configurar una conexi&oacute;n de red en su PC del tipo Banda Ancha 	(PPPoE), el nombre de usuario y contrase&ntilde;a para la conexi&oacute;n PPPoE provista por Movistar.</p>
+                    <p>Este m&eacute;todo es menos seguro que el Multipuesto.</p>
+				</ul>
+				<li>IPv6</li>
+				<ul>
+					<p>IPv6 es la nueva versi&oacute;n del protocolo de internet, actualmente la versi&oacute;n de este protocolo es la v4. Debido al gran crecimiento de usuarios de Internet y dispositivos conectados a la red, implica que el rango de direcciones de IPv4 se termine agotando. IPv4 dispone de 2^32 direcciones (direcciones con una longitud de 32 bits, es decir, 4.294.967.296 direcciones) en cambio IPv6, cuyas direcciones son de longitud de 128 bits dispone de un total de 2^128 posibles direcciones.</p>
+					<p>El despliegue de IPv6 se ir&aacute; realizando gradualmente con un periodo de convivencia con IPv4. Ipv6 se ir&aacute; asentando a medida los equipos de cliente y servicios se vayan adaptando a esta nueva versi&oacute;n del protocolo IP.</p>
+					<div>Red local IPv6</div>
+					<p>La direcci&oacute;n IPv6 est&aacute; formada por un total de 128 bits, dividida en dos partes de 64 bits cada una. Los 64 bits de mayor peso los constituyen los 48 bits que entrega el  proveedor de acceso o 	administrador de la red. Los siguientes 16 bits indican la subred concreta. Los 64 bits de menor peso se configuran autom&aacute;ticamente por medio del identificador de interfaz.</p>
+					<p>o   <b>Direcci&oacute;n Local IPv6:</b>direcci&oacute;n en formato IPv6 que se mostrar&aacute; cuando no tengamos acceso a Internet.</p>
+					<p>o   <b>Direcci&oacute;n global IPv6:</b>direcci&oacute;n que se mostrar&aacute; cuando tengamos acceso a Internet con direcci&oacute;n IPv6. Este concepto de direcciones globales en IPV6 es lo mismo al de direcciones p&uacute;blicas en IPV4.</p>
+					<p>o   <b>Longitud prefijo de subred:</b> valor decimal que indica cuantos bits contiguos de la parte izquierda de la direcci&oacute;n IPv6 componen el prefijo. Dejando el valor 64 se indica que &uacute;nicamente tenemos una subred</p>
+					<p>o   <b>Autoconfiguraci&oacute;n(stateless):</b>Este modo no requiere ninguna configuraci&oacute;n manual de hosts ni precisa servidores adicionales. Permite a un host crear su propia direcci&oacute;n mediante 	combinaci&oacute;n de informaci&oacute;n disponible de manera local o informaci&oacute;n publicada por los routers. Es decir permite al equipo configurarse por s&iacute; mismo, pudiendo establecer comunicaci&oacute;n con el 	resto de dispositivos de la misma red</p>
+					<p>o   <b>Rango fijo (stateful):</b>m&eacute;todo que dispone de un servidor DHCPv6 donde podr&aacute; establecer el rango de direcciones que est&aacute;n permitidas y ser&aacute;n asignadas dentro de la 	red local LAN). Es necesario establecer la direcci&oacute;n de inicio y fin de rango en los campos 	correspondientes</p>
+					<div>Puertos IPv6</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s abrir los puertos  que desees para equipos conectados a tu red en la configuraci&oacute;n IPv6.</p>
+					<p>o   <b>Nombre de la regla de puertos:</b>introduce el nombre que quieras asignarle a la regla de puertos y te permita identificarla de manera intuitiva. Cada una de estas reglas ocupar&aacute; una entrada en la tabla.</p>
+					<p>o   <b>Direcci&oacute;n IPv6 global del dispositivo:</b>Indicar la direcci&oacute;n IP v6 global del dispositivo al cual se quiere aplicar la regla de puertos definida.</p>
+					<p>o   <b>Protocolo:</b> selecciona el protocolo al que se aplica la regla: TCP, UDP o ambos</p>
+					<p>o   <b>Abrir el puerto o rango de puertos:</b>indicar si la regla est&aacute; definida por un puerto o por un rango de  estos. Para abrir un  rango de puertos usar el  formato 5001: 5010</p>
+					<p>Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con la regla de puertos definida</p>
+					<p>Si deseas deshabilitar temporalmente la regla de puertos, pulsa el bot&oacute;n "Desactivar". Cuando quieras volver a habilitarla  pulsa el bot&oacute;n "Activar".</p>
+					<p>Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos"</p>
+				</ul>
+				<li>Cambio contrase&ntilde;a Router</li>
+				<ul>
+					<div>Cambio contrase&ntilde;a Router:</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s cambiar la contrase&ntilde;a de acceso a tu router. Por defecto la contrase&ntilde;a de acceso, es la definida en la pegatina que podr&aacute;s encontrar debajo del router denominada "Datos de acceso al router".  La nueva contrase&ntilde;a que establezcas para entrar a tu Router debe ser alfanum&eacute;rica y se recomienda que sea de al menos 8 caracteres.</p>
+					<p class="Mloginlogo"></p>
+				</ul>
+				<li>Actualizaciones Firmware</li>
+				<ul>
+					<p>Esta opci&oacute;n permite que actualizar la versi&oacute;n Firmware de tu Router de dos formas diferentes:</p>
+					<div>Actualiza el Firmware desde tu PC:</div>
+					<p>Si dispones de la &uacute;ltima versi&oacute;n Firmware y deseas actualizar tu Router de manera manual, pulsa 	el bot&oacute;n "Buscar" para seleccionar el archivo y cargarlo en tu Router.</p>
+					<div>Actualiza el Firmware desde la red de Movistar:</div>
+					<p>Mediante esta opci&oacute;n, si hay nuevas versiones Firmware con las que puedes actualizar tu Router, se te indicar&aacute; mediante un mensaje indicando la &uacute;ltima versi&oacute;n de FW disponible. &Uacute;nicamente debes pulsar el bot&oacute;n "Actualizar" y tu equipo quedar&aacute; actualizado a la &uacute;ltima versi&oacute;n disponible en ese momento. Si al pulsar la opci&oacute;n "Actualiza el Firmware desde 	la red de Movistar" no se detecta ninguna actualizaci&oacute;n, se te informar&aacute; de esto y ser&aacute; suficiente con que pulses el bot&oacute;n "Cerrar".</p>
+				</ul>
+				<li>Otras funcionalidades</li>
+				<ul>
+					<div>Crear perfil o recuperar uno guardado</div>
+					<p>Esta opci&oacute;n te permitir&aacute; guardar en un archivo.img  la configuraci&oacute;n concreta del router,  con todos los par&aacute;metros  para recuperarla m&aacute;s adelante.  Un perfil es un conjunto de reglas y 	par&aacute;metros que se aplican para crear una configuraci&oacute;n determinada. Se guardan todos los par&aacute;metros que definen tu router, tales como los de la red inal&aacute;mbrica, configuraci&oacute;n de red local,  filtrado MAC, apertura de puertos, etc.</p>
+					<p>Puedes guardar este perfil con el nombre que desees y cargar el perfil cuando lo desees 	presionando el bot&oacute;n "Guardar". Al hacer click en este bot&oacute;n se te mostrar&aacute; un resumen del perfil 	donde debes a&ntilde;adir el nombre  que quieras darle al perfil. Pulsa el bot&oacute;n "Aceptar" para 	almacenarlo. Si finalmente no quieres almacenarlo haz click en el bot&oacute;n "Cancelar".</p>
+					<p>Para recuperar un perfil previamente guardado haz click en el bot&oacute;n "Cargar" y selecciona uno de los perfiles que se muestren. Cuando selecciones uno de ellos se te mostrar&aacute; un resumen con 	todos los par&aacute;metros. Si deseas guardar el perfil haz click en "Aceptar" y si finalmente no deseas 	guardarlo haz click en "Cancelar"</p>
+					<div>Restaurar a valores a f&aacute;brica</div>
+					<p>Esta opci&oacute;n te permite restaurar la configuraci&oacute;n por defecto de f&aacute;brica del Router. Debes tener en cuenta que si empleas est&aacute; opci&oacute;n, se borrar&aacute;n todos los par&aacute;metros configurados en tu Router, como por ejemplo la contrase&ntilde;a de acceso al Router, nombre y contrase&ntilde;a de tu red inal&aacute;mbrica, etc.tomando de nuevo los valores de la configuraci&oacute;n inicial.</p>
+					<div>Firewall</div>
+					<p>Podr&aacute;s configurar el Firewall que trae el router para proteger nuestro PC de ataques externos. Te recomendamos no desactivarlo para tener protegido tu PC. Si deseas configurarlo solo tienes que 	hacer click aqu&iacute;, o bien a trav&eacute;s de la opci&oacute;n: Otras funcionalidades-->Firewall</p>
+					<div>Protocolo UPnP</div>
+					<p>Esta opci&oacute;n te permitir&aacute; activar/desactivar la funcionalidad conocida como Universal Plug and Play (UPnP).</p>
+					<p>Permite descubrir de manera autom&aacute;tica un dispositivo nuevo conectado en tu red local y puedan ser utilizados casi de manera instant&aacute;nea sin ser configurados. Una vez que el nuevo equipo se haya configurado correctamente, puedes desactivarlo. Para m&aacute;s informaci&oacute;n consulta el manual del fabricante del router.</p>
+				</ul>
+				<li>Ayuda</li>
+				<ul>
+					<div>Ayuda configurador web: </div>
+					<p>Tutorial sobre cada uno de los apartados del configurador web.</p>
+					<div>Acerca de:</div>
+					<p>Resumen con informaci&oacute;n relevante acerca de la configuraci&oacute;n de tu Router y  tu conexi&oacute;n.</p> 
+					<p>Este apartado muestra los siguientes par&aacute;metros:</p>
+					<div>Informaci&oacute;n del equipo:</div>
+					<p>Permite identificar tu router y las diferentes versiones de Hardware, Software y Firmware, 	etc. Tambi&eacute;n podr&aacute;s identificar de una manera r&aacute;pida si tu equipo est&aacute; conectado o no a Internet.</p>
+					<div>Informaci&oacute;n WAN:</div>
+					<p><b>Direcci&oacute;n IP WAN (Internet):</b>Direcci&oacute;n IP p&uacute;blica de tu router.</p>
+					<!--<p><b>Velocidad de sincronismo:</b>Frecuencia a la cual trabaja tu router, es decir, la velocidad que se negocia con tu central local. Dentro de la velocidad de sincronismo debemos diferenciar la velocidad de bajada (es decir, velocidad a la cual recibes datos de Internet) o velocidad de subida (es decir, velocidad a la cual puedes enviar datos a Internet).</p>
+					<p style="color:gray;">[NOTA: Este apartado &uacute;nicamente se mostrar&aacute; para Routers ADSL para equipos de Fibra &Oacute;ptica no aplica]</p>-->
+					<div>Informaci&oacute;n Red Local (LAN):</div>
+					<p><b>M&aacute;scara de subred:</b> muestra el valor de tu m&aacute;scara de subred.</p>
+					<p><b>DHCP:</b> en caso de estar activado el servidor DHCP mostrar&aacute; las direcciones de inicio y final de rango de direcciones que se pueden asignar a los equipos asociados a tu 	Router.</p>
+					<p><b>Servidor DNS:</b>muestra el valor de tu servidor DNS. </p>
+					<p>Para m&aacute;s informaci&oacute;n sobre estos par&aacute;metros de tu red local  consulta el apartado "Red 	Local" de este tutorial.</p>
+					<div>Informaci&oacute;n Red inal&aacute;mbrica</div>
+					<p><b>Estado WiFi:</b> muestra si est&aacute;s o no conectado de manera inal&aacute;mbrica.</p>
+				    <p><b>Nombre WiFi:</b> Nombre de tu red inal&aacute;mbrica.</p>
+					<p><b>Oculto Nombre WiFi:</b>Te indica si tienes o no oculto el nombre que identifica tu red 	inal&aacute;mbrica.</p>
+					<p><b>Tipo cifrado:</b> muestra el cifrado que has establecido a tu red inal&aacute;mbrica.</p>
+					<p><b>Encriptaci&oacute;n:</b> muestra la encriptaci&oacute;n establecida a tu red inal&aacute;mbrica</p>
+					<p>Para m&aacute;s informaci&oacute;n sobre estos par&aacute;metros de tu red inal&aacute;mbrica consulta el apartado "WiFi" de este tutorial</p>
+					<div>Informaci&oacute;n Movistar TV</div>
+					<p><b>Servicio contratado:</b>muestra si el cliente tiene un servicio Tr&iacute;o o un D&uacute;o  contratado</p>
+				    <p><b>Tipo de direccionamiento:</b>Indica el tipo de direccionamiento de la l&iacute;nea del cliente. El direccionamiento din&aacute;mico es el m&aacute;s habitual. Para tener direccionamiento est&aacute;tico, el 	cual deber&aacute;s contratar con Movistar y configurar los valores que te han proporcionado.</p>
+					<p><b>Servicio de voz:</b>Indica si tienes servicio de Voz sobre IP</p>
+					<p><b>N&uacute;mero de Tel&eacute;fono:</b>muestra tu n&uacute;mero de tel&eacute;fono</p>
+					<!--<p style="color:gray;">[NOTA: Este apartado &uacute;nicamente se mostrar&aacute; para equipos que integren funcionalidad IPTV]</p>-->
+					<div>Informaci&oacute;n de acceso</div>
+					<p><b>Id_ONT:</b> n&uacute;mero de acceso a tu ONT.</p>
+					<!--<p style="color:gray;">[NOTA:  este apartado &uacute;nicamente se mostrar&aacute; para 	Equipos integrados que incluyan la funcionalidad de ONT]</p>-->				
+				</ul>
+				<li>Configuraci&oacute;n Avanzada</li>
+				<ul>
+					<p>Mediante este bloque de funcionalidades, podr&aacute;s realizar otras opciones de configuraci&oacute;n m&aacute;s avanzas, proporcionadas por el fabricante del router. Si no dispones de conocimientos t&eacute;cnicos avanzados te recomendamos no modificar ninguno de los par&aacute;metros accesibles desde el entorno de configuraci&oacute;n avanzada.</p>
+				</ul>
+			</div>		
+        </div>      
+    </div>  
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">          	
+            <p class="Mtitle">Ayuda configurador web</p>
+            <p class="Mcontent_word">&iquest;Tienes dudas sobre las opciones que te mostramos para hacer las configuraciones? Desde aqu&iacute; te ayudamos a que entiendas qu&eacute; son y para qu&eacute; sirven:</p>
+			<div class="description">
+				<!--<li>Introducci&oacute;n</li>
+				<ul>
+					<p>El presente documento detalla el contenido del apartado "Ayuda configurador Web". Este apartado establece a modo de tutorial toda la informaci&oacute;n necesaria para el usuario del Configurador Web de Movistar que necesite conocer el significado de opciones y par&aacute;metros.</p>
+					<p><b>Pautas generales para establecer este contenido en el Configurador Web</b></p>
+					<p>o   El idioma de este contenido debe ser castellano.</p>
+					<p>o   Cada vez que se utilice por primera vez un acr&oacute;nimo, &eacute;ste debe definirse. Todos los acr&oacute;nimos deber&aacute;n estar agrupados en un listado</p>
+					<p>o   Debe tratarse al usuario de "tu" y nunca de "usted"</p>
+					<p><b>A continuaci&oacute;n se detalla el contenido de cada una de las secciones de ayuda del configurador web. Por defecto, cuando el usuario acceda a la secci&oacute;n de ayuda, se mostrar&aacute;n &uacute;nicamente el t&iacute;tulo de las secciones principales, sin mostrar el contenido de &eacute;stas. Una vez el cliente seleccione la secci&oacute;n de la cual necesita conocer la informaci&oacute;n se desplegar&aacute; el correspondiente contenido.</b></p>
+				</ul>-->
+				<li>WiFi</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s configurar todos los bloques de tu red inal&aacute;mbrica</p>
+					<div>Identificador de Red inal&aacute;mbrica (nombre WiFi):</div>
+					<p>Nombre que recibe tu red inal&aacute;mbrica.  Cualquier equipo inal&aacute;mbrico que quiera conectarse a una red inal&aacute;mbrica debe conocer el nombre WiFi de la red. Es un c&oacute;digo incluido en todos los paquetes de una red inal&aacute;mbrica para identificarlos como parte de esa red. Mediante el nombre WiFi se pueden distinguir las distintas redes inal&aacute;mbricas existentes. Por defecto viene definido como: "MOVISTAR_XXXX".</p>
+					<div>Ocultar nombre WiFi:</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s ocultar el nombre WiFi para que no sea visible por nadie y evitar que alguien pueda localizar tu red inal&aacute;mbrica y conectarse a ella.</p> 
+					<div>Clave WiFi alfanum&eacute;rica:</div> 
+					<p>Combinaci&oacute;n de caracteres alfanum&eacute;ricos que te permite acceder a la red inal&aacute;mbrica. Adem&aacute;s se incluye una opci&oacute;n que permite visualizar el nivel de seguridad de la contrase&ntilde;a que has elegido de acceso a tu red inal&aacute;mbrica. Se indican 3 niveles de seguridad, Bajo, Medio y Alto. Te recomendamos siempre que sea posible que el nivel de seguridad de tu contrase&ntilde;a WiFi sea Alto.</p>
+					<div>Tipo de cifrado:</div>
+					<p>o   <b>WPA2:</b> sistema de cifrado m&aacute;s moderno para proteger las redes inal&aacute;mbricas. Se emplea para clientes inal&aacute;mbricos 802.11n. Con WPA2 puedes utilizar tanto el algoritmo de encriptaci&oacute;n AES como TKIP.</p>
+					<p>o   <b>WPA:</b> sistema de cifrado para la protecci&oacute;n de redes inal&aacute;mbricas que surgi&oacute; para corregir las deficiencias del cifrado WEP. Se emplea para clientes inal&aacute;mbricos 802.11g. Con WPA puedes emplear TKIP.</p>
+					<p>o   <b>WEP:</b> primer sistema  de cifrado incluido en el est&aacute;ndar IEEE 802.11. Actualmente ofrece una protecci&oacute;n demasiado d&eacute;bil y relativamente f&aacute;cil de vulnerar. Este tipo de cifrado funciona con clientes 802.11b y 802.11g.  Se recomienda no usar WEP para proteger tu red inal&aacute;mbrica si tienes alternativa, ya que su protecci&oacute;n es demasiado d&eacute;bil y f&aacute;cil de vulnerar.</p>
+					<p>o   <b>Sin cifrado:</b> tu red inal&aacute;mbrica no tiene ning&uacute;n tipo de cifrado. Te recomendamos no utilizar esta opci&oacute;n.</p>
+					<div>Tipo de encriptaci&oacute;n</div>
+					<p>o   <b>AES (Advanced Encription Standard):</b> es un algoritmo de cifrado por bloques, donde el tama&ntilde;o de la clave y del bloque son configurables. Se basa en varias operaciones realizadas en bloques de datos de 16 bytes. Actualmente es m&aacute;s seguro que TKIP.</p>
+					<p>o   <b>TKIP(Temporal Key Integrity Protocol):</b> este algoritmo fue especialmente dise&ntilde;ado para evitar los ataques se produc&iacute;an contra WEP. TKIP empieza con una clave temporal de 128 bits que comparte entre los clientes y los puntos de acceso. Combina esta clave temporal con la direcci&oacute;n MAC de cada cliente y a&ntilde;ade a su vez un vector de inicializaci&oacute;n para producir la clave final con la que se van a cifrar los datos.</p>
+					<p>o   <b>TKIP+AES:</b> combinaci&oacute;n de los dos algoritmos explicados anteriormente.</p> 
+					<div>N&uacute;mero canal WiFi:</div>
+					<p>Por defecto, el canal de radio est&aacute; en modo autom&aacute;tico (seleccionar&aacute; de manera autom&aacute;tica el canal WiFi disponible menos cargado). Tambi&eacute;n podr&aacute;s seleccionar de manera manual el canal en el cual quieres que opere tu red inal&aacute;mbrica.</p>
+					<div>C&oacute;digo QR:</div>  
+					<p>Escaneando el c&oacute;digo QR  mediante una aplicaci&oacute;n lectora de c&oacute;digos QR  que tengas 	instalada en tu equipo inal&aacute;mbrico, podr&aacute;s registrar los datos de la red inal&aacute;mbrica como nombre WiFi, clave inal&aacute;mbrica y tipo de cifrado para poder compartirlo con aquellas personas que quieras que  puedan conectarse a tu WiFi. Adem&aacute;s si tu aplicaci&oacute;n de escaneo lo permite, podr&aacute;s conectarte autom&aacute;ticamente a la red inal&aacute;mbrica con solo escanear este c&oacute;digo.</p>
+					<div>WPS (WiFi Protected Setup):</div>
+					<p>Mecanismo de intercambio seguro de configuraci&oacute;n inal&aacute;mbrica. Este m&eacute;todo permite facilitarte la asociaci&oacute;n de un cliente inal&aacute;mbrico (equipo que conecte con el router y sea compatible con WPS) sin necesidad de introducir la clave inal&aacute;mbrica en dicho cliente o tener que emplear complicados procesos de configuraci&oacute;n.</p>
+					<p>Para saber c&oacute;mo utilizar este m&eacute;todo consulta la Gu&iacute;a de instalaci&oacute;n  que te ha sido entregada junto al router.</p>
+					<div>Filtrado MAC:</div>
+					<p>Mediante esta opci&oacute;n puedes restringir los equipos que pueden acceder a tu red inal&aacute;mbrica. Para ello se crea una tabla con las direcciones MAC de los dispositivos que pueden acceder a la red. Para poder utilizar esta opci&oacute;n de manera correcta realiza los siguientes pasos:</p> 
+					<p>1&ordm;   Escribe la direcci&oacute;n MAC del equipo al cual quieres permitir el acceso en tu red inal&aacute;mbrica.</p>
+					<p>2&ordm;   Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con esa direcci&oacute;n MAC.</p>
+					<p>3&ordm;   Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos".</p>
+				</ul>
+				<li>Puertos</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s abrir los puertos que desees para equipos conectados a tu red.</p>				
+					<p><b>Nombre de la regla de puertos:</b> introduce el nombre que quieras asignarle a la regla de puertos y te permita identificarla de manera intuitiva. Cada una de estas reglas ocupar&aacute; una entrada en la tabla.</p>
+					<p><b>Protocolo:</b> selecciona el protocolo al que se aplica la regla: TCP, UDP o ambos.</p>
+					<p><b>Abrir el puerto o rango de puertos (externo) (WAN):</b> indicar si la regla est&aacute; definida por un puerto o por un rango de estos. Para abrir un  rango de puertos usar el  formato 5001: 5010.</p>
+					<p><b>Abrir el puerto o rango de puertos (interno)(LAN): </b> indicar si la regla est&aacute; definida por un puerto o por un rango de estos.  Para abrir un  rango de puertos usar el  formato 5001: 5010.</p>
+					<p><b>Direcci&oacute;n IP o Rango direcciones IP  local del dispositivo(s):</b> Indicar la direcci&oacute;n IP del equipo asociados al router para el cual se quiere aplicar la regla de puertos definida.</p>
+					<p>Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con la regla de puertos definida.</p>
+					<p>Si deseas deshabilitar temporalmente la regla de puertos, pulsa el bot&oacute;n "Desactivar". Cuando quieras volver a habilitarla  pulsa el bot&oacute;n "Activar".</p>
+					<p>Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos"</p>
+				</ul>
+				<li>Red Local</li>
+				<ul>
+					<p><b>Mapa de red local:</b></p>
+					<p>Opci&oacute;n que permite mostrar de manera gr&aacute;fica e intuitiva todos los dispositivos conectados tu red local. Te permitir&aacute; detectar elementos desconocidos  o intrusos que se hayan conectado a tu Router.</p>
+					<p><b>Configuraci&oacute;n red local:</b></p>
+					<p>Mediante este apartado podr&aacute;s configurar tu LAN, cambiar la IP local (LAN) y su m&aacute;scara de subred. Mediante este apartado tambi&eacute;n podr&aacute;s configurar el servidor DHCP. Aqu&iacute; vienen pre-configuradas la direcci&oacute;n inicial y final de rango de direcciones que el router otorgar&aacute; a los equipos que se conecten a &eacute;l. Tambi&eacute;n permite configurar los servidores DNS pero recomendamos no modificar los que vienen configurados por defecto</p>
+					<div>Direcci&oacute;n IP Gateway:</div>
+					<p>Es la direcci&oacute;n IP privada del router, es decir la direcci&oacute;n que toma el router dentro de la LAN. Por defecto tomar&aacute; el valor  192.168.1.1.</p>
+					<div>M&aacute;scara de subred:</div>
+					<p>Por defecto su valor es 255.255.255.0 lo que equivale a 253 direcciones IP posibles dentro de nuestra LAN. Para cambiar el n&uacute;mero podemos reducir el n&ordm; de ips disponibles en nuestra LAN modificando la m&aacute;scara de subred.</p>
+					<div>DHCP:</div>
+					<p>Se configurar&aacute; el estado del servidor DHCP del router (ACTIVADO/DESACTIVADO). Por defecto est&aacute; activado. En este caso es necesario configurar las direcciones inicial y final del rango de direcciones que el router otorgar&aacute; a los equipos que se conecten a &eacute;l.</p>
+					<div>Servidores DNS:</div>
+					<p>Estos servidores permiten traducir de un nombre de dominio a una direcci&oacute;n IP.</p>
+				</ul>
+				<li>Multipuesto/Monopuesto</li>
+				<ul>
+					<p>Mediante esta opci&oacute;n podr&aacute;s configurar tu l&iacute;nea en "Multipuesto" o bien en "Monopuesto" seleccionando la opci&oacute;n deseada.</p>
+					<div>Multipuesto:</div>
+					<p>Mediante esta configuraci&oacute;n podr&aacute;s crear una red de varios ordenadores en tu LAN. Es la configuraci&oacute;n por defecto de tu Router.  En esta configuraci&oacute;n, en principio, todos los puertos est&aacute;n "cerrados" (salvo aquellos que siempre est&aacute;n abiertos para permitir la navegaci&oacute;n 	por ejemplo la navegaci&oacute;n por Internet y recibir correo electr&oacute;nico). La IP p&uacute;blica no se la queda el ordenador con el que vas a navegar, se la guarda el propio Router. Este a su vez tiene una IP privada (192.168.1.1), de esta manera cada ordenador o equipo para navegaci&oacute;n debemos 	configurarlo para que utilice como puerta de enlace la direcci&oacute;n IP del Gateway 192.168.1.1  Este modo de configuraci&oacute;n es m&aacute;s seguro que el m&eacute;todo monopuesto.</p>
+					<div>Monopuesto:</div>
+					<p>Mediante el uso de este modo podr&aacute;s tener tu ordenar o equipo cliente conectado directamente a Internet. Este modo permite que tu equipo adquiera directamente la IP p&uacute;blica evitando utilizar NAT  (Network Address Translation) para navegar por Internet. Este m&eacute;todo s&oacute;lo permite tener un 	equipo conectado al Router, consiguiendo una navegaci&oacute;n totalmente transparente. Esto es &uacute;til 	si s&oacute;lo dispones de un equipo en tu red y quieres utilizar programas avanzados que requieran 	configuraci&oacute;n de puertos. Debes configurar una conexi&oacute;n de red en su PC del tipo Banda Ancha 	(PPPoE), el nombre de usuario y contrase&ntilde;a para la conexi&oacute;n PPPoE provista por Movistar.</p>
+                    <p>Este m&eacute;todo es menos seguro que el Multipuesto.</p>
+				</ul>
+				<li>IPv6</li>
+				<ul>
+					<p>IPv6 es la nueva versi&oacute;n del protocolo de internet, actualmente la versi&oacute;n de este protocolo es la v4. Debido al gran crecimiento de usuarios de Internet y dispositivos conectados a la red, implica que el rango de direcciones de IPv4 se termine agotando. IPv4 dispone de 2^32 direcciones (direcciones con una longitud de 32 bits, es decir, 4.294.967.296 direcciones) en cambio IPv6, cuyas direcciones son de longitud de 128 bits dispone de un total de 2^128 posibles direcciones.</p>
+					<p>El despliegue de IPv6 se ir&aacute; realizando gradualmente con un periodo de convivencia con IPv4. Ipv6 se ir&aacute; asentando a medida los equipos de cliente y servicios se vayan adaptando a esta nueva versi&oacute;n del protocolo IP.</p>
+					<div>Red local IPv6</div>
+					<p>La direcci&oacute;n IPv6 est&aacute; formada por un total de 128 bits, dividida en dos partes de 64 bits cada una. Los 64 bits de mayor peso los constituyen los 48 bits que entrega el  proveedor de acceso o 	administrador de la red. Los siguientes 16 bits indican la subred concreta. Los 64 bits de menor peso se configuran autom&aacute;ticamente por medio del identificador de interfaz.</p>
+					<p>o   <b>Direcci&oacute;n Local IPv6:</b>direcci&oacute;n en formato IPv6 que se mostrar&aacute; cuando no tengamos acceso a Internet.</p>
+					<p>o   <b>Direcci&oacute;n global IPv6:</b>direcci&oacute;n que se mostrar&aacute; cuando tengamos acceso a Internet con direcci&oacute;n IPv6. Este concepto de direcciones globales en IPV6 es lo mismo al de direcciones p&uacute;blicas en IPV4.</p>
+					<p>o   <b>Longitud prefijo de subred:</b> valor decimal que indica cuantos bits contiguos de la parte izquierda de la direcci&oacute;n IPv6 componen el prefijo. Dejando el valor 64 se indica que &uacute;nicamente tenemos una subred</p>
+					<p>o   <b>Autoconfiguraci&oacute;n(stateless):</b>Este modo no requiere ninguna configuraci&oacute;n manual de hosts ni precisa servidores adicionales. Permite a un host crear su propia direcci&oacute;n mediante 	combinaci&oacute;n de informaci&oacute;n disponible de manera local o informaci&oacute;n publicada por los routers. Es decir permite al equipo configurarse por s&iacute; mismo, pudiendo establecer comunicaci&oacute;n con el 	resto de dispositivos de la misma red</p>
+					<p>o   <b>Rango fijo (stateful):</b>m&eacute;todo que dispone de un servidor DHCPv6 donde podr&aacute; establecer el rango de direcciones que est&aacute;n permitidas y ser&aacute;n asignadas dentro de la 	red local LAN). Es necesario establecer la direcci&oacute;n de inicio y fin de rango en los campos 	correspondientes</p>
+					<div>Puertos IPv6</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s abrir los puertos  que desees para equipos conectados a tu red en la configuraci&oacute;n IPv6.</p>
+					<p>o   <b>Nombre de la regla de puertos:</b>introduce el nombre que quieras asignarle a la regla de puertos y te permita identificarla de manera intuitiva. Cada una de estas reglas ocupar&aacute; una entrada en la tabla.</p>
+					<p>o   <b>Direcci&oacute;n IPv6 global del dispositivo:</b>Indicar la direcci&oacute;n IP v6 global del dispositivo al cual se quiere aplicar la regla de puertos definida.</p>
+					<p>o   <b>Protocolo:</b> selecciona el protocolo al que se aplica la regla: TCP, UDP o ambos</p>
+					<p>o   <b>Abrir el puerto o rango de puertos:</b>indicar si la regla est&aacute; definida por un puerto o por un rango de  estos. Para abrir un  rango de puertos usar el  formato 5001: 5010</p>
+					<p>Pulsa el bot&oacute;n "A&ntilde;adir". Una vez pulsado se debe crear una entrada en la tabla con la regla de puertos definida</p>
+					<p>Si deseas deshabilitar temporalmente la regla de puertos, pulsa el bot&oacute;n "Desactivar". Cuando quieras volver a habilitarla  pulsa el bot&oacute;n "Activar".</p>
+					<p>Para eliminar una entrada de la tabla de manera definitiva pulsa el bot&oacute;n "Borrar". Tambi&eacute;n tienes la opci&oacute;n de eliminar todas las entradas de la tabla de manera r&aacute;pida mediante el bot&oacute;n "Borrar todos"</p>
+				</ul>
+				<li>Cambio contrase&ntilde;a Router</li>
+				<ul>
+					<div>Cambio contrase&ntilde;a Router:</div>
+					<p>Mediante esta opci&oacute;n podr&aacute;s cambiar la contrase&ntilde;a de acceso a tu router. Por defecto la contrase&ntilde;a de acceso, es la definida en la pegatina que podr&aacute;s encontrar debajo del router denominada "Datos de acceso al router".  La nueva contrase&ntilde;a que establezcas para entrar a tu Router debe ser alfanum&eacute;rica y se recomienda que sea de al menos 8 caracteres.</p>
+					<p class="Mloginlogo"></p>
+				</ul>
+				<li>Actualizaciones Firmware</li>
+				<ul>
+					<p>Esta opci&oacute;n permite que actualizar la versi&oacute;n Firmware de tu Router de dos formas diferentes:</p>
+					<div>Actualiza el Firmware desde tu PC:</div>
+					<p>Si dispones de la &uacute;ltima versi&oacute;n Firmware y deseas actualizar tu Router de manera manual, pulsa 	el bot&oacute;n "Buscar" para seleccionar el archivo y cargarlo en tu Router.</p>
+					<div>Actualiza el Firmware desde la red de Movistar:</div>
+					<p>Mediante esta opci&oacute;n, si hay nuevas versiones Firmware con las que puedes actualizar tu Router, se te indicar&aacute; mediante un mensaje indicando la &uacute;ltima versi&oacute;n de FW disponible. &Uacute;nicamente debes pulsar el bot&oacute;n "Actualizar" y tu equipo quedar&aacute; actualizado a la &uacute;ltima versi&oacute;n disponible en ese momento. Si al pulsar la opci&oacute;n "Actualiza el Firmware desde 	la red de Movistar" no se detecta ninguna actualizaci&oacute;n, se te informar&aacute; de esto y ser&aacute; suficiente con que pulses el bot&oacute;n "Cerrar".</p>
+				</ul>
+				<li>Otras funcionalidades</li>
+				<ul>
+					<div>Crear perfil o recuperar uno guardado</div>
+					<p>Esta opci&oacute;n te permitir&aacute; guardar en un archivo.img  la configuraci&oacute;n concreta del router,  con todos los par&aacute;metros  para recuperarla m&aacute;s adelante.  Un perfil es un conjunto de reglas y 	par&aacute;metros que se aplican para crear una configuraci&oacute;n determinada. Se guardan todos los par&aacute;metros que definen tu router, tales como los de la red inal&aacute;mbrica, configuraci&oacute;n de red local,  filtrado MAC, apertura de puertos, etc.</p>
+					<p>Puedes guardar este perfil con el nombre que desees y cargar el perfil cuando lo desees 	presionando el bot&oacute;n "Guardar". Al hacer click en este bot&oacute;n se te mostrar&aacute; un resumen del perfil 	donde debes a&ntilde;adir el nombre  que quieras darle al perfil. Pulsa el bot&oacute;n "Aceptar" para 	almacenarlo. Si finalmente no quieres almacenarlo haz click en el bot&oacute;n "Cancelar".</p>
+					<p>Para recuperar un perfil previamente guardado haz click en el bot&oacute;n "Cargar" y selecciona uno de los perfiles que se muestren. Cuando selecciones uno de ellos se te mostrar&aacute; un resumen con 	todos los par&aacute;metros. Si deseas guardar el perfil haz click en "Aceptar" y si finalmente no deseas 	guardarlo haz click en "Cancelar"</p>
+					<div>Restaurar a valores a f&aacute;brica</div>
+					<p>Esta opci&oacute;n te permite restaurar la configuraci&oacute;n por defecto de f&aacute;brica del Router. Debes tener en cuenta que si empleas est&aacute; opci&oacute;n, se borrar&aacute;n todos los par&aacute;metros configurados en tu Router, como por ejemplo la contrase&ntilde;a de acceso al Router, nombre y contrase&ntilde;a de tu red inal&aacute;mbrica, etc.tomando de nuevo los valores de la configuraci&oacute;n inicial.</p>
+					<div>Firewall</div>
+					<p>Podr&aacute;s configurar el Firewall que trae el router para proteger nuestro PC de ataques externos. Te recomendamos no desactivarlo para tener protegido tu PC. Si deseas configurarlo solo tienes que 	hacer click aqu&iacute;, o bien a trav&eacute;s de la opci&oacute;n: Otras funcionalidades-->Firewall</p>
+					<div>Protocolo UPnP</div>
+					<p>Esta opci&oacute;n te permitir&aacute; activar/desactivar la funcionalidad conocida como Universal Plug and Play (UPnP).</p>
+					<p>Permite descubrir de manera autom&aacute;tica un dispositivo nuevo conectado en tu red local y puedan ser utilizados casi de manera instant&aacute;nea sin ser configurados. Una vez que el nuevo equipo se haya configurado correctamente, puedes desactivarlo. Para m&aacute;s informaci&oacute;n consulta el manual del fabricante del router.</p>
+				</ul>
+				<li>Ayuda</li>
+				<ul>
+					<div>Ayuda configurador web: </div>
+					<p>Tutorial sobre cada uno de los apartados del configurador web.</p>
+					<div>Acerca de:</div>
+					<p>Resumen con informaci&oacute;n relevante acerca de la configuraci&oacute;n de tu Router y  tu conexi&oacute;n.</p> 
+					<p>Este apartado muestra los siguientes par&aacute;metros:</p>
+					<div>Informaci&oacute;n del equipo:</div>
+					<p>Permite identificar tu router y las diferentes versiones de Hardware, Software y Firmware, 	etc. Tambi&eacute;n podr&aacute;s identificar de una manera r&aacute;pida si tu equipo est&aacute; conectado o no a Internet.</p>
+					<div>Informaci&oacute;n WAN:</div>
+					<p><b>Direcci&oacute;n IP WAN (Internet):</b>Direcci&oacute;n IP p&uacute;blica de tu router.</p>
+					<!--<p><b>Velocidad de sincronismo:</b>Frecuencia a la cual trabaja tu router, es decir, la velocidad que se negocia con tu central local. Dentro de la velocidad de sincronismo debemos diferenciar la velocidad de bajada (es decir, velocidad a la cual recibes datos de Internet) o velocidad de subida (es decir, velocidad a la cual puedes enviar datos a Internet).</p>
+					<p style="color:gray;">[NOTA: Este apartado &uacute;nicamente se mostrar&aacute; para Routers ADSL para equipos de Fibra &Oacute;ptica no aplica]</p>-->
+					<div>Informaci&oacute;n Red Local (LAN):</div>
+					<p><b>M&aacute;scara de subred:</b> muestra el valor de tu m&aacute;scara de subred.</p>
+					<p><b>DHCP:</b> en caso de estar activado el servidor DHCP mostrar&aacute; las direcciones de inicio y final de rango de direcciones que se pueden asignar a los equipos asociados a tu 	Router.</p>
+					<p><b>Servidor DNS:</b>muestra el valor de tu servidor DNS. </p>
+					<p>Para m&aacute;s informaci&oacute;n sobre estos par&aacute;metros de tu red local  consulta el apartado "Red 	Local" de este tutorial.</p>
+					<div>Informaci&oacute;n Red inal&aacute;mbrica</div>
+					<p><b>Estado WiFi:</b> muestra si est&aacute;s o no conectado de manera inal&aacute;mbrica.</p>
+				    <p><b>Nombre WiFi:</b> Nombre de tu red inal&aacute;mbrica.</p>
+					<p><b>Oculto Nombre WiFi:</b>Te indica si tienes o no oculto el nombre que identifica tu red 	inal&aacute;mbrica.</p>
+					<p><b>Tipo cifrado:</b> muestra el cifrado que has establecido a tu red inal&aacute;mbrica.</p>
+					<p><b>Encriptaci&oacute;n:</b> muestra la encriptaci&oacute;n establecida a tu red inal&aacute;mbrica</p>
+					<p>Para m&aacute;s informaci&oacute;n sobre estos par&aacute;metros de tu red inal&aacute;mbrica consulta el apartado "WiFi" de este tutorial</p>
+					<div>Informaci&oacute;n Movistar TV</div>
+					<p><b>Servicio contratado:</b>muestra si el cliente tiene un servicio Tr&iacute;o o un D&uacute;o  contratado</p>
+				    <p><b>Tipo de direccionamiento:</b>Indica el tipo de direccionamiento de la l&iacute;nea del cliente. El direccionamiento din&aacute;mico es el m&aacute;s habitual. Para tener direccionamiento est&aacute;tico, el 	cual deber&aacute;s contratar con Movistar y configurar los valores que te han proporcionado.</p>
+					<p><b>Servicio de voz:</b>Indica si tienes servicio de Voz sobre IP</p>
+					<p><b>N&uacute;mero de Tel&eacute;fono:</b>muestra tu n&uacute;mero de tel&eacute;fono</p>
+					<!--<p style="color:gray;">[NOTA: Este apartado &uacute;nicamente se mostrar&aacute; para equipos que integren funcionalidad IPTV]</p>-->
+					<div>Informaci&oacute;n de acceso</div>
+					<p><b>Id_ONT:</b> n&uacute;mero de acceso a tu ONT.</p>
+					<!--<p style="color:gray;">[NOTA:  este apartado &uacute;nicamente se mostrar&aacute; para 	Equipos integrados que incluyan la funcionalidad de ONT]</p>-->				
+				</ul>
+				<li>Configuraci&oacute;n Avanzada</li>
+				<ul>
+					<p>Mediante este bloque de funcionalidades, podr&aacute;s realizar otras opciones de configuraci&oacute;n m&aacute;s avanzas, proporcionadas por el fabricante del router. Si no dispones de conocimientos t&eacute;cnicos avanzados te recomendamos no modificar ninguno de los par&aacute;metros accesibles desde el entorno de configuraci&oacute;n avanzada.</p>
+				</ul>
+			</div>
+		</div>
+    </div>
+</body>
+</html>

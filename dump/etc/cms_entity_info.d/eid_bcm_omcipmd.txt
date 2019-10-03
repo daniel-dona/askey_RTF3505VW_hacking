@@ -1,0 +1,6 @@
+BEGIN
+  eid         = EID_OMCIPMD
+  name        = omcipmd
+  flags = EIF_LAUNCH_ON_BOOT|EIF_MDM|EIF_MESSAGING_CAPABLE
+END
+

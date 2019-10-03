@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+        <script language="javascript" src="util.js"></script>
+        <script language="javascript">
+<!-- hide
+var category = '<%ejGet(certCategory)%>';
+var certn = '<%ejGet(certName)%>';
+
+var certstart = '-----BEGIN CERTIFICATE-----';
+var certinsert = '\n<insert certificate here>\n';
+var certend = '-----END CERTIFICATE-----';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+function frmLoad() {
+  if (category == 'ca') {
+    document.loadForm.action = 'certca.cmd?action=load&certName=' + certn + '&sessionKey=' + sessionKey;
+  }
+  else {
+    document.loadForm.action = 'certlocal.cmd?action=load&certName=' + certn + '&sessionKey=' + sessionKey;
+  }
+  with ( document.forms[0] ) {
+    certName.value = certn;
+    certPublic.value = certstart + certinsert + certend + '\n';
+  }
+}
+
+function applyClick() {
+
+  with ( document.forms[0] ) {
+    if ( certPublic.value == '' ) {
+      alert('Certificate Public Key should not be empty.');
+      return;
+    }
+  }
+  document.loadForm.submit();
+}
+// done hiding -->
+</script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <blockquote>
+      <form name="loadForm" method="post">
+        <b>Load certificate<br>
+        </b>
+        <br>
+          Paste signed certificate.
+        <br>
+        <br>
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="180">Certificate Name:</td>
+            <td><input type='text' name='certName' disabled size='20' maxlength="63"></td>
+          </tr>
+            <tr>
+              <td width="180">Certificate:</td>
+              <td>
+                <P>
+                  <TEXTAREA name='certPublic' rows='20' cols='80'>
+                  </TEXTAREA>
+                </P>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br>
+        <br>
+        <br>
+        <center>
+          <input type='button' onClick='applyClick()' value='Apply'>
+        </center>
+      </form>
+    </blockquote>
+  </body>
+</html>

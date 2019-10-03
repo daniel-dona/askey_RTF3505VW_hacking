@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var wanPpp= '<%ejGetOther(WanPpp)%>';  //M,username,password or S,username,password
+var userselection='M';
+var PPPoEUsername='';
+var PPPoEPassword='';
+
+ var ppp = wanPpp.split(',');
+ if (ppp.length > 0) userselection= ppp[0];
+ if (ppp.length > 1 && ppp[1] != '(null)') PPPoEUsername = ppp[1];
+ if (ppp.length > 2 && ppp[2] != '(null)') PPPoEPassword = ppp[2];
+ 
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$('[name=userselection][value='+userselection+'],[name=Muserselection][value='+userselection+']').click();
+	$('[name=PPPoEUsername],[name=MPPPoEUsername]').text(PPPoEUsername);
+	var pwd='';
+	for(i=0;i<PPPoEPassword.length;i++)
+		pwd+='.';
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').text(pwd);
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').css({'font-size':'36px','line-height':'8px'});
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').parent().css({'overflow-y':'hidden'});
+	//userselect();
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value="Aplicar cambios"]').on('click',function(){	
+		/*if($('[name=userselection]:checked,[name=Muserselection]:checked').val() == 'M' ){
+			if(!checkSpecialChar($('[name=PPPoEUsername],[name=MPPPoEUsername]').val(),1))
+			{
+				alertSpecial(" ?Caracteres no v&aacute;lidos! ");
+				$('[name=PPPoEUsername],[name=MPPPoEUsername]').focus();
+				return false;
+			}
+			if(!checkSpecialChar($('[name=PPPoEPassword],[name=MPPPoEPassword]').val(),0))
+			{
+				alertSpecial(" ?Caracteres no v&aacute;lidos!");
+				$('[name=PPPoEPassword],[name=MPPPoEPassword]').focus();
+				return false;
+			}
+		}*/
+        var loc = 'te_mm.cmd?action=Apply&userselection='+$('[name=userselection]:checked,[name=Muserselection]:checked').val();
+		if($('[name=userselection]:checked,[name=Muserselection]:checked').val() == "M" ){
+              loc += '&PPPoEUsername='+PPPoEUsername;
+		      loc += '&PPPoEPassword='+PPPoEPassword;
+        }
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);
+	});
+    /*
+	$('[value="Deshacer"]').on('click touchstart',function(){
+		$('[name=userselection][value='+userselection+'],[name=Muserselection][value='+userselection+']').click();
+		userselect();
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').val('');
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').val('');
+	});
+    */
+});
+
+function userselect(){
+	return;
+	if(	$('[name=userselection]:checked,[name=Muserselection]:checked').val() == 'S' ){
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').attr('disabled',true);
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').attr('disabled',true);
+	}
+	else{
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').attr('disabled',false);
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').attr('disabled',false);
+	}
+}
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+	<div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Multipuesto / Monopuesto</div>
+            <div class="content">
+				<div class="littletitle"><input type="radio" name="userselection" value="M" onclick="userselect();"><span>Multipuesto (Con NAT) (RECOMENDADO)</span></div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direccionamiento Din&aacute;mico</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Usuario PPPoE:</td>
+					<td><label name="PPPoEUsername"></label></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Contrase&ntilde;a:</td>
+					<td><label name="PPPoEPassword"></label></td>
+				</tr>
+				</table>
+				</div>
+			<div class="content">
+				<div class="littletitle"><input type="radio" name="userselection" value="S" onclick="userselect();"><span>Monopuesto (Sin NAT)</span></div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direccionamiento Din&aacute;mico</td>
+				</tr>
+				<tr>
+					<td colspan='2' class="content_word" style="text-indent:0px;padding-left:20px;">Es necesario disponer de un cliente PPPoE (con su correspondiente adaptador de cliente PPPoE) en su equipo de cliente. Para m&aacute;s informaci&oacute;n consulte el men&uacute; <a href="te_ayuda_configurador_web.html">Ayuda</a></td>
+				</tr>
+				</table>
+			</div>
+			<p style="width:80%;position:relative;margin:auto;">
+					<input type="button" value="Aplicar cambios">
+					<!--<input type="button" value="Deshacer">-->
+			</p><br>
+		</div>
+    </div>  
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">          	
+            <div class="Mtitle">Multipuesto / Monopuesto</div>
+            <div class="Mcontent">
+				<div class="littletitle"><input type="radio" name="Muserselection" value="M" onclick="userselect();"><span>Multipuesto (Con NAT) (RECOMENDADO)</span></div>
+				<p>
+					<span class="Mtitlesize">Direccionamiento Din&aacute;mico</span>
+				</p>
+				<p>
+					<span class="Mtitlesize">Usuario PPPoE:</span>
+					<span><label name="MPPPoEUsername"></label></span>
+				</p>
+				<p>
+					<span class="Mtitlesize">Contrase&ntilde;a:</span>
+					<span><label name="MPPPoEPassword"></label></span>
+				</p>
+				</div>
+			<div class="Mcontent">
+				<div class="littletitle"><input type="radio" name="Muserselection" value="S" onclick="userselect();"><span>Monopuesto (Sin NAT)</span></div>
+				<p>
+					<span class="Mtitlesize">Direccionamiento Din&aacute;mico</span>
+				</p>
+				<p class="Mcontent_word">
+					Es necesario disponer de un cliente PPPoE (con su correspondiente adaptador de cliente PPPoE) en su equipo de cliente. Para m&aacute;s informaci&oacute;n consulte el men&uacute; <a href="te_ayuda_configurador_web.html">Ayuda</a>
+				</p>
+			</div>
+				<p>
+					<input type="button" value="Aplicar cambios">
+					<!--<input type="button" value="Deshacer">-->
+				</p>
+			</div>
+    </div>
+</body>
+</html>

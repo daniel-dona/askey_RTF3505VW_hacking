@@ -1,0 +1,320 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+
+<script language="javascript" src="util.js"></script>
+<script language="javascript">
+<!-- hide
+
+var chipId = <%ejGetOther(sysInfo, chipId)%>
+
+
+
+function frmLoad() {
+
+   var loc;
+
+
+   if (loc) {
+      var code = 'location="' + loc + '"';
+      eval(code);
+   } else {
+      with ( document.forms[0] ) {
+         var pwrmngt = '';
+         pwrmngt = '<%ejGetOther(pwrmngt)%>';
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'pwrmngt.cmd?';
+
+   with ( document.forms[0] ) {
+
+      if ( radPmCPUSpeed.checked == true ) {
+             loc += 'PmCPUSpeed=256';
+          }
+      else {
+             loc += 'PmCPUSpeed=0';
+      }
+      if ( chkPmCPUr4Kwait.checked == true )
+        loc += '&PmCPUr4kWaitEn=1';
+      else
+        loc += '&PmCPUr4kWaitEn=0';
+
+      if ( chkPmDRAMSelfRefresh.checked == true )
+        loc += '&PmDRAMSelfRefreshEn=1';
+      else
+        loc += '&PmDRAMSelfRefreshEn=0';
+
+      if ( chkPmEEE.checked == true )
+        loc += '&PmEthEEE=1';
+      else
+        loc += '&PmEthEEE=0';
+      
+      if (chkPmEthAutoPwrDwn.checked == true )
+        loc += '&PmEthAutoPwrDwnEn=1';
+      else
+        loc += '&PmEthAutoPwrDwnEn=0';
+      
+      if (chkPmAvs.checked == true )
+        loc += '&PmAvsEn=1';
+      else
+        loc += '&PmAvsEn=0';
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+
+<body onLoad='frmLoad()'>
+
+      <blockquote>
+         <form>
+
+            <b>Power Management</b><br>
+            <br>
+            This page allows control of Hardware modules to evaluate power consumption. Use the control buttons to select the desired option, click Apply and check the status response. 
+            <br>
+            <br>
+
+            <div<%ejGetOther(sysInfo, buildHostMipsPwrsave)%>>
+            <hr align=left width=95%><br>
+            <b>MIPS CPU Clock divider when Idle</b>
+            <br>
+            <table border=0 cellspacing=1 cellpadding=1 >
+              <tr>
+                <td><input type='checkbox' name='radPmCPUSpeed' value=256>&nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class='hd'>Status:</td>
+                <td class='hd'>
+                   <script language="javascript">
+                   <!-- hide 
+                   {   with ( document.forms[0] ) {
+                         pmCPUSpeed   = '<%ejGet(pmCPUSpeed)%>';
+                          if (pmCPUSpeed == 256) {
+                               radPmCPUSpeed.checked = true;
+                               pmCPUr4Kwait = '<%ejGet(pmCPUr4kWaitEn)%>';
+                               if(pmCPUr4Kwait == 1) {
+                                 document.writeln("<font color='green'> Enabled</font>");
+                               }
+                               else {
+                                 document.writeln("<font color='red'> Enabled (Wait Disabled)</font>");
+                               }
+                          }
+                          else if (pmCPUSpeed == 0) {
+                               radPmCPUSpeed.checked = false;
+                               document.writeln("<font color='red'> Disabled </font>");
+                        }
+                       }
+                   } 
+                   // done hiding -->
+                   </script>
+                </td>
+              </tr>
+            </table>
+            <br>
+            </div>
+
+            <hr align=left width=95%><br>
+            <b>Wait instruction when Idle</b>
+            <br>
+            <table border=0 cellspacing=1 cellpadding=1 >
+              <tr>
+                <td><input type='checkbox' name='chkPmCPUr4Kwait'> &nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class='hd'>Status:</td>
+                <td class='hd'>
+                   <script language="javascript">
+                   <!-- hide 
+                     {
+                       with ( document.forms[0] ) {
+                         pmCPUr4Kwait = '<%ejGet(pmCPUr4kWaitEn)%>';
+                         if(pmCPUr4Kwait == 1) {
+                           document.writeln("<font color='green'>Enabled</font>");
+                           chkPmCPUr4Kwait.checked = true;
+                         }
+                         else {
+                           document.writeln("<font color='red'>Disabled</font>");
+                           chkPmCPUr4Kwait.checked = false;
+                         }
+                       }
+                     }
+                   // done hiding -->
+                   </script>
+                </td>
+              </tr>
+            </table>
+            <br>
+
+            <div<%ejGetOther(sysInfo, buildDdrSelfRefreshPwrsave)%>>
+            <hr align=left width=95%><br>
+            <b>DRAM Self Refresh</b>
+            <br>
+            <table border=0 cellspacing=1 cellpadding=1 >
+              <tr>
+                <td><input type='checkbox' name='chkPmDRAMSelfRefresh'> &nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class='hd'>Status:</td>
+                <td class='hd'>
+                   <script language="javascript">
+                   <!-- hide 
+                     {
+                       with ( document.forms[0] ) {
+                         pmDRAMSelfRefresh = '<%ejGet(pmDRAMSelfRefreshEn)%>';
+                         if(pmDRAMSelfRefresh == 1) {
+                           document.writeln("<font color='green'>Enabled</font>");
+                           chkPmDRAMSelfRefresh.checked = true;
+                         }
+                         else {
+                           document.writeln("<font color='red'>Disabled</font>");
+                           chkPmDRAMSelfRefresh.checked = false;
+                         }
+                       }
+                     }
+                   // done hiding -->
+                   </script>
+                </td>
+              </tr>
+            </table>
+            <br>
+            </div>
+            
+            <div<%ejGetOther(sysInfo, buildEthernetPwrsave)%>>
+            <hr align=left width=95%><br>
+            <b>Energy Efficient Ethernet</b>
+            <br>
+            <table border=0 cellspacing=1 cellpadding=1 >
+              <tr>
+                <td><input type='checkbox' name='chkPmEEE'> &nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class='hd'>Status:</td>
+                <td class='hd'>
+                   <script language="javascript">
+                   <!-- hide 
+                     {
+                       with ( document.forms[0] ) {
+                         pmEthEEE = '<%ejGet(pmEthEEE)%>';
+                         if(pmEthEEE == 1) {
+                           document.writeln("<font color='green'>Enabled</font>");
+                           chkPmEEE.checked = true;
+                         }
+                         else {
+                           document.writeln("<font color='red'>Disabled</font>");
+                           chkPmEEE.checked = false;
+                         }
+                       }
+                     }
+                   // done hiding -->
+                   </script>
+                </td>
+              </tr>
+            </table>
+            <br>
+            </div>
+            
+            <div<%ejGetOther(sysInfo, buildEthernetPwrsave)%>>
+            <hr align=left width=95%><br>
+            <table border=0 cellspacing=0 cellpadding=0 >
+              <tr>
+                <td>
+                  <b>Ethernet Auto Power Down and Sleep</b>
+                  <br>
+                  <table border=0 cellspacing=1 cellpadding=1 >
+                    <tr>
+                      <td><input type='checkbox' name='chkPmEthAutoPwrDwn'> &nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td class='hd'>Status:</td>
+                      <td class='hd'>
+                         <script language="javascript">
+                         <!-- hide 
+                           {
+                             with ( document.forms[0] ) {
+                               pmEthAutoPwrDwn = '<%ejGet(pmEthAutoPwrDwnEn)%>';
+                               if(pmEthAutoPwrDwn == 1) {
+                                 document.writeln("<font color='green'>Enabled</font>");
+                                 chkPmEthAutoPwrDwn.checked = true;
+                               }
+                               else {
+                                 document.writeln("<font color='red'>Disabled</font>");
+                                 chkPmEthAutoPwrDwn.checked = false;
+                               }
+                             }
+                           }
+                         // done hiding -->
+                         </script>
+                      </td>
+                    </tr>
+                  </table>
+                <td width="15"></td>
+                <td>
+                  <script language="javascript">
+                  <!-- hide 
+                    {
+                      with ( document.forms[0] ) {
+                        pmEthAutoPwrDwn = '<%ejGet(pmEthAutoPwrDwnEn)%>';
+                        if(pmEthAutoPwrDwn == 1) {
+                          ethRegCnt = '<%ejGet(pmEthIfRegisteredCnt)%>';
+                          ethConCnt = '<%ejGet(pmEthIfConnectedCnt)%>';
+                          ethLowPwrCnt = ethRegCnt -  ethConCnt;
+                          document.writeln("Number of ethernet interfaces:<br>");
+                          document.writeln("<font color='blue'>&nbsp;Powered up: " + ethConCnt + "</font><br>");
+                          document.writeln("<font color='green'>&nbsp;Powered down: " + ethLowPwrCnt + "</font><br>"); 
+                        }                    
+                      }
+                    }
+                  // done hiding -->
+                  </script>  
+                </td>
+              </tr>
+            </table>
+            <br>
+            </div>
+
+            <div<%ejGetOther(sysInfo, buildAvs)%>>
+            <hr align=left width=95%><br>
+            <b>Adaptive Voltage Scaling</b>
+            <br>
+            <table border=0 cellspacing=1 cellpadding=1 >
+              <tr>
+                <td><input type='checkbox' name='chkPmAvs'> &nbsp;&nbsp;Enable&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class='hd'>Status:</td>
+                <td class='hd'>
+                   <script language="javascript">
+                   <!-- hide 
+                     {
+                       with ( document.forms[0] ) {
+                         pmAvs = '<%ejGet(pmAvsEn)%>';
+                         if(pmAvs == 1) {
+                           document.writeln("<font color='green'>Enabled</font>");
+                           chkPmAvs.checked = true;
+                         }
+                         else {
+                           document.writeln("<font color='red'>Disabled</font>");
+                           chkPmAvs.checked = false;
+                         }
+                       }
+                     }
+                   // done hiding -->
+                   </script>
+                </td>
+              </tr>
+            </table>
+            <br>
+            </div>
+
+            <center>
+               <p align="center">
+                  <input type='button' onClick='btnApply()' value='Apply'>
+                  <input type=button value="refresh" onClick="window.location.reload()">
+            </center>
+         </form>
+      </blockquote>
+
+
+</body>
+</html>
+
+

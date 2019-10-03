@@ -1,0 +1,242 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function btnRemove() {
+   with ( document.choiceForm ) {
+      var arrSelected = new Array();
+      var count = 0;
+      for ( i = 0; i < lstChoice.options.length; i++ ) {
+         if ( lstChoice.options[i].selected == true ) {
+            arrSelected[count] = lstChoice.options[i].value;
+         }
+         count++;
+      }
+      var x = 0;
+      for (i = 0; i < lstChoice.options.length; i++) {
+         for (x = 0; x < arrSelected.length; x++) {
+            if (lstChoice.options[i].value == arrSelected[x]) {
+               varOpt = new Option(lstChoice.options[i].text, lstChoice.options[i].value);
+               lstAvailable.options[lstAvailable.length] = varOpt;
+               lstChoice.options[i] = null;
+            }
+         }
+      }
+   }
+}
+
+function btnAdd() {
+   with ( document.choiceForm ) {
+      var arrSelected = new Array();
+      var count = 0;
+      for ( i = 0; i < lstAvailable.options.length; i++ ) {
+         if ( lstAvailable.options[i].selected == true ) {
+            arrSelected[count] = lstAvailable.options[i].value;
+         }
+         count++;
+      }
+      var x = 0;
+      for (i = 0; i < lstAvailable.options.length; i++) {
+         for (x = 0; x < arrSelected.length; x++) {
+            if (lstAvailable.options[i].value == arrSelected[x]) {
+               varOpt = new Option(lstAvailable.options[i].text, lstAvailable.options[i].value);
+               lstChoice.options[lstChoice.length] = varOpt;
+               lstAvailable.options[i] = null;
+            }
+         }
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'portmapcfg.cmd?action=add';
+   with ( document.forms[0] ) {
+      var i = 0;
+
+      if (groupName.value == '') {
+         alert('Need to provide a valid Group Name "A non empty string of characters."');
+         return;
+      }
+      if (vendorid0.value != '')
+         loc += '&vendorid0=' + vendorid0.value;
+      if (vendorid1.value != '')
+         loc += '&vendorid1=' + vendorid1.value;
+      if (vendorid2.value != '')
+         loc += '&vendorid2=' + vendorid2.value;
+      if (vendorid3.value != '')
+         loc += '&vendorid3=' + vendorid3.value;
+      if (vendorid4.value != '')
+         loc += '&vendorid4=' + vendorid4.value;
+
+      var vendoridUsed = loc.search('&vendorid');
+	  
+      if (lstChoice.length == 0 && vendoridUsed == -1) {
+         alert('Need to provide at least one interface from "Select one from the LAN Available list OR enter some Vendor IDs"');
+         return;
+      }
+	  if( isXSS(groupName.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Group Name");
+			return false;
+	  }else{
+			loc += '&groupName=' + groupName.value;
+	  }
+      
+      var ifc = '';
+      var tempList = '';
+      for (i = 0; i < lstChoice.length; i++) {
+         tempList += lstChoice.options[i].value + '|';
+      }
+      var interfaces = tempList.split('|');
+      interfaces.sort();
+      for (i = 0; i < interfaces.length; i++ ) {
+         ifc += interfaces[i] + '|';
+      }
+      loc += '&choiceBox=' + ifc;
+
+      var idx = wanIf.selectedIndex;
+      var wanIfc = wanIf.options[idx].value;
+      loc += '&wanIfName=' + wanIfc;
+	  
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body>
+      <blockquote>
+         <form name="choiceForm">
+            <b>Interface grouping Configuration</b><br>
+            <br>
+            To create a new interface group:
+            <br>
+            <b>1.</b> Enter the Group name and the
+            group name must be unique and select either 2. (dynamic) or 3. (static) below:
+            <br><br>
+            <b>2.</b> If you like to automatically add LAN clients to a WAN Interface in the new group
+            add the DHCP vendor ID string. By configuring a DHCP vendor ID string
+            any DHCP client request with the specified vendor ID (DHCP option 60)
+            will be denied an IP address from the local DHCP server. 
+            <br><br>
+            <b>3.</b>Select interfaces from the available interface list and add it to the grouped
+            interface list using the arrow buttons to create the required mapping of the ports.
+            <b>Note that these clients may obtain public IP addresses</b>
+            <br><br>
+            <b>4.</b> Click Apply/Save button to make the changes effective immediately
+            <br><br>
+            <br><br>
+            <b>IMPORTANT If a vendor ID is configured for a specific client device,
+            please REBOOT the client device attached to the modem to allow it to
+            obtain an appropriate IP address.</b>
+            <br><br>
+            <b>Group Name:
+               <input type="text" name="groupName" size="32" maxlength="32"></b>
+            <br><br>
+               <table>
+                  <tr>
+                     <td><b>WAN Interface used in the grouping</b></td>
+                     <td><select name='wanIf'>
+                           <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, allEoAPvc)%>';
+   var interfaces = interfaceInfo.split('|');
+   
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+ 
+      document.write("  <option value='" + names[1] + "'>");
+      document.writeln(interfaces[i]);
+   }
+               	}
+// done hiding -->
+</script>
+                        </select></td>
+                  </tr>
+               </table>
+            <br><br><br>
+               
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="200"><b>Grouped LAN Interfaces</b></td>
+                  <td width="100"></td>
+                  <td width="200"><b>Available LAN Interfaces</b></td>
+               </tr>
+               <tr><td colspan="3">&nbsp;</td></tr>
+               <tr>
+                  <td>
+                      <select multiple name="lstChoice" size="10" style="width: 200"></select>
+                  </td>
+                  <td align="center">
+                     <table border="0" cellpadding="0" cellspacing="5">
+                        <tr><td>
+                           <input type="button" value="->" onClick="btnRemove()" style="width: 30; height: 30">
+                        </td></tr>
+                        <tr><td>
+                           <input type="button" value="<-" onClick="btnAdd()" style="width: 30; height: 30">
+                        </td></tr>
+                     </table>
+                  </td>
+                  <td>
+                      <select multiple name="lstAvailable" size="10" style="width: 200">
+<script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var dispName = '';
+   var brdId = '<%ejGet(boardID)%>';
+   var interfaceInfo = '<%ejGetOther(bridgeInterfaceInfo, all)%>';
+   var interfaces = interfaceInfo.split('|');
+   interfaces.sort();
+   for ( i = 0; i < interfaces.length; i++ ) {
+      if (interfaces[i] != '') {
+         document.write("  <option value='" + interfaces[i] + "'>");
+      }
+      dispName = getUNameByLName(brdId + '|' + interfaces[i]);
+      document.writeln(dispName);
+   }
+}
+// done hiding -->
+                         </script>
+                      </select>
+                  </td>
+               </table>
+               <br><br>
+               <table>
+                  <tr>
+                     <td width="150"><b>Automatically Add Clients With the following DHCP Vendor IDs</b></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid0' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid1' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid2' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid3' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid4' size="32" maxlength="64"></td>
+                  </tr>
+               </table>
+            <br><br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

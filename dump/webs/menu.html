@@ -1,0 +1,108 @@
+<html>
+<head>
+<html><head>
+<meta http-equiv='Pragma' content='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language='javascript' src='menuTree.js'></script>
+<script language='javascript' src='menuTitle.js'></script>
+<script language='javascript' src='menuBcm.js'></script>
+<title></title>
+<base target="_self">
+</head>
+<body class='mainMenuBody' topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+<table border="0" cellpadding="0" cellspacing="0" height="1000">
+  <tr>
+    <td style="background-color: #f8f8f8" width="1"></td>
+    <td class='menu' width="158" valign="top" align="left">
+    <br>
+    <script language='javascript'>
+<!-- hide
+   var options = new Array('<%ejGet(curUserName)%>',
+                           '<%ejGetOther(sysInfo, adslStd)%>',
+                           '<%ejGetOther(sysInfo, noBrPrtcl)%>',
+                           '<%ejGetOther(sysInfo, enblFirewall)%>',
+                           '<%ejGetOther(sysInfo, enblNat)%>',
+                           '<%ejGetOther(sysInfo, pppIpExtension)%>',
+                           '<%ejGetWl(wlInterface)%>',
+                           '<%ejGetVoice(voiceProtocol)%>',
+                           '<%ejGetOther(sysInfo, buildSnmp)%>',
+                           '<%ejGetOther(sysInfo, buildUpnp)%>',
+                           '<%ejGetOther(sysInfo, buildDdnsd)%>',
+                           '<%ejGetOther(sysInfo, buildSntp)%>',
+                           '<%ejGetOther(sysInfo, buildEbTables)%>',
+                           '<%ejGetOther(sysInfo, brPrtcl)%>',
+                           '<%ejGetOther(sysInfo, buildToD)%>',
+                           '<%ejGetOther(sysInfo, buildSiproxd)%>',
+                           '<%ejGet(enblDhcpSrv)%>',
+                           '<%ejGetOther(memInfo, isQosEnabled)%>',
+                           '<%ejGetOther(sysInfo, buildPortmap)%>',
+                           '<%ejGetOther(sysInfo, buildIpp)%>',
+                           '<%ejGetWl(wlSesAvail)%>',  //SUPPORT_SES                           
+                           '<%ejGetOther(sysInfo, buildRip)%>',
+                           '<%ejGetOther(sysInfo, buildIPSec)%>',
+                           '<%ejGetOther(sysInfo, buildCert)%>',
+                           '<%ejGetWl(wlHasWme)%>',
+                           '<%ejGetOther(sysInfo, buildTr69c)%>',
+                           '<%ejGetOther(isVdsl)%>',
+                           '<%ejGetOther(sysInfo, buildUrlFilter)%>',
+                           '<%ejGetOther(sysInfo, buildIPv6)%>',
+                           '<%ejGetOther(sysInfo, enblIPv6)%>',
+                           '<%ejGetOther(sysInfo, buildDnsProxy)%>',
+                           '<%ejGetOther(sysInfo, buildPR)%>',
+                           '<%ejGetOther(sysInfo, buildOmci)%>',
+                           '<%ejGetOther(sysInfo, chipId)%>',
+                           '<%ejGetOther(sysInfo, numWlAdaptor)%>',
+                           '<%ejGetOther(sysInfo, buildP8021AG)%>',                           
+                           '<%ejGetOther(sysInfo, buildEthWan)%>',
+                           '<%ejGetOther(sysInfo, buildPtm)%>',
+                           '<%ejGetOther(sysInfo, buildDhcpRelay)%>',
+                           '<%ejGetOther(sysInfo, buildPwrMngt)%>',
+                           '<%ejGetVoice(ntrEnabled)%>',
+                           '<%ejGetOther(sysInfo, buildAtm)%>',
+                           '<%ejGetOther(sysInfo, buildMocaWan)%>',
+                           '<%ejGetVoice(dectSupport)%>',
+                           '<%ejGetOther(sysInfo, buildDslBonding)%>',
+                           '<%ejGetOther(sysInfo, buildMulticast)%>',
+                           '<%ejGetOther(sysInfo, buildL2tpAc)%>', 
+                           '<%ejGetOther(sysInfo, buildStorageService)%>',
+                           '<%ejGetOther(sysInfo, buildSupportMoca)%>',
+                           '<%ejGetOther(sysInfo, buildStandby)%>',
+                           '<%ejGetOther(sysInfo, buildDLNA)%>',
+                           '<%ejGetWl(wlWapiAvail)%>',  // WAPI
+                           '<%ejGetOther(sysInfo, buildAutoDetection)%>',
+                           '<%ejGetOther(sysInfo, buildGponWan)%>',
+                           '<%ejGetOther(sysInfo, enblPolicer)%>',
+                           '<%ejGetOther(sysInfo, buildModSwWebUi)%>',
+                           '<%ejGetOther(sysInfo, buildEponWan)%>',
+                           '<%ejGetOther(sysInfo, buildSambaService)%>',
+                           '<%ejGetOther(sysInfo, buildBmu)%>',
+                           '<%ejGetOther(sysInfo, buildVdsl)%>',
+                           '<%ejGetOther(sysInfo, supportLanvlan)%>',
+                           '<%ejGetOther(sysInfo, buildOptical)%>',
+                           '<%ejGetOther(sysInfo, buildWifiWan)%>',
+                           '<%ejGetOther(sysInfo, buildModSwWebUiAdmin)%>',
+                           '<%ejGetOther(sysInfo, buildModSwWebUiSupport)%>',
+                           '<%ejGetOther(sysInfo, buildModSwBaseline)%>',
+                           '<%ejGetOther(sysInfo, buildModSwOsgiEE)%>',
+                           '<%ejGetOther(sysInfo, buildModSwLinuxEE)%>',
+                           '<%ejGetOther(sysInfo, buildModSwLinuxPFP)%>',
+                           '<%ejGetOther(sysInfo, supportFapctl)%>',
+                           '<%ejGetOther(sysInfo, buildTms)%>',
+                           '<%ejGetVoice(voiceSipImpl)%>',
+                           '<%ejGetOther(sysInfo, buildAlg)%>',
+                           '<%ejGetOther(sysInfo, buildigmpTvServices)%>'
+                          );
+
+   createBcmMenu(options);
+   initializeDocument();
+// done hiding -->
+    </script>
+<noscript>You must enable JavaScript in your browser.</noscript>
+    </td>
+    <td style="background-color: #f8f8f8" width="1"></td>
+    <td style="background-color: #ffffff"></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+var interfaces = interfaceInfo.split('|');
+var gtwyIfcs = '<%ejGetOther(sysInfo, gtwyIfcs)%>'; if (gtwyIfcs == '&nbsp') gtwyIfcs = '';
+
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+var intfInfo6 = '<%ejGetOther(wanInterfaceInfo, route6)%>';
+var intf6 = intfInfo6.split('|');
+var gtwy6Ifc = '<%ejGetOther(sysInfo, dfltGw6Ifc)%>'; if (gtwy6Ifc == '&nbsp') gtwy6Ifc = '';
+
+function btnApply() {
+   var loc = 'rtdefaultcfg.cgi?';
+
+   with (document.forms[0]) {
+       var loc;
+       var idxGtwy = selGtwyIfcs.selectedIndex;
+       loc += 'defaultGatewayList=' + selGtwyIfcs.options[idxGtwy].value;
+
+       if (enblIP6 == '1') {
+          var idx6 = wanIf6.selectedIndex;
+          var ifc6 = wanIf6.options[idx6].value;
+          loc += '&dfltGw6Ifc=' + ifc6;
+       }
+   }
+   
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function hideGw6Info(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('gw6Info').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.gw6Info.style.visibility = status;
+   }
+}
+
+function frmLoad() {
+
+  with ( document.forms[0] ) {
+    if (enblIP6 == '1')
+       hideGw6Info(0);
+    else
+       hideGw6Info(1);
+  }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+           <b>Routing -- Default Gateway</b><br><br><br>
+                          Please select WAN interface as system default gateway or empty as no default gateway.
+	        </P>
+			<br>
+            <table border="0">
+               <tr>
+                  <td width="300">Select WAN Interface as default Ipv4 gateway</td>
+                  <td>
+                      <select name="selGtwyIfcs">
+
+<script language="javascript">
+<!-- hide
+{
+   var i;
+   document.writeln("  <option value=''></option>"); 
+   for (i = 0; i < interfaces.length; i++) {
+      if (interfaces[i] != "") {
+        var names = interfaces[i].split('/');
+        if (gtwyIfcs.search(names[1]) == -1)
+          document.writeln("  <option value='" + names[1] + "'>" + names[1]);
+        else
+          document.writeln("  <option value='" + names[1] + "'selected>" + names[1]);
+      }		
+   }
+}
+// done hiding -->
+</script>
+                        </select></td>
+                  </tr>
+               </table>
+               <br>
+            
+            <div id='gw6Info'>
+               <table>
+                  <tr>
+                     <td width="300">Select WAN Interface as default Ipv6 gateway</td>
+                     <td><select name='wanIf6'>
+                           <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var names = intf6[i].split('/');
+	
+   if (names == '') {
+      document.write("  <option value='&nbsp' selected>NO CONFIGURED INTERFACE");
+//TODO: IPV6     alert('No configured IPv6 WAN interface existed for system default IPv6 gateway.');
+   }
+   else {
+      document.writeln("  <option value=''></option>"); 
+      for ( i = 0; i < intf6.length; i++ ) {
+         names = intf6[i].split('/');
+         if ( names[1] == gtwy6Ifc )
+            document.write("  <option value='" + names[1] + "' selected>");
+         else
+            document.write("  <option value='" + names[1] + "'>");
+         document.writeln(intf6[i]);
+      }
+   }
+}
+
+// done hiding -->
+</script>
+                        </select></td>
+                  </tr>
+              </table><br><br>
+            </div>
+            <p align="center">
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

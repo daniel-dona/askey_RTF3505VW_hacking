@@ -1,0 +1,148 @@
+#
+# This file replaces the first 15 entries in entityInfoArray in eid.c
+# 3 types of entities are listed in this file:
+# a. the tr69c app itself
+# b. subscriber LAN side configuration apps.  TR-069 can always control
+#    the MDM write access of these apps.
+# c. other management apps whose MDM write access can be controlled by TR-069
+
+# See cms_eid.h and TR-069 A.3.2.4 for more details.
+
+# Only 15 entries are allowed in this file.  Do not add any
+# more entries here.  If you are adding a management app whose access
+# to the MDM can/should be controlled by TR69, look for AVAILABLE or
+# delete an entry that is not used in your system, e.g. TR64
+#
+# Fields not set here are initialized to zero or NULL.
+# All field values must be on a single line
+#
+
+BEGIN
+  eid         = EID_TR69C        /*      1 */
+  accessBit   = NDA_ACCESS_TR69C /* 0x0001 */
+  name        = tr69c
+  flags = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_LAUNCH_ON_BOOT|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 1
+  port        = TR69C_CONN_REQ_PORT
+END
+
+BEGIN
+  eid         = EID_TR64C        /*      2 */
+  accessBit   = NDA_ACCESS_TR64C /* 0x0002 */
+  name        = tr64c
+# FIXME: also set EIF_MESSAGING_CAPABLE?
+  flags       = EIF_MDM|EIF_LAUNCH_ON_BOOT
+  port        = TR64C_HTTP_CONN_PORT
+END
+
+BEGIN
+  eid         = EID_HTTPD        /*      3 */
+  accessBit   = NDA_ACCESS_HTTPD /* 0x0004 */
+  name        = httpd
+  flags = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 3
+  port        = HTTPD_PORT
+END
+
+BEGIN
+  eid         = EID_SNMPD        /*      4 */
+  accessBit   = NDA_ACCESS_SNMPD /* 0x0008 */
+  name        = snmpd
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE
+  port        = SNMPD_PORT
+END
+
+BEGIN
+  eid         = EID_CONSOLED        /*      5 */
+  accessBit   = NDA_ACCESS_CONSOLED /* 0x0010 */
+  name        = consoled
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE
+END
+
+BEGIN
+  eid         = EID_TELNETD         /*      6 */
+  accessBit   = NDA_ACCESS_TELNETD  /* 0x0020 */
+  name        = telnetd
+  flags = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 3
+  port        = TELNETD_PORT
+END
+
+BEGIN
+  eid         = EID_SSHD            /*      7 */
+  accessBit   = NDA_ACCESS_SSHD     /* 0x0040 */
+  name        = sshd
+  flags = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 3
+  port        = SSHD_PORT
+END
+
+BEGIN
+  eid         = EID_UPNP            /*      8 */
+  accessBit   = NDA_ACCESS_UPNP     /* 0x0080 */
+  name        = upnp
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE
+END
+
+BEGIN
+  eid         = EID_HTTPD_SSL    /*      9 */
+  accessBit   = NDA_ACCESS_HTTPD /* 0x0004 */
+  name        = httpd
+  runArgs     = "-p 443"
+  flags = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 3
+  port        = HTTPD_PORT_SSL
+END
+
+BEGIN
+  eid         = EID_AVAILABLE10        /*     10 */
+  accessBit   = NDA_ACCESS_AVAILABLE10 /* 0x0200 */
+  name        = avail10
+END
+
+BEGIN
+  eid         = EID_AVAILABLE11        /*     11 */
+  accessBit   = NDA_ACCESS_AVAILABLE11 /* 0x0400 */
+  name        = avail11
+END
+
+BEGIN
+  eid         = EID_AVAILABLE12        /*     12 */
+  accessBit   = NDA_ACCESS_AVAILABLE12 /* 0x0800 */
+  name        = avail12
+END
+
+BEGIN
+  eid         = EID_AVAILABLE2        /*     13 */
+  accessBit   = NDA_ACCESS_AVAILABLE2 /* 0x1000 */
+  name        = avail2
+END
+
+BEGIN
+  eid         = EID_AVAILABLE14        /*     14 */
+  accessBit   = NDA_ACCESS_AVAILABLE14 /* 0x2000 */
+  name        = avail14
+END
+
+BEGIN
+  eid         = EID_AVAILABLE15        /*     15 */
+  accessBit   = NDA_ACCESS_AVAILABLE15 /* 0x4000 */
+  name        = avail15
+END
+
+BEGIN
+  eid         = EID_HTTPD_REGION_SPECIFIC    /*   5009 */
+  accessBit   = NDA_ACCESS_HTTPD             /* 0x0004 */
+  name        = httpd
+  runArgs     = "-p 8000"
+  flags       = EIF_MDM|EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  backLog     = 3
+  port        = HTTPD_PORT_REGION_SPECIFIC
+END
+
+BEGIN
+  eid         = EID_SWD
+  accessBit   = NDA_ACCESS_SWD /* 0x0400 */
+  name        = swd
+  flags       = EIF_MDM|EIF_LAUNCH_ON_BOOT|EIF_MESSAGING_CAPABLE
+END

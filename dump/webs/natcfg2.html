@@ -1,0 +1,474 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+var enblIpVer = '<%ejGet(enblIpVer)%>';
+var serviceId= '<%ejGet(serviceId)%>';
+var enblGponWan = '<%ejGetOther(sysInfo, buildGponWan)%>';
+var enblPcp = '<%ejGetOther(sysInfo, buildPcp)%>';
+
+function frmLoad() {
+   var nat = '<%ejGet(enblNat)%>';
+   var fullcone = '<%ejGet(enblFullcone)%>';
+   var firewall = '<%ejGet(enblFirewall)%>';
+   var enableIgmp = '<%ejGet(enblIgmp)%>';  
+   var enableIgmpMcastSource = '<%ejGet(enblIgmpMcastSource)%>';  
+   var enableMldMcastSource = '<%ejGet(enblMldMcastSource)%>';
+
+   with ( document.forms[0] ) {
+      if (enblIpVer == '2')
+      {
+         showIgmpInfo(0);
+         enblNat.disabled = 1;
+         enblNat.checked = false;
+         hideFullconeNat(1);
+         fullConeClick(0);
+         enblIgmpProxy.disabled = 1;
+      }
+      else
+      {
+         showIgmpInfo(1);
+         if ( nat == '1' ) {
+            enblNat.checked = true;
+            hideFullconeNat(0);
+         }
+         else {
+            enblNat.checked = false;
+            hideFullconeNat(1);
+         }
+         if ( fullcone == '1' )
+            enblFullcone.checked = true;
+         else
+            enblFullcone.checked = false;
+         fullConeClick(enblFullcone);
+      }
+
+      if ( firewall == '1' )
+         enblFirewall.checked = true;
+      else
+         enblFirewall.checked = false;
+	  
+      if ( enableIgmp == '1' )
+         enblIgmpProxy.checked = true;
+      else
+         enblIgmpProxy.checked = false;
+      if ( enableIgmpMcastSource == '1' )
+         enblIgmpMcastSource.checked = true;
+      else
+         enblIgmpMcastSource.checked = false;
+	  igmpProxyClicked(enblIgmpProxy);
+
+      if ( enblPcp == '1' )
+      {
+         hidePcpInfo(0);
+         pcpmode.selectedIndex = 0;
+      }
+      else
+         hidePcpInfo(1);
+	  
+      if ( enblGponWan == '1' ) {
+         hideMcastFilterInfo();
+         var setMcastFilter = false;
+         if (document.getElementById) {  // DOM3 = IE5, NS6
+            if (document.getElementById('McastFilter').style.visibility == 'visible') {
+               setMcastFilter = true;
+            }
+         } else if (document.layers == false) { // IE 4
+            if (document.all.McastFilter.style.visibility == 'visible') {
+               setMcastFilter = true;
+            }
+         }
+         if ( setMcastFilter == true ) {
+            var noMcastVlanFlt = '<%ejGet(noMcastVlanFilter)%>';
+            if ( noMcastVlanFlt == '1' )
+               noMcastVlanFilter.checked = true;
+            else
+               noMcastVlanFilter.checked = false;
+         }
+      }
+
+      if ( enblIpVer != '0' ) {
+         var enableMld = '<%ejGet(enblMld)%>';
+         if ( enableMld == '1' )
+            enblMldProxy.checked = true;
+         else
+            enblMldProxy.checked = false;
+         if ( enableMldMcastSource == '1' )
+            enblMldMcastSource.checked = true;
+         else
+            enblMldMcastSource.checked = false;
+         mldProxyClicked(enblMldProxy);
+         hideMldInfo(0);
+      }
+      else
+         hideMldInfo(1);
+   }
+}
+
+function showIgmpInfo(vis) {
+   var status = 'hidden';
+
+   if ( vis == 1 )
+      status = 'visible';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('IgmpInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.IgmpInfo.style.visibility = status;
+   }
+}
+
+function hideMldInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('MldInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.MldInfo.style.visibility = status;
+   }
+}
+
+function hideMcastFilterInfo() {
+   var status = 'visible';
+   with ( document.forms[0] ) {
+
+      if ( enblGponWan == '0') {
+         status = 'hidden';
+      }
+      if ((document.getElementsByName('enblIgmpMcastSource')[0].checked == false ) && 
+          (document.getElementsByName('enblMldMcastSource')[0].checked  == false )) {
+         status = 'hidden';
+      }
+      if (document.getElementById)  // DOM3 = IE5, NS6
+         document.getElementById('McastFilter').style.visibility = status;
+      else {
+         if (document.layers == false) // IE 4
+            document.all.McastFilter.style.visibility = status;
+      }
+   }
+}
+
+function igmpProxyClicked(cb) {
+   with ( document.forms[0] ) {
+
+      if ( cb.checked == true )
+      {
+         if (document.getElementsByName)  // DOM3 = IE5, NS6
+         {
+            document.getElementsByName('enblIgmpMcastSource')[0].checked = true;
+            document.getElementsByName('enblIgmpMcastSource')[0].disabled = true;
+         }
+      else
+         {
+            if (document.layers == false) // IE 4
+               enblIgmpMcastSource.checked = true;
+         }
+      }
+      else
+      {
+         if (document.getElementsByName)  // DOM3 = IE5, NS6
+         {
+            document.getElementsByName('enblIgmpMcastSource')[0].disabled = false;
+         } 
+        else
+         {
+            if (document.layers == false) // IE 4
+               enblIgmpMcastSource.checked = true;
+         }
+      }
+   }
+   hideMcastFilterInfo();
+}
+
+function mldProxyClicked(cb) {
+   with ( document.forms[0] ) {
+
+      if ( cb.checked == true )
+      {
+         if (document.getElementsByName)  // DOM3 = IE5, NS6
+         {
+            document.getElementsByName('enblMldMcastSource')[0].checked = true;
+            document.getElementsByName('enblMldMcastSource')[0].disabled = true;
+         }
+         else
+         {
+            if (document.layers == false) // IE 4
+               enblIgmpMcastSource.checked = true;
+         }
+      }
+      else
+      {
+         if (document.getElementsByName)  // DOM3 = IE5, NS6
+         {
+            document.getElementsByName('enblMldMcastSource')[0].disabled = false;
+         } 
+         else
+         {
+            if (document.layers == false) // IE 4
+               enblIgmpMcastSource.checked = true;
+         }
+      }
+   }
+   hideMcastFilterInfo();
+}
+
+function btnNext() {
+   var loc = 'ifcgateway.cgi?';
+
+   if (serviceId == '1')
+  	 loc = 'ntwksum2.cgi?';
+	
+   with ( document.forms[0] ) {
+      if ( enblNat.checked == true )
+         loc += 'enblNat=1';
+      else
+         loc += 'enblNat=0';
+      if ( enblFullcone.checked == true )
+         loc += '&enblFullcone=1';
+      else
+         loc += '&enblFullcone=0';
+      if ( enblFirewall.checked == true )
+         loc += '&enblFirewall=1';
+      else
+         loc += '&enblFirewall=0';
+      if ( enblIgmpProxy.checked == true )
+         loc += '&enblIgmp=1';
+      else
+         loc += '&enblIgmp=0';
+      if ( enblGponWan == '1' ) {
+         if ( noMcastVlanFilter.checked == true )
+            loc += '&noMcastVlanFilter=1';
+         else
+            loc += '&noMcastVlanFilter=0';
+      }
+      if ( enblMldProxy.checked == true )
+         loc += '&enblMld=1';
+      else
+         loc += '&enblMld=0';
+      if ( pcpmode.selectedIndex == 1 )
+      {
+         if ( isValidIpAddress6(pcpServer.value) == false )
+         {
+            alert('PCP Server of DSLite "' + pcpServer.value + '" is invalid IP address.');
+            return;
+         }
+         else
+         {
+            loc += '&pcpMode=1';
+            loc += '&pcpServer=' + pcpServer.value;
+         }
+      }
+      else if ( pcpmode.selectedIndex == 2 )
+      {
+         if ( isValidIpAddress(pcpServer.value) == false )
+         {
+            alert('PCP Server of NAT444 "' + pcpServer.value + '" is invalid IP address.');
+            return;
+         }
+         else
+         {
+            loc += '&pcpMode=2';
+            loc += '&pcpServer=' + pcpServer.value;
+         }
+      }
+      else
+         loc += '&pcpMode=0';
+
+      if ( enblIgmpMcastSource.checked == true ) {
+         loc += '&enblIgmpMcastSource=1';
+      } else {
+         loc += '&enblIgmpMcastSource=0';
+      }
+
+      if ( enblMldMcastSource.checked == true ) {
+         loc += '&enblMldMcastSource=1';
+      } else {
+         loc += '&enblMldMcastSource=0';
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var loc = 'wansrvc.cmd';
+	
+   if (serviceId == '1')
+  	 loc = 'wancfg.cmd';
+   else {
+     if ( prtcl == 'MER')
+        loc = 'wancfg.html';
+     else if ( prtcl == 'IPoA' )
+        loc = 'ipoacfg.html';
+   }
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function hideFullconeNat(hide) {
+   var status = 'visible';
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('fullconeNatInfo').style.visibility = status;
+   else {
+      if (document.layers) { // Netscape 4
+         if ( hide == 1 )
+            document.forms[0].enblFullcone.value = '';
+         else
+            document.forms[0].enblFullcone.value = '<%ejGet(enblFullcone)%>';
+      } else  // IE 4
+         document.all.fullconeNatInfo.style.visibility = status;
+   }
+}
+
+
+function fullConeClick(cb)
+{
+   var status = 'visible';
+   
+   if (!cb.checked)
+      status = 'hidden';
+
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('fullConeWarning').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.fullConeWarning.style.visibility = status;
+   }
+}
+
+function natClick(cb) {
+   if ( cb.checked == true )
+      hideFullconeNat(0);
+   else
+      hideFullconeNat(1);
+}
+
+function hidePcpInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('pcpInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.pcpInfo.style.visibility = status;
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Network Address Translation Settings</b>
+            <br><br>
+            Network Address Translation (NAT) allows you to share one Wide Area Network
+            (WAN) IP address for multiple computers on your Local Area Network (LAN).
+            <br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblNat' onClick='natClick(this)'></td>
+                  <td>Enable NAT</td>
+               </tr>
+            </table>
+            <div id='fullconeNatInfo'>
+            <table border="0" cellpadding="0" cellspacing="0"> 
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblFullcone' onClick='fullConeClick(this)'></td>
+                  <td>Enable Fullcone NAT</td>
+               </tr>
+            </table>
+            </div>
+            <div id='fullConeWarning'>
+               <table border="0" cellpadding="0" cellspacing="0">
+               <td <font color='red'>&nbsp;&nbsp;&nbsp;ONLY IF REQUIRED -- DISABLES NETWORK ACCELERATION AND SOME SECURITY</font></td>
+               </table>
+            </div>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblFirewall'></td>
+                  <td>Enable Firewall</td>
+               </tr>
+            </table>
+
+            <div id='pcpInfo'>
+            
+            <td>Port Control Protocol Mode</td>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <select name='pcpmode'>
+                    <option value="0"> Disable </option>
+                    <option value="1"> DS-Lite </option>
+                    <option value="2"> NAT444  </option>
+                </select>
+            </table>
+
+            <table border="0" cellpadding="0" cellspacing="0"> 
+               <tr>
+                  <td>PCP Server</td>
+                  <td width='30' height="30"><input type='text' name='pcpServer'></td>
+               </tr>
+            </table>
+            </div>
+            <br><br>
+            <div id='IgmpInfo'>
+            <b>IGMP Multicast</b>
+            <br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblIgmpProxy' onClick='igmpProxyClicked(this)'></td>
+                  <td>Enable IGMP Multicast Proxy</td>
+               </tr>
+            </table>
+            <div id='McastSource'>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblIgmpMcastSource' onClick='hideMcastFilterInfo()'></td>
+                  <td>Enable IGMP Multicast Source</td>
+               </tr>
+            </table>
+            </div>
+            </div>
+            <div id='McastFilter'>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='noMcastVlanFilter'></td>
+                  <td>No Multicast VLAN Filter</td>
+               </tr>
+            </table>
+            </div>
+            <br><br>
+            <div id='MldInfo'>
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width='30' height="30"><input type='checkbox' name='enblMldProxy' onClick='mldProxyClicked(this)'></td>
+                <td>Enable MLD Multicast Proxy</td>
+              </tr>
+            </table>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='30' height="30"><input type='checkbox' name='enblMldMcastSource' onClick='hideMcastFilterInfo()'></td>
+                  <td>Enable MLD Multicast Source</td>
+               </tr>
+            </table>
+            </div>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

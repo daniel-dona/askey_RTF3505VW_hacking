@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ ! -n "$3" ] ; then
+  echo "Usage: $0 <hexaddr> <val> <length>: Write bytes to a memory region"
+else
+  echo w $1 $2 $3 b > /proc/bcmlog
+fi

@@ -1,0 +1,222 @@
+#!/bin/sh
+
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+trap fn_on_sigterm SIGTERM
+
+. /etc/shgw/shgw.constants
+. /etc/shgw/shgw.common
+. /etc/shgw/shgw.env
+
+LAN_INTERFACES=$(fn_get_lan_ifaces)
+SHGW_DNSPROXY_PID=0
+
+fn_shgw_ipv4_tproxy_setup() {
+	local _IFACE=""
+	${IPTABLES} -t mangle -N SHGW_DNS > /dev/null 2>&1
+	for _IFACE in ${LAN_INTERFACES}; do
+		${IPTABLES} -t mangle -A SHGW_DNS \
+			-i ${_IFACE} \
+			-p udp --dport 53 \
+			-j TPROXY --tproxy-mark ${SHGW_TPROXY_MARK} --on-port ${SHGW_REQ_PORT} > /dev/null 2>&1
+	done
+
+	${IPTABLES} -t mangle -I PREROUTING -j SHGW_DNS > /dev/null 2>&1
+
+	${IP} rule add fwmark ${SHGW_FWMARK} lookup ${SHGW_TABLE} ${SHGW_IPV4_RULE_PREF} > /dev/null 2>&1
+	${IP} route add local 0.0.0.0/0 dev lo table ${SHGW_TABLE} > /dev/null 2>&1
+}
+
+fn_shgw_ipv4_tproxy_cleanup() {
+	local _IFACE=""
+	for _IFACE in ${LAN_INTERFACES}; do
+		fn_run_until_failure "${IPTABLES} -t mangle -D SHGW_DNS \
+			-i ${_IFACE} \
+			-p udp --dport 53 \
+			-j TPROXY --tproxy-mark ${SHGW_TPROXY_MARK} --on-port ${SHGW_REQ_PORT}"
+	done
+	fn_run_until_failure "${IPTABLES} -t mangle -D PREROUTING -j SHGW_DNS"
+	${IPTABLES} -t mangle -X SHGW_DNS > /dev/null 2>&1
+
+	${IP} route del local 0.0.0.0/0 dev lo table ${SHGW_TABLE} > /dev/null 2>&1
+	fn_run_until_failure "${IP} rule del fwmark ${SHGW_FWMARK} lookup ${SHGW_TABLE} ${SHGW_IPV4_RULE_PREF}"
+}
+
+fn_shgw_ipv6_tproxy_setup() {
+	local _IFACE=""
+	${IP6TABLES} -t mangle -N SHGW_DNS > /dev/null 2>&1
+	for _IFACE in ${LAN_INTERFACES}; do
+		${IP6TABLES} -t mangle -A SHGW_DNS \
+			-i ${_IFACE} \
+			-p udp --dport 53 \
+			-j TPROXY --tproxy-mark ${SHGW_TPROXY_MARK6} --on-port ${SHGW_REQ_PORT} > /dev/null 2>&1
+	done
+
+	${IP6TABLES} -t mangle -I PREROUTING -j SHGW_DNS > /dev/null 2>&1
+
+	${IP} -6 rule add fwmark ${SHGW_FWMARK6} lookup ${SHGW_TABLE6} ${SHGW_IPV6_RULE_PREF} > /dev/null 2>&1
+	${IP} -6 route add local ::/0 dev lo table ${SHGW_TABLE6} > /dev/null 2>&1
+}
+
+fn_shgw_ipv6_tproxy_cleanup() {
+	local _IFACE=""
+	for _IFACE in ${LAN_INTERFACES}; do
+		fn_run_until_failure "${IP6TABLES} -t mangle -D SHGW_DNS \
+			-i ${_IFACE} \
+			-p udp --dport 53 \
+			-j TPROXY --tproxy-mark ${SHGW_TPROXY_MARK6} --on-port ${SHGW_REQ_PORT}"
+	done
+	fn_run_until_failure "${IP6TABLES} -t mangle -D PREROUTING -j SHGW_DNS"
+	${IP6TABLES} -t mangle -X SHGW_DNS > /dev/null 2>&1
+
+	${IP} -6 route del local ::/0 dev lo table ${SHGW_TABLE6} > /dev/null 2>&1
+	fn_run_until_failure "${IP} -6 rule del fwmark ${SHGW_FWMARK6} lookup ${SHGW_TABLE6} ${SHGW_IPV6_RULE_PREF}"
+}
+
+fn_on_sigterm() {
+	fn_shgw_ipset_cleanup
+	fn_shgw_ipv6_tproxy_cleanup
+	fn_shgw_ipv4_tproxy_cleanup
+	fn_kill_if_running
+	${ECHO} "[$(fn_time_now)] Trap handler.Dnsproxy exited!" >> ${SHGW_STARTUP_LOG} 2>&1
+	exit 0
+}
+
+fn_kill_if_running() {
+	dp_pids=$(${PS} | ${GREP} shgw_dnsproxy | ${GREP} -v grep | ${AWK} '{ print $1 }')
+	if [ ! -z "$dp_pids" ]; then
+		for dp_pid in $dp_pids; do
+			kill -s KILL $dp_pid
+		done
+	fi
+}
+
+fn_launch_and_wait() {
+	${ECHO} "[$(fn_time_now)]" >> ${SHGW_STARTUP_LOG} 2>&1
+	${IPTABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+	${IP6TABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+	fn_kill_if_running
+	${IPTABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+	${IP6TABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+	$SHGW_DNSPROXY &
+	SHGW_DNSPROXY_PID=$!
+	wait $SHGW_DNSPROXY_PID
+	${ECHO} "[$(fn_time_now)] Dnsproxy exited!" >> ${SHGW_STARTUP_LOG} 2>&1
+}
+
+fn_shgw_ipset_cleanup() {
+
+	## RULES UNDER NAT TABLE
+	${IPTABLES} -t nat -F SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t nat -F SHGW_EULA_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -F SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -F SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t nat -F SHGW_WHITELIST > /dev/null 2>&1
+	
+	${IPTABLES} -t nat -D SHGW_IPSET -j SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t nat -D SHGW_IPSET -j SHGW_EULA_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -D SHGW_IPSET -j SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -D SHGW_IPSET -j SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t nat -D SHGW_IPSET -j SHGW_WHITELIST > /dev/null 2>&1
+	${IPTABLES} -t nat -D PREROUTING -j SHGW_IPSET > /dev/null 2>&1
+	
+	${IPTABLES} -t nat -X SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t nat -X SHGW_EULA_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -X SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -X SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t nat -X SHGW_WHITELIST > /dev/null 2>&1
+	${IPTABLES} -t nat -X SHGW_IPSET > /dev/null 2>&1
+	
+	## RULES UNDER FILTER TABLE
+	${IPTABLES} -t filter -F SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t filter -F SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t filter -F SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	
+	${IPTABLES} -t filter -D SHGW_IPSET -j SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t filter -D SHGW_IPSET -j SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t filter -D SHGW_IPSET -j SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t filter -D FORWARD -j SHGW_IPSET > /dev/null 2>&1
+	
+	${IPTABLES} -t filter -X SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t filter -X SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t filter -X SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t filter -X SHGW_IPSET > /dev/null 2>&1
+	
+	
+	${IPSET} destroy SHGW_HOST_REPUTATION	> /dev/null 2>&1 ##Set name and Iptable chain name are same
+	${IPSET} destroy SHGW_HOST_REPUTATION_DST	> /dev/null 2>&1 
+	${IPSET} destroy SHGW_EULA_BLOCK	> /dev/null 2>&1
+	${IPSET} destroy SHGW_DEVICE_BLOCK	> /dev/null 2>&1
+	${IPSET} destroy SHGW_NETWORK_PAUSE	> /dev/null 2>&1
+	${IPSET} destroy SHGW_WHITELIST	> /dev/null 2>&1
+}
+
+##Creating custom iptable chains for matching the shgw ipsets
+fn_shgw_ipset_setup() {
+
+	## RULES UNDER NAT TABLE
+	${IPTABLES} -t nat -N SHGW_IPSET > /dev/null 2>&1
+	${IPTABLES} -t nat -N SHGW_WHITELIST > /dev/null 2>&1
+	${IPTABLES} -t nat -N SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t nat -N SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -N SHGW_EULA_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -N SHGW_HOST_REPUTATION > /dev/null 2>&1
+	
+	${IPTABLES} -t nat -A SHGW_IPSET -j SHGW_WHITELIST > /dev/null 2>&1
+	${IPTABLES} -t nat -A SHGW_IPSET -j SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t nat -A SHGW_IPSET -j SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -A SHGW_IPSET -j SHGW_EULA_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t nat -A SHGW_IPSET -j SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t nat -I PREROUTING -j SHGW_IPSET > /dev/null 2>&1	
+	
+	## RULES UNDER FILTER TABLE
+	${IPTABLES} -t filter -N SHGW_IPSET > /dev/null 2>&1
+	${IPTABLES} -t filter -N SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t filter -N SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t filter -N SHGW_HOST_REPUTATION > /dev/null 2>&1
+	
+	${IPTABLES} -t filter -A SHGW_IPSET -j SHGW_NETWORK_PAUSE > /dev/null 2>&1
+	${IPTABLES} -t filter -A SHGW_IPSET -j SHGW_DEVICE_BLOCK > /dev/null 2>&1
+	${IPTABLES} -t filter -A SHGW_IPSET -j SHGW_HOST_REPUTATION > /dev/null 2>&1
+	${IPTABLES} -t filter -I FORWARD -j SHGW_IPSET > /dev/null 2>&1
+	
+	
+}
+
+# main
+${ECHO} "Starting dpwrap" >> ${SHGW_STARTUP_LOG} 2>&1
+fn_shgw_ipv6_tproxy_cleanup
+fn_shgw_ipv6_tproxy_setup
+fn_shgw_ipv4_tproxy_cleanup
+fn_shgw_ipv4_tproxy_setup
+fn_shgw_ipset_cleanup
+fn_shgw_ipset_setup
+fn_launch_and_wait
+fn_shgw_ipset_cleanup
+fn_shgw_ipv4_tproxy_cleanup
+fn_shgw_ipv6_tproxy_cleanup
+${IPTABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+${IP6TABLES} -t mangle -nvL | ${GREP} ${SHGW_REQ_PORT} >> ${SHGW_STARTUP_LOG} 2>&1
+${ECHO} "Stopping dpwrap" >> ${SHGW_STARTUP_LOG} 2>&1

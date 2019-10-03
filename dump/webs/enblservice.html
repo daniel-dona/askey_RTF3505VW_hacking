@@ -1,0 +1,91 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+var ipExtension = '<%ejGet(pppIpExtension)%>';
+var port = '<%ejGet(portId)%>';
+var vpi = '<%ejGet(atmVpi)%>';
+var vci = '<%ejGet(atmVci)%>';
+var enblGponWan = '<%ejGetOther(sysInfo, buildGponWan)%>';
+
+function btnNext() {
+   var loc = 'ifcgateway.cgi?';
+
+   with ( document.forms[0] ) {
+      if ( enblIgmp.checked == true )
+         loc += 'enblIgmp=1';
+      else
+         loc += 'enblIgmp=0';
+      if ( enblGponWan == '1' ) {
+          if ( noMcastVlanFilter.checked == true )
+             loc += 'noMcastVlanFilter=1';
+         else
+            loc += 'noMcastVlanFilter=0';
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var loc;
+
+   if ( prtcl == 'PPPoE' || prtcl == 'PPPoA' )
+      loc = 'pppoe.html';
+   else if ( prtcl == 'IPoA' )
+      loc = 'ipoacfg.html';
+   else if ( prtcl == 'MER' )
+      loc = 'wancfg.html';
+   else
+      loc = 'ntwkprtcl.html';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function frmLoad() {
+   var enableIgmp = '<%ejGet(enblIgmp)%>';
+
+   with ( document.forms[0] ) {
+      if ( enableIgmp == '1' )
+         enblIgmp.checked = true;
+      else
+         enblIgmp.checked = false;
+      if ( enblGponWan == '1' ) {
+         var noMcastVlanFlt = '<%ejGet(noMcastVlanFilter)%>';
+         if ( noMcastVlanFlt == '1' )
+            noMcastVlanFilter.checked = true;
+         else
+            noMcastVlanFilter.checked = false;
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <br><b>Enable IGMP Multicast, and WAN Service</b><br><br>
+            <table border="0" cellpadding="4" cellspacing="0">
+               <tr>
+                  <td>Enable IGMP Multicast</td>
+                  <td width='30' height="30"><input type='checkbox' name='enblIgmp' checked></td>
+               </tr>
+            </table>
+            <br><br><br>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

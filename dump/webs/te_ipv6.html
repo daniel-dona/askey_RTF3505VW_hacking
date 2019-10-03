@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="util.js"></script>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+var enblDhcps = '<%ejGetOther(enblDhcp6s, all)%>';
+var enblDhcpsStateful = '<%ejGet(enblDhcp6sStateful)%>';
+var pdAddress6 = '<%ejGet(lanPdAddr6)%>';
+var globalIPv6Address='';
+var globalIPv6Prefixlength='';
+var ipv6addr=null;
+
+//ip -6 addr show scope link dev br0
+var localIPv6Address='<%ejGetOther(localIPv6Address)%>';
+
+var IPv6DHCPMode='0';
+var startIPv6Address= '<%ejGet(ipv6IntfIDStart)%>';
+var endIPv6Address='<%ejGet(ipv6IntfIDEnd)%>';
+
+var rawIpv6FirewallRuleList='<%ejGetOther(tefFiWa, entryListIpv6)%>'; //i.e. example '(101,0,2002:db8::1,64,7000-7010,T,hello);(102,2,2002:db8::cafe,128,7000-7010,F,world);(103,1,2002:db8::1000,64,8000-8010,T,experiment)';
+var RULE_SEPARATOR=';';
+var curpage = 1;
+if (enblDhcps==0)
+{
+   IPv6DHCPMode ='0';
+}   
+else     
+{
+	if (enblDhcpsStateful==0)
+	{
+	   IPv6DHCPMode ='1';
+	}   
+	else     
+	{
+	   IPv6DHCPMode ='2';
+	}   
+}   
+ipv6addr=pdAddress6.split('/');
+
+if (ipv6addr.length==2)
+{
+	globalIPv6Address= ipv6addr[0];
+	globalIPv6Prefixlength= ipv6addr[1];
+}
+
+function deserialize( raw )
+{
+  var rules=[];
+  var outer=raw.split(RULE_SEPARATOR);
+  for(var i=0; i<outer.length; i++ )
+  {
+    rules[i]=[];
+    var inner=null;
+    inner=outer[i].substring( outer[i].indexOf('(')+1, outer[i].lastIndexOf(')') );
+    inner=inner.split(',');
+    for( var j=0; j<inner.length; j++ )
+    {
+      rules[i][j]=inner[j];
+    } //end for
+  } //end for
+  return rules;
+}
+
+$(function()
+{
+    //ipv6InterfaceComparisonUnitTest();
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+        $('.local').after('<span>'+localIPv6Address+'</span>');
+    }
+    else
+    {
+        $('#mobileformat').remove();
+        $('.local').after('<td>'+localIPv6Address+'</td>');
+    }
+	$('[name=globalIPv6Address],[name=MglobalIPv6Address]').text(globalIPv6Address);
+	$('[name=globalIPv6Prefixlength],[name=MglobalIPv6Prefixlength]').text(globalIPv6Prefixlength);
+	$('[name=IPv6DHCPMode][value='+IPv6DHCPMode+'],[name=MIPv6DHCPMode][value='+IPv6DHCPMode+']').click();
+	if( IPv6DHCPMode == '2')
+		$('.ForRelay').show();
+	else
+		$('.ForRelay').hide();
+	$('[name=startIPv6Address],[name=MstartIPv6Address]').val(startIPv6Address);
+	$('[name=endIPv6Address],[name=MendIPv6Address]').val(endIPv6Address);
+	if(ismobile)
+	    showpage(1);
+	else
+		showtable();
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[name=IPv6DHCPMode],[name=MIPv6DHCPMode]').change(function(){
+		if( $(this).val() == '2')
+			$('.ForRelay').show();
+		else
+			$('.ForRelay').hide();
+	});
+	$('.localIPv6').find('[value="Aceptar"]').on('click',function(){		
+		if( !isGlobalIpv6Address($('[name=globalIPv6Address],[name=MglobalIPv6Address]').val()) ){
+			return false;
+		}
+		if( $('[name=globalIPv6Prefixlength],[name=MglobalIPv6Prefixlength]').val()<64 || $('[name=globalIPv6Prefixlength],[name=MglobalIPv6Prefixlength]').val()>128 ){
+			alertSpecial("m&aacute;scara de subred mundial IPv6 debe estar entre 64 y 128");
+			return false;
+		}
+                var loc = 'te_ipv6.cmd?action=lanapply&';
+		if (!isValidIpAddress6($('[name=globalIPv6Address],[name=MglobalIPv6Address]').val()) || !isValidPrefixLength($('[name=globalIPv6Prefixlength],[name=MglobalIPv6Prefixlength]').val()) )
+		{
+			alertSpecial("Error!!");
+			return;
+		}	
+		loc += 'globalIPv6Address='+$('[name=globalIPv6Address],[name=MglobalIPv6Address]').val();
+		loc += '&globalIPv6Prefixlength='+$('[name=globalIPv6Prefixlength],[name=MglobalIPv6Prefixlength]').val();		
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		eval(code);		
+	});
+	$('.DHCPIPv6').find('[value="Aceptar"]').on('click',function(){			
+		var loc = 'te_ipv6.cmd?action=dhcpapply&IPv6DHCPMode='+$('[name=IPv6DHCPMode]:checked,[name=MIPv6DHCPMode]:checked').val();
+		if( $('[name=IPv6DHCPMode]:checked,[name=MIPv6DHCPMode]:checked').val() == "2" ){
+			if ( $('[name=startIPv6Address],[name=MstartIPv6Address]').val() == ''){	
+				alertSpecial("gama ipv6 no puede estar vac&iacute;o");  
+				return false;
+			}
+			var startipv6=$('[name=startIPv6Address],[name=MstartIPv6Address]').val();
+			if(!checkipv6range(startipv6))
+				return false;
+			if ( $('[name=endIPv6Address],[name=MendIPv6Address]').val() == ''){	
+				alertSpecial("gama ipv6 no puede estar vac&iacute;o");  
+				return false;
+			}
+			var endipv6=$('[name=endIPv6Address],[name=MendIPv6Address]').val();
+			if(!checkipv6range(endipv6))
+				return false;
+			if(!compareipv6range(startipv6.split(':'),endipv6.split(':')))
+				return false;	
+			loc += '&startIPv6Address='+$('[name=startIPv6Address],[name=MstartIPv6Address]').val();		
+			loc += '&endIPv6Address='+$('[name=endIPv6Address],[name=MendIPv6Address]').val();
+		}
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		eval(code);		
+	});
+	$('[value='+htmlDecode("A&ntilde;adir")+']').on('click',function(){		
+		if ( $('[name=portName],[name=MportName]').val() == '' ) {
+			alertSpecial("Nombre del puerto no puede estar vac&iacute;o.")  
+			return false;
+		}
+		if( !isGlobalIpv6Address($('[name=IPAddress],[name=MIPAddress]').val()) ){
+			return false;
+		}
+		if( $('[name=IPAddress],[name=MIPAddress]').val() ==  globalIPv6Address ){
+			alertSpecial("Direcci&oacute;n IPv6 global del Dispositivo no nativa IP Global");
+			return false;
+		}
+                //var loc = 'te_ipv6.cmd?action=Add&IPv6portName='+$('[name=portName],[name=MportName]').val();
+		//loc += '&portIPv6Address='+$('[name=IPAddress],[name=MIPAddress]').val();		
+		//loc += '&IPv6portProtocol='+$('[name=Protocol],[name=MProtocol]').val();
+		//loc += '&IPv6PortRange='+$('[name=IPv6startPortRange],[name=MIPv6startPortRange]').val()+'-'+$('[name=IPv6endPortRange],[name=MIPv6endPortRange]').val();
+		//loc += '&IPv6portActive=off';
+		//loc += '&sessionKey='+sessionKey;
+    var prot=$('[name=Protocol],[name=MProtocol]').val();
+    var ipaddr=$('[name=IPAddress],[name=MIPAddress]').val();
+    ipaddr=(ipaddr==''?"NA":ipaddr);
+    var prefixlength=(ipaddr=='')?'':'128'; //default address prefix length
+    var dstportstart=$('[name=IPv6startPortRange],[name=MIPv6startPortRange]').val();
+    var dstportend=$('[name=IPv6endPortRange],[name=MIPv6endPortRange]').val();
+    var str=$('[name=portName],[name=MportName]').val();
+	//alert(str);
+	if (str.indexOf("\'") >= 0 || str.indexOf("\\") >= 0)		
+		var name=addslash(str);
+	else
+		var name=str;
+    var loc = 'scbidirectionalflt.cmd?action=create';
+    loc += '&newinst='+'('+prot+','+ipaddr+','+prefixlength+','+dstportstart+'-'+dstportend+','+'T'+','+encodeUrl(name)+')';
+    loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);		
+	});
+});
+
+function showtable(){
+	$('thead').children('tr:not(:first)').remove();
+  var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );
+  if(ipv6FirewallRuleList.length==1 && (ipv6FirewallRuleList[0].length===undefined||ipv6FirewallRuleList[0][1]===undefined)) return;
+
+	for(i=0;i<ipv6FirewallRuleList.length;i++){
+        $('#ActivePuertos tr:last,#MActivePuertos tr:last').after('<tr>\
+                                        <td><img class="hand" src="te_cross.png" onclick="delandactive(this);"></td>\
+										<td></td>');
+		$('#ActivePuertos td:last,#MActivePuertos td:last').text(ipv6FirewallRuleList[i][6]);							
+		if( ipv6FirewallRuleList[i][1] == '0' )
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>TCP</td>');
+		else if( ipv6FirewallRuleList[i][1] == '1' )
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>UDP</td>');
+		else
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>TCP+UDP</td>');
+		$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>'+ipv6FirewallRuleList[i][4]+'</td>\
+                                        <td>'+ipv6FirewallRuleList[i][2]+'</td>');
+		if( ipv6FirewallRuleList[i][5] == 'T' )
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td><img class="hand" src="te_on.png" onclick="delandactive(this);"></td>');
+		else
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td><img class="hand" src="te_off.png" onclick="delandactive(this);"></td>');	
+        $('#ActivePuertos td:last,#MActivePuertos td:last').after('</tr>');			
+    }
+}
+
+function prevdata(){
+    curpage--;
+    showpage(0); 
+}
+
+function showpage(load){
+	var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );
+	if(ipv6FirewallRuleList.length==1 && (ipv6FirewallRuleList[0].length===undefined||ipv6FirewallRuleList[0][1]===undefined)){
+		$('.page').hide();
+		return;
+	}
+	else{
+        $('.page').show();        	
+		if(load){
+			$('#showpage').append("<input type='button' id='prev' class='hand' style='float:left;font-size:28px;font-weight:bold;' value='<' onclick='prevdata();'>");
+			$('#prev').after("<span id='pageno' style='font-size:28px;font-weight:bold;'>"+curpage+"/"+ipv6FirewallRuleList.length+"</span>");
+			$('#pageno').after("<input type='button' id='next' class='hand' style='float:right;font-size:28px;font-weight:bold;' value='>' onclick='nextdata();'>");
+		}
+		else{			
+			$('#pageno').text(curpage+"/"+ipv6FirewallRuleList.length);			
+		}
+		$('[value="<"],[value=">"]').css('width','auto');
+	}
+	var row=ipv6FirewallRuleList.length;
+	if( ipv6FirewallRuleList[curpage-1][5] == 'T' )
+		$('.active').html('Activar <img style="vertical-align:middle" src="te_on.png" onclick="delandactive(this);">');
+	else
+		$('.active').html('Activar <img style="vertical-align:middle" src="te_off.png" onclick="delandactive(this);">');		
+	$('#Nombre').children('span').text(ipv6FirewallRuleList[curpage-1][6]);
+	if( ipv6FirewallRuleList[curpage-1][1] == '0' )
+		$('#Protocolo').children('span').html('TCP');
+	else if( ipv6FirewallRuleList[curpage-1][1] == '1' )
+		$('#Protocolo').children('span').html('UDP');
+	else
+		$('#Protocolo').children('span').html('TCP+UDP');
+	$('#rango').children('span').html(ipv6FirewallRuleList[curpage-1][4]);
+	$('#DirecciónIP').children('span').html(ipv6FirewallRuleList[curpage-1][2]);	
+	if( curpage == 1 && curpage == row ){
+        $('#prev').addClass('divHide');
+        $('#next').addClass('divHide');
+    }   
+    else if( curpage == 1 && curpage != row ){
+        $('#prev').addClass('divHide');
+        $('#next').removeClass('divHide');
+    }
+    else if( curpage != 1 && curpage == row ){
+        $('#prev').removeClass('divHide');
+        $('#next').addClass('divHide');
+    }
+    else{
+        $('#prev').removeClass('divHide');
+        $('#next').removeClass('divHide');
+    }
+    $('#pageno').text(curpage+'/'+row);
+}
+
+function nextdata(){
+    curpage++;
+    showpage(0); 
+}
+
+function delandactive(obj){
+	var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );
+	if(ismobile)
+		var idx=curpage-1;
+	else
+		var idx=($(obj).closest('tr').index())-1;
+    var instIndex=ipv6FirewallRuleList[idx][0];	
+	if( $(obj).attr('src') == "te_cross.png" || $(obj).hasClass('Eliminar') ){
+		var loc = 'scbidirectionalflt.cmd?action=delete';
+		loc += '&oldinst='+instIndex;
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		eval(code);
+	}
+	else{
+		var loc = 'scbidirectionalflt.cmd?action=save&inst='+'(';
+		loc += ipv6FirewallRuleList[idx][0]+',';
+		loc += ipv6FirewallRuleList[idx][1]+',';
+		loc += ipv6FirewallRuleList[idx][2]+',';
+		loc += ipv6FirewallRuleList[idx][3]+',';
+		loc += ipv6FirewallRuleList[idx][4]+',';
+		if( $(obj).attr('src') == "te_on.png" )
+			loc += 'F'+',';
+		else
+			loc += 'T'+',';
+		loc += ipv6FirewallRuleList[idx][6];
+		loc += ')';
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);	
+	}		
+}
+
+function deleteRow(obj){
+	//var loc = 'te_ipv6.cmd?action=delete&portName='+ipv6FirewallRuleList[$(obj).closest('tr').index()-1][0];
+	//loc += '&IPv6portProtocol='+ipv6FirewallRuleList[$(obj).closest('tr').index()-1][1];
+	//loc += '&IPv6PortRange='+ipv6FirewallRuleList[$(obj).closest('tr').index()-1][2];
+	//loc += '&portIPv6Address='+ipv6FirewallRuleList[$(obj).closest('tr').index()-1][3];
+	//loc += '&IPv6portActive='+ipv6FirewallRuleList[$(obj).closest('tr').index()-1][4];
+	//loc += '&sessionKey='+sessionKey;
+  var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );
+  var instIndex=ipv6FirewallRuleList[$(obj).closest('tr').index()-1][0];
+  var loc = 'scbidirectionalflt.cmd?action=delete';
+  loc += '&oldinst='+instIndex;
+  loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	//location.reload();
+	eval(code);		
+}
+
+function editTable(obj){
+    $('.edit').addClass('divHide');
+	$('.save').removeClass('divHide');
+  var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );
+	for(i=1;i<=ipv6FirewallRuleList.length;i++){
+	    $('#'+obj+' tr').eq(i).children('td').eq(0).removeClass('divHide');
+		$('#'+obj+' tr').eq(i).children('td').eq(1).remove();
+        $('#'+obj+' tr').eq(i).children('td').eq(1).html('<input class="Input_box" type="text" value="'+ipv6FirewallRuleList[i-1][6]+'" maxlength="16">');
+		$('#'+obj+' tr').eq(i).children('td').eq(2).html('<select class="Select_box">\
+																<option value="0">TCP</option>\
+																<option value="1">UDP</option>\
+																<option value="2" disabled >TCP+UDP</option>\
+														  </select>');
+		$('#'+obj+' tr').eq(i).children('td').eq(2).find('option[value='+ipv6FirewallRuleList[i-1][1]+']').prop('selected',true);
+		var portRange=ipv6FirewallRuleList[i-1][4].split('-');
+		$('#'+obj+' tr').eq(i).children('td').eq(3).html('<input class="Input_box" type="text" value="'+portRange[0]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(3).find('input').after('-<input class="Input_box" type="text" value="'+portRange[1]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(4).html('<input class="Input_box" type="text" value="'+ipv6FirewallRuleList[i-1][2]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(5).find('img').attr("onclick","activeport(this);");	
+		$('#'+obj+' tr').eq(i).children('td').eq(5).find('img').attr("class","hand");
+    }
+}
+
+function saveTable(obj){
+    $('.edit').removeClass('divHide');
+	$('.save').addClass('divHide');
+  var ipv6FirewallRuleList=deserialize( rawIpv6FirewallRuleList );  
+	var rowCount = $('#'+obj+' tr').length;
+	var loc = 'scbidirectionalflt.cmd?action=save'
+  loc += '&inst=';//IPv6ipv6FirewallRuleList format to server "aa:0:00-11:dd:on;...."
+  var qty=0;
+	for(i=1;i<rowCount;i++){
+    if( qty>0 ) loc+=RULE_SEPARATOR;
+    loc += '(';
+		loc += ipv6FirewallRuleList[(i-1)][0]+',';
+		loc += $('#'+obj+' tr').eq(i).children('td').eq(2).find('select>option:selected').val()+',';
+    var ipaddr=$('#'+obj+' tr').eq(i).children('td').eq(4).find('input').val();
+		loc += (ipaddr==''?"NA":ipaddr)+',';
+    loc += '128'+','; //default address prefix length
+		loc += $('#'+obj+' tr').eq(i).children('td').eq(3).find('input').eq(0).val()+'-'+$('#'+obj+' tr').eq(i).children('td').eq(3).find('input').eq(1).val()+',';
+		if( $('#'+obj+' tr').eq(i).children('td').eq(5).find('img').attr('src') == 'te_on.png')
+			loc += 'T'+',';
+		else
+			loc += 'F'+',';
+    loc += $('#'+obj+' tr').eq(i).children('td').eq(1).find('input').val();
+    
+    loc += ')';
+    qty++;
+    }
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	//location.reload();
+	eval(code); 
+}
+
+function activeport(obj){
+	if( $(obj).attr('src') == 'te_on.png' ){
+		$(obj).fadeOut(function(){
+			$(obj).attr('src','te_off.png').fadeIn(0.00000000001);
+		});
+	}
+	else{
+		$(obj).fadeOut(function(){
+		   $(obj).attr('src','te_on.png').fadeIn(0.00000000001);
+		});
+	}
+}
+ 
+function checkipv6range(ipaddr){
+    if (/::.*::/.test(ipaddr) || /:::/.test(ipaddr) || /:$/.test(ipaddr))
+        ret = false;
+    else
+        ret = (/^([\da-f]{1,4}(:|::)){1,3}[\da-f]{1,4}$/i.test(ipaddr)) ||
+              (/^::([\da-f]{1,4}:){0,2}[\da-f]{1,4}$/i.test(ipaddr));
+    
+    if (ret == false)
+        alertSpecial("Formato gama ipv6 v&aacute;lido. El formato debe ser:&nbsp; 1:1:1:1 o ::1");
+
+    return ret;
+}
+
+function ipv6InterfaceComparisonUnitTest()
+{
+  var DAT=
+  [
+    //begin, end, expected
+    {begin:"4321:1:1:CCCC", end:"5432:1:1:AAAA", expected:true},
+    {begin:"9999:1:1:BBBB", end:"9999:2:1:BBBB", expected:true},
+    {begin:"9999:1:1:BBBB", end:"9999:1:2:BBBB", expected:true},
+    {begin:"9999:1:1:BBBB", end:"9999:1:1:CCCC", expected:true},
+    {begin:"2222:1:F:7777", end:"3222:2:E:6666", expected:true},
+    {begin:"2222:1:3:1111", end:"3222:2:2:2222", expected:true},
+    {begin:"::1", end:"::2", expected:true},
+    {begin:"4321:1:1:CCCC", end:"4321:1:1:AAAA", expected:false},
+    {begin:"1111:1:1:FFFF", end:"1111:1:1:DDDD", expected:false},
+    {begin:"::101", end:"::100", expected:false},
+  ];
+
+  for( var k=0; k<DAT.length; k++ )
+  {
+    var evaluated=compareipv6range(DAT[k].begin.split(":"), DAT[k].end.split(":"), true);
+    if( evaluated!=DAT[k].expected )
+    {
+      alertSpecial("FAIL: "+k+" begin:"+DAT[k].begin+" end:"+DAT[k].end+ " expected:"+DAT[k].expected+" evaluated:"+evaluated+"!");
+    }
+  }//end for
+}
+
+function compareipv6range(begin,end,hide){
+  var len=(begin.length<end.length)?(begin.length):(end.length);
+  var weightedresult=[];
+  var avail=true;
+	for(var i=0; i<len; i++) {
+		var beginval = parseInt(begin[i],16);
+		var endval = parseInt(end[i],16);
+		//alertSpecial(' '+begin[i].length+'\t'+beginval+'\t'+end[i].length+'\t'+endval+' ');
+		if ( (begin[i].length>0&&isNaN(beginval)) || (end[i].length>0&&isNaN(endval)) ) {
+			avail=false;
+			break;
+		}
+
+    if(begin[i].length==0) beginval=-1; //any value, just be equal to end
+    if(end[i].length==0) endval=-1; //any value, just be equal to begin
+
+    weightedresult[i]=((beginval<=endval)?((beginval<endval)?2:1):0); //weighted value
+    if(weightedresult[i]==0) {
+      if(weightedresult.length>2) { //self has been checked, so skip it.
+        var tmpchk=false;
+        for(var j=0; j<(weightedresult.length-2); j++) {
+          //alertSpecial(
+          //  "begin["+i+"]"+"="+begin[i]+"\n"+
+          //  "end["+i+"]"+"="+end[i]+"\n"+
+          //  "wr["+j+"]"+"="+weightedresult[j]+"\n"+
+          //  "wr["+(j+1)+"]"+"="+weightedresult[j+1]+"\n"+
+          //  "cmp="+(weightedresult[j]>weightedresult[j+1])+"."
+          //);
+          if(weightedresult[j]>1 || weightedresult[j]>weightedresult[j+1]) {
+            tmpchk=true;
+            break;
+          }
+        } //end for
+        avail=tmpchk;
+      }
+      else
+      {
+        avail=false;
+      }
+    }
+
+    if(avail==false) break;
+	} //end for
+
+  if ( avail==false && (hide==undefined||hide==false) ) {	
+  	alertSpecial("La Direcci&oacute;n final debe ser mayor que Direcci&oacute;n de inicio!");
+  }
+
+	return avail;
+}
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Red Local IPv6</div>
+			<div class="localIPv6 content">
+				<div class="littletitle">Configuraci&oacute;n Red Local IPv6</div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="local titlesize">Direcci&oacute;n local IPv6:</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n global IPv6:</td>
+					<td><label name="globalIPv6Address"></label></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Longitud prefijo subred:</td>
+					<td><label name="globalIPv6Prefixlength"></label></td>
+				</tr>
+				<!--<tr>
+                    <td><input type="button" value="Aceptar"></td>
+                </tr>-->
+				</table>
+			</div>
+			<div class="DHCPIPv6 content">
+				<div class="littletitle">Configuraci&oacute;n DHCP IPv6</div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Modo DHCPv6:</td>
+					<td colspan='2'>
+						<input type="radio" name="IPv6DHCPMode" value="0">Ninguno
+						<input type="radio" name="IPv6DHCPMode" value="1">Autoconfiguraci&oacute;n
+						<input type="radio" name="IPv6DHCPMode" value="2">Rango Fijo
+					</td>
+				</tr>
+				<tr class="ForRelay">
+					<td class="titlesize">Direcci&oacute;n IP inicio de rango:</td>
+					<td><input class="Input_box" type="text" name="startIPv6Address"></td>
+				</tr>
+				<tr class="ForRelay">
+					<td class="titlesize">Direcci&oacute;n IP fin de rango:</td>
+					<td><input class="Input_box" type="text" name="endIPv6Address">(ej:&nbsp; 1:1:1:1 o ::1)</td>
+				</tr>
+				<tr>
+                    <td><input type="button" value="Aceptar"></td>
+                </tr>
+				</table>
+			</div>
+            <div class="title">Puertos IPv6</div>
+            <div class="content">
+				<div class="littletitle">Configuraci&oacute;n Puertos IPv6</div>
+				<p class="content_word">Rellena los siguientes campos y pulsa el bot&oacute;n <b>A&ntilde;adir</b>. Ten en cuenta que para abrir un rango de puertos debes usar el siguiente formato : <b>5001:5010</b></p>
+                <table class="editItems" border="0">
+				<tr>
+                    <td class="titlesize">Nombre regla de puertos:</td>
+                    <td><input class="Input_box" type="text" name="portName" maxlength="16"></td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Direcci&oacute;n IPv6 global del dispositivo:</td>
+                    <td><input class="Input_box" type="text" name="IPAddress"></td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Protocolo:</td>
+                    <td>
+                    <select class="Select_box" name="Protocol">
+                        <option value="0">TCP</option>
+                        <option value="1">UDP</option>
+                        <option value="2">TCP+UDP</option>
+                    </select>
+					</td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Abrir Puerto/Rango de puertos:</td>
+                    <td>
+						<input class="Input_box" type="text" size="5" name="IPv6startPortRange"> -
+						<input class="Input_box" type="text" size="5" name="IPv6endPortRange">
+					</td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="A&ntilde;adir"></td>
+                </tr>
+				</table>
+            </div> 
+			<div class="content">
+				<div class="littletitle">Tabla de filtrado actual</div>
+				<table id="ActivePuertos" border="0" style="width:100%;">
+					<thead>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;</td>
+							<td>Nombre</td>
+							<td>Protocolo</td>
+							<td>Puertos/rango puertos</td>
+							<td>Direcci&oacute;n IPv6 global del dispositivo</td>
+							<td>Activar</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Red Local IPv6</div>
+			<div class="localIPv6 Mcontent">
+				<div class="littletitle">Configuraci&oacute;n Red Local IPv6</div>
+				<p>
+					<span class="local Mtitlesize">Direcci&oacute;n local IPv6:</span>
+				</p>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n global IPv6:</span><label name="MglobalIPv6Address"></label>
+				</p>
+				<p>
+					<span class="Mtitlesize">Longitud prefijo subred:</span><label name="MglobalIPv6Prefixlength"></label>
+				</p>
+				<!--<p>
+                    <input type="button" value="Aceptar">
+                </p>-->
+			</div>
+			<div class="DHCPIPv6 Mcontent">
+				<div class="littletitle">Configuraci&oacute;n DHCP IPv6</div>
+				<p>
+					<span class="Mtitlesize">Modo DHCPv6:</span>
+					<input type="radio" name="MIPv6DHCPMode" value="0">Ninguno
+					<input type="radio" name="MIPv6DHCPMode" value="1">Autoconfiguraci&oacute;n
+					<input type="radio" name="MIPv6DHCPMode" value="2">Rango Fijo
+				</p>
+				<p class="ForRelay">
+					<span class="Mtitlesize" style="float:left;">Direcci&oacute;n IP inicio de rango:</span>
+					<input class="MInput_box" type="text" name="MstartIPv6Address">
+				</p>
+				<p class="ForRelay">
+					<span class="Mtitlesize" style="float:left;">Direcci&oacute;n IP fin de rango:</span>
+					<input class="MInput_box" type="text" name="MendIPv6Address"><span style="float:left;">(ej:&nbsp; 1:1:1:1 o ::1)</span>
+				</p>
+				<p>
+                    <input type="button" value="Aceptar">
+                </p>
+			</div>
+            <div class="Mtitle">Puertos IPv6</div>
+
+            <div class="Mcontent">
+				<div class="littletitle">Configuraci&oacute;n Puertos IPv6</div>
+				<p class="Mcontent_word">Rellena los siguientes campos y pulsa el bot&oacute;n <b>A&ntilde;adir</b>. Ten en cuenta que para abrir un rango de puertos debes usar el siguiente formato : <b>5001:5010</b></p>
+                <div>
+                    <span class="Mtitlesize">Nombre regla de puertos:</span>
+				</div>
+                <div>
+                    <input class="MInput_box" type="text" name="MportName" maxlength="16">
+                </div>
+                <div>
+                    <span class="Mtitlesize">Direcci&oacute;n IPv6 global del dispositivo:</span>
+                </div>
+                <div>    
+					<input class="MInput_box" type="text" name="MIPAddress">
+                </div>
+                <div>
+                    <span class="Mtitlesize">Protocolo:</span>
+				</div>
+                <div>
+                    <select class="MSelect_box" name="MProtocol">
+                        <option value="0">TCP</option>
+                        <option value="1">UDP</option>
+                        <option value="2">TCP+UDP</option>
+                    </select>
+                </div>
+                <div>
+                    <span class="Mtitlesize">Abrir Puerto/Rango de puertos:</span>
+                </div>
+                <div>    
+					<input class="MInput_box" type="text" name="MIPv6startPortRange"> -
+                    <input class="MInput_box" type="text" name="MIPv6endPortRange">
+                </div>
+                <div>
+                    <input type="button" value="A&ntilde;adir">
+                </div>
+            </div> 
+			<div class="page Mcontent">
+				<div class="littletitle">Tabla de filtrado actual</div>
+				<div>
+					<span class="Eliminar hand" style="color:#0174DF;" onclick="delandactive(this);">Eliminar</span>
+					<!--<span class="savedata hand divHide" style="color:#0174DF" onclick="saveData();">OK</span>-->
+					<span class="active hand" style="display:block;margin-top:-20px;text-align:right;"></span>
+				</div>
+				<div id="Nombre">Nombre:<span></span></div>
+				<div id="Protocolo">Protocolo:<span></span></div>
+				<div id="rango">Puertos/rango puertos:<span></span></div>
+				<div id="DirecciónIP">Direcci&oacute;n IPv6 global del dispositivo:<span></span></div>
+				<div id="showpage" style="display:block;text-align:center;">
+				</div>
+				<!--<table id="MActivePuertos" border="0" style="width:100%;">
+					<thead>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;</td>
+							<td>Nombre</td>
+							<td>Protocolo</td>
+							<td>Puertos/<br>rango<br>puertos</td>
+							<td>Direcci&oacute;n<br>IPv6<br>global<br>del<br>dispositivo</td>
+							<td>Activar</td>
+						</tr>
+					</thead>
+				</table>-->
+			</div>
+        </div>
+    </div>
+</body>
+</html>

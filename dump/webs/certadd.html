@@ -1,0 +1,383 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+        <script language="javascript" src="util.js"></script>
+        <script language="javascript">
+<!-- hide
+
+var category = '<%ejGet(certCategory)%>';
+
+var country = "US";
+var certreq = 'request';
+var certsigned = 'signed';
+
+function loadCountryList() {
+  document.forms[0].certCountry[0] = new Option("AD (Andorra)", "AD");
+  document.forms[0].certCountry[1] = new Option("AE (United Arab Emirates)","AE");
+  document.forms[0].certCountry[2] = new Option("AF (Afghanistan)","AF");
+  document.forms[0].certCountry[3] = new Option("AG (Antiqua And Barb)","AG");
+  document.forms[0].certCountry[4] = new Option("AI (Anguilla)","AI");
+  document.forms[0].certCountry[5] = new Option("AL (Albania)","AL");
+  document.forms[0].certCountry[6] = new Option("AM (Amenia)","AM");
+  document.forms[0].certCountry[7] = new Option("AN (Netherlands Antilles)","AN");
+  document.forms[0].certCountry[8] = new Option("AO (Angola)","AO");
+  document.forms[0].certCountry[9] = new Option("AQ (Antarctica)","AQ");
+  document.forms[0].certCountry[10] = new Option("AR (Argentina)","AR");
+  document.forms[0].certCountry[11] = new Option("AS (American Samoa)","AS");
+  document.forms[0].certCountry[12] = new Option("AT (Austria)","AT");
+  document.forms[0].certCountry[13] = new Option("AU (Australia)","AU");
+  document.forms[0].certCountry[14] = new Option("AW (Aruba)","AW");
+  document.forms[0].certCountry[15] = new Option("AZ (Azerbaijan)","AZ");
+  document.forms[0].certCountry[16] = new Option("BA (Bosnia and Herzegovina)","BA");
+  document.forms[0].certCountry[17] = new Option("BB (Barbados)","BB");
+  document.forms[0].certCountry[18] = new Option("BD (Bangladesh)","BD");
+  document.forms[0].certCountry[19] = new Option("BE (Belgium)","BE");
+  document.forms[0].certCountry[20] = new Option("BF (Burkina Faso)","BF");
+  document.forms[0].certCountry[21] = new Option("BG (Bulgaria)","BG");
+  document.forms[0].certCountry[22] = new Option("BH (Bahrain)","BH");
+  document.forms[0].certCountry[23] = new Option("BI (Burundi)","BI");
+  document.forms[0].certCountry[24] = new Option("BJ (Benin)","BJ");
+  document.forms[0].certCountry[25] = new Option("BM (Bermuda)","BM");
+  document.forms[0].certCountry[26] = new Option("BN (Brunei)","BN");
+  document.forms[0].certCountry[27] = new Option("BO (Bolivia)","BO");
+  document.forms[0].certCountry[28] = new Option("BR (Briazil)","BR");
+  document.forms[0].certCountry[29] = new Option("BS (Bahamas)","BS");
+  document.forms[0].certCountry[30] = new Option("BT (Bhutan)","BT");
+  document.forms[0].certCountry[31] = new Option("BV (Bouvet Islands)","BV");
+  document.forms[0].certCountry[32] = new Option("BW (Botswana)","BW");
+  document.forms[0].certCountry[33] = new Option("BY (Belarus)","BY");
+  document.forms[0].certCountry[34] = new Option("CA (Canada)","CA");
+  document.forms[0].certCountry[35] = new Option("CC (Cocos Keeling)","CC");
+  document.forms[0].certCountry[36] = new Option("CD (Congo(DRC))","CD");
+  document.forms[0].certCountry[37] = new Option("CF (Central African Republic)","CF");
+  document.forms[0].certCountry[38] = new Option("CG (Congo)","CG");
+  document.forms[0].certCountry[39] = new Option("CH (Switzerland)","CH");
+  document.forms[0].certCountry[40] = new Option("CI (Cote D'lvoire)","CI");
+  document.forms[0].certCountry[41] = new Option("CK (Cook Islands)","CK");
+  document.forms[0].certCountry[42] = new Option("CL (Chile)","CL");
+  document.forms[0].certCountry[43] = new Option("CM (Cameroon)","CM");
+  document.forms[0].certCountry[44] = new Option("CN (China)","CN");
+  document.forms[0].certCountry[45] = new Option("CO (Colombia)","CO");
+  document.forms[0].certCountry[46] = new Option("CR (Costa Rica)","CR");
+  document.forms[0].certCountry[47] = new Option("CU (Cuba)","CU");
+  document.forms[0].certCountry[48] = new Option("CV (Cape Verde)","CV");
+  document.forms[0].certCountry[49] = new Option("CX (Chrismas Island)","CX");
+  document.forms[0].certCountry[50] = new Option("CY (Cyprus)","CY");
+  document.forms[0].certCountry[51] = new Option("CZ (Czech Republic)","CZ");
+  document.forms[0].certCountry[52] = new Option("DE (Germany)","DE");
+  document.forms[0].certCountry[53] = new Option("DE (Djibouti)","DE");
+  document.forms[0].certCountry[54] = new Option("DK (Denmark)","DK");
+  document.forms[0].certCountry[55] = new Option("DM (Dominica)","DM");
+  document.forms[0].certCountry[56] = new Option("DO (Dominican Republic)","DO");
+  document.forms[0].certCountry[57] = new Option("DZ (Algeria)","DZ");
+  document.forms[0].certCountry[58] = new Option("EC (Ecuador)","EC");
+  document.forms[0].certCountry[59] = new Option("EE (Estonia)","EE");
+  document.forms[0].certCountry[60] = new Option("EG (Egypt)","EG");
+  document.forms[0].certCountry[61] = new Option("ER (Eritrea)","ER");
+  document.forms[0].certCountry[62] = new Option("ES (Spain)","ES");
+  document.forms[0].certCountry[63] = new Option("ET (Ethiopia)","ET");
+  document.forms[0].certCountry[64] = new Option("FI (Finland)","FI");
+  document.forms[0].certCountry[65] = new Option("FJ (Fiji Islands)","FJ");
+  document.forms[0].certCountry[66] = new Option("FK (Faulkland Islands)","FK");
+  document.forms[0].certCountry[67] = new Option("FM (Micronesia)","FM");
+  document.forms[0].certCountry[68] = new Option("FR (France)","FR");
+  document.forms[0].certCountry[69] = new Option("FX (France, Metropolit)","FX");
+  document.forms[0].certCountry[70] = new Option("GA (Gobon)","GA");
+  document.forms[0].certCountry[71] = new Option("GB (United Kingdom)","GB");
+  document.forms[0].certCountry[72] = new Option("GD (Grenada)","GD");
+  document.forms[0].certCountry[73] = new Option("GI (Georgia)","GE");
+  document.forms[0].certCountry[74] = new Option("GF (French Guiana)","GF");
+  document.forms[0].certCountry[75] = new Option("GH (Ghana)","GH");
+  document.forms[0].certCountry[76] = new Option("GI (Gibraltar)","GI");
+  document.forms[0].certCountry[77] = new Option("GL (Greenland)","GL");
+  document.forms[0].certCountry[78] = new Option("GM (Gambia, The)","GM");
+  document.forms[0].certCountry[79] = new Option("GN (Guinea)","GN");
+  document.forms[0].certCountry[80] = new Option("GP (Guadeloupe)","GP");
+  document.forms[0].certCountry[81] = new Option("GQ (Equatoria Guinea)","GQ");
+  document.forms[0].certCountry[82] = new Option("GR (Greece)","GR");
+  document.forms[0].certCountry[83] = new Option("GS (South Georgia And the South Sandwich Islands)","GS");
+  document.forms[0].certCountry[84] = new Option("GT (Guatemala)","GT");
+  document.forms[0].certCountry[85] = new Option("GU (Guam)","GU");
+  document.forms[0].certCountry[86] = new Option("GW (Guinea-Bissau)","GW");
+  document.forms[0].certCountry[87] = new Option("GY (Guyana)","GY");
+  document.forms[0].certCountry[88] = new Option("HK (Hong Kong S.A.R)","HK");
+  document.forms[0].certCountry[89] = new Option("HM (Heard and McDo)","HM");
+  document.forms[0].certCountry[90] = new Option("HN (Honduras)","HN");
+  document.forms[0].certCountry[91] = new Option("HR (Croatia)","HR");
+  document.forms[0].certCountry[92] = new Option("HT (Haiti)","HT");
+  document.forms[0].certCountry[93] = new Option("HU (Hungary)","HU");
+  document.forms[0].certCountry[94] = new Option("ID (Indonessia)","ID");
+  document.forms[0].certCountry[95] = new Option("IE (Ireland)","IE");
+  document.forms[0].certCountry[96] = new Option("IL (Israel)","IL");
+  document.forms[0].certCountry[97] = new Option("IN (India)","IN");
+  document.forms[0].certCountry[98] = new Option("IO (British Indian Ocean Territory)","IO");
+  document.forms[0].certCountry[99] = new Option("IQ (Iraq)","IQ");
+  document.forms[0].certCountry[100] = new Option("IR (Iran)","IR");
+  document.forms[0].certCountry[101] = new Option("IS (Iceland)","IS");
+  document.forms[0].certCountry[102] = new Option("IT (Italy)","IT");
+  document.forms[0].certCountry[103] = new Option("JM (Jamaica)","JM");
+  document.forms[0].certCountry[104] = new Option("JM (Jordan)","JM");
+  document.forms[0].certCountry[105] = new Option("JP (Japan)","JP");
+  document.forms[0].certCountry[106] = new Option("KE (Kenya)","KE");
+  document.forms[0].certCountry[107] = new Option("KG (Kyrgyzstan)","KG");
+  document.forms[0].certCountry[108] = new Option("KG (Cambodia)","KG");
+  document.forms[0].certCountry[109] = new Option("KI (Kiribati)","KI");
+  document.forms[0].certCountry[110] = new Option("KM (Comoros)","KM");
+  document.forms[0].certCountry[111] = new Option("KN (St. Kitts And Nevis)","KN");
+  document.forms[0].certCountry[112] = new Option("KP (North Korea)","KP");
+  document.forms[0].certCountry[113] = new Option("KR (Korea)","KR");
+  document.forms[0].certCountry[114] = new Option("KW (Kuwait)","KW");
+  document.forms[0].certCountry[115] = new Option("KY (Cayman Islands)","KY");
+  document.forms[0].certCountry[116] = new Option("KZ (Kazakhstan)","KZ");
+  document.forms[0].certCountry[117] = new Option("LA (Laos)","LA");
+  document.forms[0].certCountry[118] = new Option("LB (Lebanon)","LB");
+  document.forms[0].certCountry[119] = new Option("LC (St. Lucia)","LC");
+  document.forms[0].certCountry[120] = new Option("LI (Liechtenstein)","LI");
+  document.forms[0].certCountry[121] = new Option("LK (Sri Lanka)","LK");
+  document.forms[0].certCountry[122] = new Option("LR (Liberia)","LR");
+  document.forms[0].certCountry[123] = new Option("LS (Lesotho)","LS");
+  document.forms[0].certCountry[124] = new Option("LT (Lithuania)","LT");
+  document.forms[0].certCountry[125] = new Option("LU (Luxembourg)","LU");
+  document.forms[0].certCountry[126] = new Option("LV (Latvia)","LV");
+  document.forms[0].certCountry[127] = new Option("LY (Libya)","LY");
+  document.forms[0].certCountry[128] = new Option("MA (Morocco)","MA");
+  document.forms[0].certCountry[129] = new Option("MC (Monaco)","MC");
+  document.forms[0].certCountry[130] = new Option("MD (Moldova)","MD");
+  document.forms[0].certCountry[131] = new Option("MG (Madagascar)","MG");
+  document.forms[0].certCountry[132] = new Option("MH (Marshall Islands)","MH");
+  document.forms[0].certCountry[133] = new Option("MK (Macedonia)","MK");
+  document.forms[0].certCountry[134] = new Option("ML (Mali)","ML");
+  document.forms[0].certCountry[135] = new Option("MM (Myanmar)","MM");
+  document.forms[0].certCountry[136] = new Option("MN (Mongolia)","MN");
+  document.forms[0].certCountry[137] = new Option("MO (Macau S.A.R.)","MO");
+  document.forms[0].certCountry[138] = new Option("MP (Nothern Marina Islands)","MP");
+  document.forms[0].certCountry[139] = new Option("MQ (Martinique)","MQ");
+  document.forms[0].certCountry[140] = new Option("MR (Mauritania)","MR");
+  document.forms[0].certCountry[141] = new Option("MS (Montserrat)","MS");
+  document.forms[0].certCountry[142] = new Option("MT (Malta)","MT");
+  document.forms[0].certCountry[143] = new Option("MU (Mauritius)","MU");
+  document.forms[0].certCountry[144] = new Option("MV (Maldives)","MV");
+  document.forms[0].certCountry[145] = new Option("MW (Malawi)","MW");
+  document.forms[0].certCountry[146] = new Option("MX (Mexico)","MX");
+  document.forms[0].certCountry[147] = new Option("MY (Malaysiz)","MY");
+  document.forms[0].certCountry[148] = new Option("MZ (Mozambique)","MZ");
+  document.forms[0].certCountry[149] = new Option("NA (Namibia)","NA");
+  document.forms[0].certCountry[150] = new Option("NC (New Caledonia)","NC");
+  document.forms[0].certCountry[151] = new Option("NE (Niger)","NE");
+  document.forms[0].certCountry[152] = new Option("NF (Norfolk Island)","NF");
+  document.forms[0].certCountry[153] = new Option("NG (Nigeria)","NG");
+  document.forms[0].certCountry[154] = new Option("NI (Nicaragua)","NI");
+  document.forms[0].certCountry[155] = new Option("NL (Netherlands, The)","NL");
+  document.forms[0].certCountry[156] = new Option("NO (Norway)","NO");
+  document.forms[0].certCountry[157] = new Option("NP (Nepal)","NP");
+  document.forms[0].certCountry[158] = new Option("NR (Nauru)","NR");
+  document.forms[0].certCountry[159] = new Option("NU (Niue)","NU");
+  document.forms[0].certCountry[160] = new Option("NZ (New Zealand)","NZ");
+  document.forms[0].certCountry[161] = new Option("OM (Oman)","OM");
+  document.forms[0].certCountry[162] = new Option("PA (Panama)","PA");
+  document.forms[0].certCountry[163] = new Option("PE (Peru)","PE");
+  document.forms[0].certCountry[164] = new Option("PF (French Polynesia)","PF");
+  document.forms[0].certCountry[165] = new Option("PG (Papua New Guinea)","PG");
+  document.forms[0].certCountry[166] = new Option("PH (Philippines)","PH");
+  document.forms[0].certCountry[167] = new Option("PK (Pakistan)","PK");
+  document.forms[0].certCountry[168] = new Option("PL (Poland)","PL");
+  document.forms[0].certCountry[169] = new Option("PM (St. Pierre and Miquelon)","PM");
+  document.forms[0].certCountry[170] = new Option("PN (Pitcairn Islands)","PN");
+  document.forms[0].certCountry[171] = new Option("PR (Puerto Rico)","PR");
+  document.forms[0].certCountry[172] = new Option("PT (Portugal)","PT");
+  document.forms[0].certCountry[173] = new Option("PW (Palau)","PW");
+  document.forms[0].certCountry[174] = new Option("PY (Paraguay)","PY");
+  document.forms[0].certCountry[175] = new Option("QA (Qatar)","QA");
+  document.forms[0].certCountry[176] = new Option("RE (Reunion)","RE");
+  document.forms[0].certCountry[177] = new Option("RO (Romania)","RO");
+  document.forms[0].certCountry[178] = new Option("RU (Russia)","RU");
+  document.forms[0].certCountry[179] = new Option("RW (Rwanda)","RW");
+  document.forms[0].certCountry[180] = new Option("SA (Saudi Arabia)","SA");
+  document.forms[0].certCountry[181] = new Option("SB (Solomon Islands)","SB");
+  document.forms[0].certCountry[182] = new Option("SC (Seychelles)","SC");
+  document.forms[0].certCountry[183] = new Option("SD (Sudan)","SD");
+  document.forms[0].certCountry[184] = new Option("SE (Sweden)","SE");
+  document.forms[0].certCountry[185] = new Option("SG (Singapore)","SG");
+  document.forms[0].certCountry[186] = new Option("SH (St. Helena)","SH");
+  document.forms[0].certCountry[187] = new Option("SI (Slovenia)","SI");
+  document.forms[0].certCountry[188] = new Option("SJ (Svalbard And Jan Mayen Islands)","SJ");
+  document.forms[0].certCountry[189] = new Option("SK (Slovakia)","SK");
+  document.forms[0].certCountry[190] = new Option("SL (Sierra Leone)","SL");
+  document.forms[0].certCountry[191] = new Option("SM (San Marino)","SM");
+  document.forms[0].certCountry[192] = new Option("SN (Senegal)","SN");
+  document.forms[0].certCountry[193] = new Option("SO (Somalia)","SO");
+  document.forms[0].certCountry[194] = new Option("SP (Serbia)","SP");
+  document.forms[0].certCountry[195] = new Option("SR (Suriname)","SR");
+  document.forms[0].certCountry[196] = new Option("ST (Sao Tome and Principe)","ST");
+  document.forms[0].certCountry[197] = new Option("SV(El Salvador)","SV");
+  document.forms[0].certCountry[198] = new Option("SY (Syria)","SY");
+  document.forms[0].certCountry[199] = new Option("SZ (Swaziland)","SZ");
+  document.forms[0].certCountry[200] = new Option("TC (Turks And Caicos Island)","TC");
+  document.forms[0].certCountry[201] = new Option("TD (Chad)","TD");
+  document.forms[0].certCountry[202] = new Option("TF (French Southen aan Antarctic Lands)","TF");
+  document.forms[0].certCountry[203] = new Option("TG (Togo)","TG");
+  document.forms[0].certCountry[204] = new Option("TH (Thailand)","TH");
+  document.forms[0].certCountry[205] = new Option("TJ (Tajikistan)","TJ");
+  document.forms[0].certCountry[206] = new Option("TK (Tokelau)","TK");
+  document.forms[0].certCountry[207] = new Option("TM (Turkmenistan)","TM");
+  document.forms[0].certCountry[208] = new Option("TN (Tunisia)","TN");
+  document.forms[0].certCountry[209] = new Option("TO (Tonga)","TO");
+  document.forms[0].certCountry[210] = new Option("TP (East Timor)","TP");
+  document.forms[0].certCountry[211] = new Option("TR (Turkey)","TR");
+  document.forms[0].certCountry[212] = new Option("TT (Trinidad and Tobago)","TT");
+  document.forms[0].certCountry[213] = new Option("TV (Tuvalu)","TV");
+  document.forms[0].certCountry[214] = new Option("TW (Taiwan)","TW");
+  document.forms[0].certCountry[215] = new Option("TZ (Tanzania)","TZ");
+  document.forms[0].certCountry[216] = new Option("UA (Ukraine)","UA");
+  document.forms[0].certCountry[217] = new Option("UG (Uganda)","UG");
+  document.forms[0].certCountry[218] = new Option("UM (U.S. Minor Outlyi)","UM");
+  document.forms[0].certCountry[219] = new Option("US (United States)","US");
+  document.forms[0].certCountry[220] = new Option("UY (Uruguay)","UY");
+  document.forms[0].certCountry[221] = new Option("UZ (Uzbekistan)","UZ");
+  document.forms[0].certCountry[222] = new Option("VA (Vatican City)","VA");
+  document.forms[0].certCountry[223] = new Option("VC (St. Vincent And The Grenadines)","VC");
+  document.forms[0].certCountry[224] = new Option("VE (Venezuela)","VE");
+  document.forms[0].certCountry[225] = new Option("VG (Virgin Islands, British)","VG");
+  document.forms[0].certCountry[226] = new Option("VI (Virgin Islands)","VI");
+  document.forms[0].certCountry[227] = new Option("VN (Viet Nam)","VN");
+  document.forms[0].certCountry[228] = new Option("VU (Vanuatu)","VU");
+  document.forms[0].certCountry[229] = new Option("WF (Wallis and Futura Islands)","WF");
+  document.forms[0].certCountry[230] = new Option("WS (Samoa)","WS");
+  document.forms[0].certCountry[231] = new Option("YE (Yemen)","YE");
+  document.forms[0].certCountry[232] = new Option("YT (Mayotte)","YT");
+  document.forms[0].certCountry[233] = new Option("YU (Yugoslvia)","YU");
+  document.forms[0].certCountry[234] = new Option("ZA (South Africa)","ZA");
+  document.forms[0].certCountry[235] = new Option("ZM (Zambia)","ZM");
+  document.forms[0].certCountry[236] = new Option("ZW (Zimbabwe)","ZW");
+ 
+  for (var i=0; i< document.forms[0].certCountry.options.length; i++) {
+    if (document.forms[0].certCountry.options[i].value == country) {
+      document.forms[0].certCountry.options[i].selected = true;
+      break;
+    }
+  }
+}
+
+function frmLoad() {
+
+  loadCountryList();
+
+  with ( document.forms[0] ) {
+      certName.value = '';
+      certCommonName.value = '';
+      certOrg.value = '';
+      certState.value = '';
+  }
+}
+
+function btnApply() {
+  var loc, idx, type;
+  
+  if (category != 'ca') {
+     loc = 'certlocal.cmd?action=add';
+  }
+  else {
+     loc = 'certca.cmd?action=add';
+  }
+  
+  with ( document.forms[0] ) {
+  
+	if ( isValidNameWSpace(certName.value) == false ) {
+		alert('Invalid Certificate Name "' + certName.value + '".');
+		return;
+	}
+	if( isXSS(certName.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Certificate Name");
+		return false;
+	}else{
+		loc += '&certName=' + certName.value;
+	}
+    
+    if ( certCommonName.value == '' ) {
+      alert('Common Name should not be empty.');
+      return;
+    }
+    if ( certOrg.value == '' ) {
+      alert('Organization Name should not be empty.');
+      return;
+    }
+    if ( certState.value == '' ) {
+      alert('State/Province Name should not be empty.');
+      return;
+    }
+	if( isXSS(certCommonName.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Common Name");
+		return false;
+	}else{
+		loc += '&certCommonName=' + certCommonName.value;
+	}
+	if( isXSS(certOrg.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Organization Name");
+		return false;
+	}else{
+		loc += '&certOrg=' + certOrg.value;
+	}
+	if( isXSS(certState.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on State/Province Name");
+		return false;
+	}else{
+		loc += '&certState=' + certState.value;
+	}
+	
+    idx = certCountry.selectedIndex;
+    loc += '&certCountry=' + certCountry.options[idx].value;
+  }
+
+  loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+  var code = 'location="' + loc + '"';
+  eval(code);
+}
+// done hiding -->
+            </script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <blockquote>
+      <form>
+        <b>Create new certificate request<br>
+        </b>
+        <br>
+        To generate a certificate signing request you need to include Common Name, 
+        Organization Name, State/Province Name, and the 2-letter Country Code for
+        the certificate.
+        <br>
+        <br>
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="180">Certificate Name:</td>
+            <td><input type='text' name='certName' size='20' maxlength="63"></td>
+          </tr>
+            <tr>
+              <td width="180">Common Name:</td>
+              <td><input type='text' name='certCommonName' size='20' maxlength="63"></td>
+            </tr>
+            <tr>
+              <td width="180">Organization Name:</td>
+              <td><input type='text' name='certOrg' size='20' maxlength="63"></td>
+            </tr>
+            <tr>
+              <td width="180">State/Province Name:</td>
+              <td><input type='text' name='certState' size='20' maxlength="32"></td>
+            </tr>
+            <tr>
+              <td width="180">Country/Region Name:</td>
+              <td><select name='certCountry' size="1">
+                </select></td>
+            </tr>
+          </table>
+        <br>
+        <br>
+        <br>
+        <center>
+          <input type='button' onClick='btnApply()' value='Apply'>
+        </center>
+      </form>
+    </blockquote>
+  </body>
+</html>

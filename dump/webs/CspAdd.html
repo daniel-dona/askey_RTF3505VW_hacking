@@ -1,0 +1,142 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function btnApply() {
+   var loc = 'dhcpdconditionallease.cmd?action=add';
+   with ( document.forms[0] ) {
+
+      if (""==VendorClassId.value) {
+	      alert( 'VendorClassId "' + VendorClassId.value + '" is empty.');
+	      return;
+      }
+      else if (isXSS(VendorClassId.value)) {
+          alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Vendor Class Id");
+          return;
+      }
+      else if (isValidIpAddress(MinIpAddr.value) == false) {
+	      alert( 'MinIpAddr "' + MinIpAddr.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (isValidIpAddress(MaxIpAddr.value) == false) {
+	      alert( 'MaxIpAddr "' + MaxIpAddr.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (isValidSubnetMask(SubnetMask.value) == false) {
+	      alert( 'SubnetMask "' + SubnetMask.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (isValidIpAddress(Router.value) == false) {
+	      alert( 'Router "' + Router.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (DnsServer1.value!= "" && isValidIpAddress(DnsServer1.value) == false) {
+	      alert( 'DnsServer1 "' + DnsServer1.value + '" is invalid IP address.');
+	      return;
+      }
+      else if (DnsServer2.value!= "" && isValidIpAddress(DnsServer2.value) == false) {
+	      alert( 'DnsServer2 "' + DnsServer2.value + '" is invalid IP address.');
+	      return;
+      }
+      else {
+	      loc += '&VendorClassId=' + VendorClassId.value;
+	      loc += '&MinIpAddr=' + MinIpAddr.value;
+	      loc += '&MaxIpAddr=' + MaxIpAddr.value;
+	      loc += '&Router=' + Router.value;
+	      loc += '&SubnetMask=' + SubnetMask.value;
+	      loc += '&DnsServer1=' + DnsServer1.value;
+	      loc += '&DnsServer2=' + DnsServer2.value;
+	      loc += '&Option240=' + Option240.value;
+	      loc += '&Option241=' + Option241.value;
+	      loc += '&Option242=' + Option242.value;
+	      loc += '&Option243=' + Option243.value;
+	      loc += '&Option244=' + Option244.value;
+	      loc += '&Option245=' + Option245.value;
+             loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   	      var code = 'location="' + loc + '"';
+   	      eval(code);
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>DHCP Conditional Lease </b><br>
+            <br>
+	    Enter the information of conditional pool then click "Apply/Save" .<br>
+            <br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td >Vendor Class Id:</td>
+                  <td><input type='text' name='VendorClassId'></td>
+               </tr>
+               <tr>
+                  <td>Min IP Address:</td>
+                  <td><input type='text' name='MinIpAddr'> </td>
+               </tr>
+               <tr>
+                  <td>Max IP Address:</td>
+                  <td><input type='text' name='MaxIpAddr'></td>
+               </tr>
+               <tr>
+                  <td>Subnet Mask:</td>
+                  <td><input type='text' name='SubnetMask'></td>
+               </tr>
+               <tr>
+                  <td>Router:</td>
+                  <td><input type='text' name='Router'></td>
+               </tr>
+               <tr>
+                  <td>DNS servers1:</td>
+                  <td><input type='text' name='DnsServer1'></td>
+               </tr>
+               <tr>
+                  <td>DNS servers2:</td>
+                  <td><input type='text' name='DnsServer2'></td>
+               </tr>
+               <tr>
+                  <td>Option 240:</td>
+                  <td><input type='text' name='Option240'></td>
+               </tr>
+               <tr>
+                  <td>Option 241:</td>
+                  <td><input type='text' name='Option241'></td>
+               </tr>
+               <tr>
+                  <td>Option 242:</td>
+                  <td><input type='text' name='Option242'></td>
+               </tr>
+               <tr>
+                  <td>Option 243:</td>
+                  <td><input type='text' name='Option243'></td>
+               </tr>
+               <tr>
+                  <td>Option 244:</td>
+                  <td><input type='text' name='Option244'></td>
+               </tr>
+               <tr>
+                  <td>Option 245:</td>
+                  <td><input type='text' name='Option245'></td>
+               </tr>
+
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

@@ -1,0 +1,108 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="te_util.js"></script>
+            <script language="javascript" src="te_jquery.min.js"></script>
+            <script language="javascript">
+<!-- hide
+var unitNum = '<%ejGetWl(wlInstance_id)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var current2dot4gGuestIfname='<%ejGetOther(wifiGuestSecurity, true, interface)%>';
+var current2dot4gGuestSecState='<%ejGetOther(wifiGuestSecurity, true, state)%>';
+
+$(window).load(function() {
+  var wl2dot4g=[];
+  var wl2dot4gIfname=current2dot4gGuestIfname.split(',');
+  var wl2dot4gSecState=current2dot4gGuestSecState.split(',');
+  if(wl2dot4gIfname.length==wl2dot4gSecState.length)
+  {
+    var len=wl2dot4gSecState.length;
+    for(var i=0; i<len; i++)
+    {
+      var item='<tr>';
+      item+='<td>'+'<label>'+(wl2dot4gIfname[i]==''?'&nbsp;':wl2dot4gIfname[i])+'</label>'+'</td>';
+      item+='<td align="center">'+'<input type="checkbox" '+(wl2dot4gSecState[i]=='true'?'checked':'')+' name="security2dot4g" '+'/>'+'</td>';
+      item+='</tr>';
+      $('#tblGuest2dot4g').find('tbody').append(item);
+    } //end for
+  }
+  
+  $('#btnApply').click(function() {
+    var chk2dot4g=$('#tblGuest2dot4g').find('tbody').find('input[name="security2dot4g"]');
+    var mutated=[];
+    $.each(chk2dot4g, function(idx, val){
+      mutated.push($(val).prop('checked'));
+    });
+    
+    var loc = 'te_wifiguestsecurity.cmd?action=set2dot4g';
+    loc += '&inst='+mutated.join(',');
+    loc += '&sessionKey='+sessionKey;
+    $.ajax({type:"GET", url:loc, async:false, success: function(result) {
+      var response=[];
+      var outer=result.split('&');
+      for( var i=0; i<outer.length; i++ )
+      {
+        var inner=outer[i].split('=');
+        switch( inner[0] )
+        {
+          case 'sessionKey':
+            sessionKey=inner[1];
+            response['sessionKey']=sessionKey;
+            break;
+          case 'result':
+            response['result']=inner[1];
+            break;
+          default:
+            break;
+        } //end for
+      } //end for
+      if(response['result']!=undefined && response['result']=='true')
+      {
+        location.reload();
+      }
+      else if(response['result']!=undefined && response['result']=='false')
+      {
+        //do nothing
+      }
+      else
+      {
+        //do nothing
+      }
+    }});
+  });
+});
+
+// done hiding -->
+      </script>
+   </head>
+   <body>
+      <p><b>Wi-Fi Guest AP Security Configuration:</b></p>
+      <p>
+      <font>The SSID must be independent of each other. Computers connected to a SSID should not have access to other computers on other SSID.</font><br/>
+      <font>The equipment connected secondary network SSID should not have access to router configuration (IP address configured as a gateway on the LAN).</font><br/>
+      <font>The equipment connected secondary network SSID should not have access to any computer connected to the LAN router.</font><br/>
+      <font>The equipment connected on secondary SSID itself should have access to the WAN / Internet outside.</font><br/>
+      </p>
+      <table border='1' cellpadding='3' cellspacing='0' id='tblGuest2dot4g'>
+        <thead>
+          <td class='hd'>Interface Name</td>
+          <td class='hd'>Enabled</td>
+        </thead>
+        <tbody>
+        </tbody>
+      </table><br/>
+      <input type='button' value='Apply/Save' id='btnApply'/>
+      <br/>
+   </body>
+</html>
+
+
+
+
+
+
+
+<!-- added by Leo -->

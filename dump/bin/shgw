@@ -1,0 +1,376 @@
+#!/bin/sh
+
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+#
+# Used for matching the version
+. /etc/shgw/shgw.version
+
+#
+# Load all the variables
+. /etc/shgw/shgw.constants
+. /etc/shgw/shgw.common
+. /etc/shgw/shgw.errno
+. /etc/shgw/shgw_migrate
+
+SQL_FAILURE_RETRY_COUNT=5
+ONE_SEC=1
+
+#
+# Trim startup log
+${TAIL} -n ${NO_OF_LINES} ${SHGW_STARTUP_LOG} > ${SHGW_STARTUP_LOG_TMP}
+${CAT} ${SHGW_STARTUP_LOG_TMP} > ${SHGW_STARTUP_LOG}
+${RM} -f ${SHGW_STARTUP_LOG_TMP}
+
+#
+# Enable deep inspection debugging of this shell script
+
+exec 3>&1 4>&2 1>> ${SHGW_STARTUP_LOG} 2>&1
+set -x
+
+fn_retry_cmd_upto_five_times() {
+        local _cmd=$1
+        local _ecode=$2
+        COUNT=1
+        while [ $COUNT -lt $SQL_FAILURE_RETRY_COUNT ]; do
+                eval $_cmd > /dev/null 2>&1
+                if [ $? -eq 0 ]; then
+                        break
+                fi
+                sleep 1
+                COUNT=$((${COUNT} + 1))
+        done
+
+        if [ $COUNT -eq $SQL_FAILURE_RETRY_COUNT ]; then
+                fn_err_exit $_ecode
+        fi
+}
+
+create_debug_files(){
+	> ${SHGW_STARTUP_STATUS}
+	> ${SHGW_ERROR_FILE}
+}
+
+
+get_lan_ifaces() {
+	LAN_INTERFACES="br0"
+	local _IFACE=""
+	LAN_INTERFACE_JSON_LIST=""
+	for _IFACE in ${LAN_INTERFACES}; do
+		if [ ! -z ${LAN_INTERFACE_JSON_LIST} ]; then
+			LAN_INTERFACE_JSON_LIST=${LAN_INTERFACE_JSON_LIST}','
+		fi
+		LAN_INTERFACE_JSON_LIST=${LAN_INTERFACE_JSON_LIST}'"'${_IFACE}'"'
+	done
+	if [ -z ${LAN_INTERFACE_JSON_LIST} ]; then
+		fn_err_exit ${NO_LAN_IFACE}
+	fi
+	LAN_INTERFACE_JSON_LIST='['${LAN_INTERFACE_JSON_LIST}']'
+	${ECHO} "[$(fn_time_now)] LAN_INTERFACES = ${LAN_INTERFACE_JSON_LIST} " >> ${SHGW_STARTUP_STATUS}
+}
+
+create_persistant_sqlite_db(){
+        fn_retry_cmd_upto_five_times "${SQLITE} ${SHGW_PERSISTANT_DB} < ${SHGW_CONFIG_STORE}" "${PERSISTANT_DB_CREATE_FAILED}"
+
+        fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value='${SHGW_VERSION}' WHERE key='version';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+}
+
+update_persistant_sqlite_db() {
+		fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value='/var/hosts' WHERE key='dhcp_lease_file_name';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "UPDATE shgw_config_store set value='${LAN_INTERFACE_JSON_LIST}' WHERE key='lan_interfaces';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "UPDATE shgw_config_store set value='${LAN_INTERFACE_JSON_LIST}' WHERE key='httpd_interfaces';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+}
+
+check_persistant_db(){
+
+	local _need_to_create_db=0
+	if [ -f ${SHGW_PERSISTANT_DB} ]; then
+		fn_retry_query_upto_five_times "SELECT value FROM shgw_config_store WHERE key='version';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		local _shgw_version_from_sql=${QUERY_OUTPUT}
+		if [ "${_shgw_version_from_sql}" != "${SHGW_VERSION}" ]; then
+			fn_migrate_persistant_db
+		fi
+	else
+		# persistant db not found
+		_need_to_create_db=1
+	fi
+
+	if [ ${_need_to_create_db} -eq 1 ]; then
+		create_persistant_sqlite_db
+	fi
+
+	update_persistant_sqlite_db
+}
+
+fetch_skip_ips() {
+	if [ ! -f ${IP_SKIP_LIST_FILE} ]; then
+		${ECHO} "[$(fn_time_now)] No Skip IPs file" >> ${SHGW_STARTUP_STATUS}
+		IP_SKIP_JSON_LIST='[""]'
+	else
+		IP_SKIP_JSON_LIST=""
+		while read line
+		do
+			if [ ! -z ${IP_SKIP_JSON_LIST} ]; then
+				IP_SKIP_JSON_LIST=${IP_SKIP_JSON_LIST}','
+			fi
+			IP_SKIP_JSON_LIST=${IP_SKIP_JSON_LIST}'"'${line}'"'
+		done < ${IP_SKIP_LIST_FILE}
+
+		if [ -z ${IP_SKIP_JSON_LIST} ]; then
+			${ECHO} "[$(fn_time_now)] No Skip IPs" >> ${SHGW_STARTUP_STATUS}
+		fi
+
+		IP_SKIP_JSON_LIST='['${IP_SKIP_JSON_LIST}']'
+		${ECHO} "[$(fn_time_now)] Skipping IPs = ${IP_SKIP_JSON_LIST} " >> ${SHGW_STARTUP_STATUS}
+	fi
+
+	fn_retry_query_upto_five_times "UPDATE shgw_config_store set value='${IP_SKIP_JSON_LIST}' WHERE key='ip_skip_list';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+}
+
+
+fetch_and_update_gwinfo() {
+	serial=$(${ECHO} $(${CUT} -d ';' -f1 ${HGUINFO}))
+	model=$(${ECHO} $(${CUT} -d ';' -f2 ${HGUINFO}))
+	timezone=$(${ECHO} $(${CUT} -d ';' -f3 ${HGUINFO}))
+	country_code=$(${ECHO} $(${CUT} -d ';' -f4 ${HGUINFO}))
+	base_mac=$(${ECHO} $(${CUT} -d ';' -f5 ${HGUINFO}))
+
+	if [ -z "${base_mac}" ]; then
+		fn_err_exit ${FETCH_BASE_MAC_FAILED}
+	fi
+
+	if [ -z ${serial} ]; then
+		${ECHO} "[$(fn_time_now)] Serial number is empty!"
+		serial="serial"
+	fi
+
+	if [ -z ${model} ]; then
+		${ECHO} "[$(fn_time_now)] Model number is empty!"
+		model="model"
+	fi
+
+	if [ -z ${country_code} ]; then
+		${ECHO} "[$(fn_time_now)] Country code is empty!"
+		country_code="ES" #Should we quit instead of this?
+	fi
+
+	if [ -z ${timezone} ]; then
+		${ECHO} "[$(fn_time_now)] Timezone is empty!"
+		timezone="GMT"
+	fi
+
+	fn_retry_query_upto_five_times "INSERT or REPLACE INTO shgw_config_store(key, value) VALUES ('shgw_base_mac', '${base_mac}');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value='${serial}' WHERE key='serial_number';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value='${model}' WHERE key='model_number';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	fn_retry_query_upto_five_times "INSERT or REPLACE INTO shgw_config_store(key, value) VALUES ('csp_country_code', '${country_code}');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	fn_retry_query_upto_five_times "INSERT or REPLACE INTO shgw_config_store(key, value) VALUES ('timezone', '${timezone}');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+}
+
+create_non_persistant_sqlite_db(){
+		fn_retry_query_upto_five_times "CREATE TABLE IF NOT EXISTS device_discovery_table(mac TEXT PRIMARY KEY, ip_address TEXT, ip6_address TEXT, host_name TEXT, status INTEGER, last_seen INTEGER, trusted INTEGER);" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "CREATE TABLE IF NOT EXISTS stats(key TEXT PRIMARY KEY, value TEXT);" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "DELETE FROM stats;" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "INSERT INTO stats VALUES('dns_stats', '{}');" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "INSERT INTO stats VALUES('sys_stats', '{}');" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+		fn_retry_query_upto_five_times "CREATE TABLE IF NOT EXISTS shgw_access_restrictions(status INTEGER, protocol TEXT, port INTEGER, source TEXT, devices TEXT);" "${SHGW_NON_PERSISTANT_DB}" "${NON_PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}" "${ONE_SEC}"
+}
+
+#------------------------------------start_server------------------------------
+
+start_watchdogd() {
+	#Remove the o/p redirection done by exec
+	exec 1>&3 2>&4
+
+	${SHGW_WD_MONIT} &
+
+	#Add the o/p redirection
+	exec 3>&1 4>&2 1>> ${SHGW_STARTUP_LOG} 2>&1
+
+	wd_pid=$(${PS} | ${GREP} -i "shgw_watchdogd" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	if [ ! -z $wd_pid ]; then
+		# request start
+		${KILL} -SIGUSR2 $wd_pid
+	fi
+}
+
+create_shgw_directories() {
+	${MKDIR} -p ${SHGW_NVRAM}
+	${MKDIR} -p ${SHGW_TMPFS_PATH}
+}
+
+
+check_tld_json_existence() {
+	if [ ! -f ${TLD_JSON_FILE} ];then
+		${CP} ${SHGW_PRIVATE}/shgw_tld_file.json ${SHGW_NVRAM}
+		${CHMOD} 666 ${TLD_JSON_FILE}
+	fi
+}
+#------------------------------------>MAIN<----------------------------------------
+
+start_shg(){
+	create_shgw_directories
+
+	get_lan_ifaces
+
+	check_persistant_db
+	fetch_and_update_gwinfo
+	fetch_skip_ips
+
+	${SHGW_ACCESS_RESTRICTION} "inbound_sec_start"
+	create_non_persistant_sqlite_db
+	${ECHO} "[$(fn_time_now)] Database created successfully" >> ${SHGW_STARTUP_STATUS}
+	check_tld_json_existence
+	start_watchdogd
+
+}
+
+force_start_shg() {
+        fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value = 0 WHERE key = 'shgw_stop_performed';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	start_shg
+}
+
+stop_shg(){
+	${SHGW_ACCESS_RESTRICTION} "inbound_sec_stop"
+
+	# request stop
+	wd_pid=$(ps | ${GREP} -i "shgw_watchdogd" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	${KILL} -SIGUSR1 $wd_pid
+}
+
+force_stop_shg(){
+        fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value = 1 WHERE key = 'shgw_stop_performed';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}" "${ONE_SEC}"
+	stop_shg
+}
+
+kill_shg() {
+	${ECHO} "Killing SHGW"
+
+	stop_shg
+
+	wd_monit_pid=$(${PS} | ${GREP} -i "shgw_wd_monit" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	if [ ! -z $wd_monit_pid ]; then
+		${ECHO} "Stopping monit!"
+		${KILL} -9 $wd_monit_pid
+	fi
+
+	wd_pid=$(${PS} | ${GREP} -i "shgw_watchdogd" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	if [ ! -z $wd_pid ]; then
+		${ECHO} "Stopping watchdog!"
+		${KILL} -9 $wd_pid
+	fi
+
+
+	${RM} -rf ${SHGW_TMPFS_PATH}
+	${RM} -rf ${SHGW_STARTUP_STATUS}
+	${RM} -rf ${SHGW_STARTUP_LOG}
+	${RM} -rf ${SHGW_ERROR_FILE}
+
+}
+
+reset_shg() {
+	${ECHO} "Resetting SHGW!"
+
+	${SHGW_ROUTER_RESET}
+
+	wd_monit_pid=$(${PS} | ${GREP} -i "shgw_wd_monit" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	if [ ! -z $wd_monit_pid ]; then
+		${ECHO} "Stopping monit!"
+		${KILL} -9 $wd_monit_pid
+	fi
+
+	wd_pid=$(${PS} | ${GREP} -i "shgw_watchdogd" | ${GREP} -v "grep" | ${AWK} -v OFS=' ' '{print $1}')
+	if [ ! -z $wd_pid ]; then
+		${ECHO} "Stopping watchdog!"
+		${KILL} -9 $wd_pid
+	fi
+	# backup
+	${RM} -f ${SHGW_PERSISTANT_DB}
+
+	${ECHO} "Reset done!"
+}
+
+shgw_mode() {
+	if [ X"$mode" == X"start" ]; then
+		${ECHO} "SHGW start called!"
+		start_shg
+	elif [ X"$mode" == X"stop" ]; then
+		${ECHO} "SHGW stop called!"
+		stop_shg
+	elif [ X"$mode" == X"kill" ]; then
+		${ECHO} "SHGW kill called!"
+		kill_shg
+	elif [ X"$mode" == X"restart" ]; then
+		${ECHO} "SHGW restart called!"
+		stop_shg
+		sleep 3
+		start_shg
+	elif [ X"$mode" == X"force_start" ]; then
+		${ECHO} "SHGW force_start called!"
+		force_start_shg
+	elif [ X"$mode" == X"force_stop" ]; then
+		${ECHO} "SHGW force_stop called!"
+		force_stop_shg
+	elif [ X"$mode" == X"reset" ]; then
+		${ECHO} "SHGW reset called!"
+		reset_shg
+	else
+		${ECHO} "Usage: $0 [start|stop|kill|restart|force_start|force_stop|reset]"
+		fn_err_exit ${INVALID_MODE}
+	fi
+	${RM} -rf $STARTUP_LOCK
+}
+
+
+exit_if_running() {
+	# TODO : Add a fdlock implementaion
+	local mypid=$$
+
+	if ! [ -f "$STARTUP_LOCK" ]; then
+		${ECHO} $$ > $STARTUP_LOCK
+		return
+	fi
+
+	local pid_on_file=$(${CAT} "$STARTUP_LOCK")
+	[ X"$pid_on_file" == X"$mypid" ] && return
+
+	old_cmd_line=$(${CAT} /proc/$pid_on_file/cmdline 2>/dev/null)
+	[ "$?" != "0" ] && ${ECHO} $$ > $STARTUP_LOCK && return
+
+	${ECHO} "$old_cmd_line" | ${GREP} "shgw"
+	[ "$?" == "0" ] && ${ECHO} "Already running" && exit 127
+
+	${ECHO} $$ > $STARTUP_LOCK
+}
+
+#--------------------------------------------------------------------------------
+
+${ECHO} "Called for: $1"
+exit_if_running
+
+create_debug_files
+${ECHO} "[$(fn_time_now)] starting" >> ${SHGW_STARTUP_STATUS}
+mode=$1
+shgw_mode
+${ECHO} "[$(fn_time_now)] done" >> ${SHGW_STARTUP_STATUS}

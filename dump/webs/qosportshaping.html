@@ -1,0 +1,93 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+// ETH : 1,000,000 Kbps = 1Gbps
+var rateMaxEth = 1000000;
+//Minimum burst size shall be minimally larger than the size of the largest possible IP packet in the stream.
+var burstMin = 1600;
+
+function btnApply() {
+   var loc = 'qosportshaping.cmd?action=savapply';
+
+   with ( document.forms[0] )
+   {
+      for (var i=0; i < document.forms[0].elements.length; i++)
+      {
+         if(document.forms[0].elements[i].name.search('RateCfg') != -1)
+         {
+            loc += '&'+document.forms[0].elements[i].name + '=' + encodeUrl(document.forms[0].elements[i].value);
+         }
+      }
+   }
+   
+   with ( document.forms[0] )
+   {
+      for (var i=0; i < document.forms[0].elements.length; i++)
+      {
+         if(document.forms[0].elements[i].name.search('RateCfg') != -1)
+         {
+            if (isNaN(parseInt(document.forms[0].elements[i].value)) == true)
+            {
+               alert('Shaping Rate "' + document.forms[0].elements[i].value + '" is invalid.');
+               return;
+            }
+            rate = parseInt(document.forms[0].elements[i].value);
+            if (rate != -1 && (rate <= 0 || rate > rateMaxEth))
+            {
+               alert('Shaping Rate "' + document.forms[0].elements[i].value + '" is out of range [1-' + rateMaxEth + '].');
+               return;
+            }
+            loc += '&'+document.forms[0].elements[i].name + '=' + encodeUrl(document.forms[0].elements[i].value);
+         }
+         else if(document.forms[0].elements[i].name.search('SizeCfg') != -1)
+         {
+            if (isNaN(parseInt(document.forms[0].elements[i].value)) == true)
+            {
+               alert('Burst Size "' + document.forms[0].elements[i].value + '" is invalid.');
+               return;
+            }
+            burst = parseInt(document.forms[0].elements[i].value);
+            if (rate != -1 && burst < burstMin) {
+               alert('Burst Size "' + document.forms[0].elements[i].value + '" shall be >=' + burstMin + '.');
+               return;
+            }
+            loc += '&'+document.forms[0].elements[i].name + '=' + encodeUrl(document.forms[0].elements[i].value);
+         }
+      }
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+// done hiding -->
+
+            </script>
+   </head>
+   <body>
+      <blockquote> 
+         <form>                                                                              
+            <b>QoS Port Shaping Setup</b><br>
+            <br> 
+            QoS port shaping supports traffic shaping of Ethernet interface.<br>
+            If "Shaping Rate" is set to "-1", it means no shaping and "Burst Size" will be ignored.<br>
+            <br> 
+            <table border='1' cellpadding='6' cellspacing='0'> 
+               <tr align='center'> 
+                  <td class='hd'>Interface</td> 
+                  <td class='hd'>Type</td> 
+                  <td class='hd'>Shaping Rate (Kbps)</td> 
+                  <td class='hd'>Burst Size (bytes)</td> 
+               </tr>
+               <%ejGetOther(qosportshapingInfo,0,0)%>
+            </table>
+            <br> 
+            <input type='button' onClick='btnApply()' value='Apply/Save'> 
+         </form> 
+      </blockquote> 
+   </body> 
+</html>

@@ -1,0 +1,105 @@
+#!/bin/sh
+
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+. /etc/shgw/shgw.constants
+
+TMP_FILE="${SHGW_TMPFS_PATH}/missing_files"
+UPLOAD_LIST=""
+CONNECT_TIMEOUT=180
+MAX_TIME=6000
+
+remove_tmp_file() {
+	$RM -rf $TMP_FILE
+}
+
+get_db_values() {
+	[ -f "$SHGW_PERSISTANT_DB" ] || exit 1
+
+	ACCESS_TOKEN=$($ECHO "select value from shgw_config_store where key = 'access_token';" | $SQLITE $SHGW_PERSISTANT_DB)
+	[ "$?" != "0" -o "$ACCESS_TOKEN" == "" ] && exit 2
+
+	url=$($ECHO "select primary_url from csp_service_discovery where service ='wd_critical_url';" |
+              $SQLITE $SHGW_PERSISTANT_DB)
+	[ "$?" != "0" -o "$url" == "" ] && exit 3
+
+}
+
+add_to_list_if_exists() {
+	[ -f $1 ] &&
+	UPLOAD_LIST=$UPLOAD_LIST"-F file[]=@$1 " ||
+	echo "$1 Not found" >> $TMP_FILE
+}
+
+collect_debug_data() {
+	"${SHGW_BIN_STORE}"/shgw_collect_debug_data
+}
+
+construct_upload_files_list() {
+	add_to_list_if_exists $SHGW_ERROR_FILE
+	add_to_list_if_exists $SHGW_STARTUP_STATUS
+	add_to_list_if_exists $SHGW_STARTUP_LOG
+	add_to_list_if_exists $CRONTAB_FILE
+	add_to_list_if_exists $TMP_FILE
+	add_to_list_if_exists $DEBUG_DATA_FILE
+}
+
+add_error_code_list() {
+	UPLOAD_LIST=$UPLOAD_LIST"-F error_codes='$1' "
+}
+
+upload_files() {
+	$CURL -H "Authorization: $ACCESS_TOKEN"                \
+	      --connect-timeout $CONNECT_TIMEOUT       \
+	      --max-time $MAX_TIME                     \
+	      --"$CACERT" "$CA_CERT_FILE"     			   \
+	      $UPLOAD_LIST -X POST $url
+}
+
+collect_files_to_upload() {
+	remove_tmp_file
+	collect_debug_data
+}
+
+upload_files_collected() {
+	get_db_values
+	construct_upload_files_list
+	add_error_code_list $1
+	upload_files
+	remove_tmp_file
+}
+
+case $1 in
+	collect)
+		collect_files_to_upload
+		;;
+	upload)
+		upload_files_collected $2
+		;;
+	both)
+		collect_files_to_upload
+		upload_files_collected
+		;;
+esac

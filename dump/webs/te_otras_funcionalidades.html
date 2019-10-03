@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+	<link rel="stylesheet" href="sweetalert.css" type="text/css">
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+    <script language="javascript" src="te_jquery.form.js"></script>
+<!--<script language="javascript" src="sweetalert.min.js"></script>-->
+<script language="JavaScript">
+<!-- hide
+var oldIE = (navigator.userAgent.indexOf("MSIE") != -1 ) && (document.documentMode <=9 );
+var head = document.getElementsByTagName('head')[0];
+var js = document.createElement("script");
+js.type = "text/javascript";
+if (!oldIE) {
+    js.src = 'sweetalert.min.js';
+    head.appendChild(js);
+}
+
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var active = '<%ejGet(enblUpnp)%>';
+var progress = 0;
+var info = [];
+
+$(function()
+{
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$('.saveimg').addClass('divHide');
+	$('[value="Cancelar"]').addClass('divHide');
+	$('.saveimg').find('td').css("background-color","");
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	if( active=='1' )
+		$('.active').prop('src','te_on.png');
+    else
+		$('.active').prop('src','te_off.png');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value=Guardar]').on('click',function(){
+		if($('.saveimg').hasClass('divHide')){
+			$('.uploadconfig').addClass('divHide');
+			$('.saveimg,[value="Cancelar"]').removeClass('divHide');
+		}
+		else{
+		var loc = 'backupsettings.conf';
+		var code = 'location="' + loc + '"';
+		eval(code);
+		}
+	});
+	$('[value=Cancelar]').on('click',function(){
+		$('.saveimg,[value=Cancelar]').addClass('divHide');
+		$('.uploadconfig').removeClass('divHide');
+	});
+	$('.active').on('click',function(){
+		var loc = 'te_upnp.cmd?';
+		if( $(this).attr('src') == 'te_on.png' ){
+			if (!confirmSpecial('Desactivado UPnP')) return;
+			loc += 'enblUpnp=0';
+		}
+		else{
+			if (!confirmSpecial('Activado UPnP')) return;
+			loc += 'enblUpnp=1';
+		}
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		eval(code);
+	});
+	info[ 0] = '<%ejGet(teamName)%>';
+	info[ 1] = '<%ejGet(modelName)%>';
+	info[ 2] = '<%ejGet(serialNumber)%>';
+	info[ 3] = '<%ejGet(hardwareVersion)%>';
+	info[ 4] = '<%ejGet(sysVersion)%>';
+	info[ 5] = '<%ejGet(sysVersion)%>';
+	info[ 6] = '<%ejGetOther(wanInterfaceInfo, connectionStatus)%>';
+	info[ 7] = '<%ejGetOther(wanInterfaceInfo, externalIPAddress)%>';
+	info[ 8] = '<%ejGet(ethIpAddress)%>';
+	info[ 9] = '<%ejGet(ethSubnetMask)%>';
+	info[10] = '<%ejGet(enblDhcpSrv)%>';
+	var dns = '<%ejGet(lanHostDns)%>'.split(',');
+	if (dns[0]  !=  '') info[11] = dns[0]; else info[11] = '--';
+	if (dns.length > 1) info[12] = dns[1]; else info[12] = '--';
+	info[13] = '<%ejGetWl(wlEnbl_main0)%>';
+	info[14] = htmlDecode('<%ejGetWl(wlSsid_main0)%>');
+	info[15] = '<%ejGetWl(wlHide_main0)%>';
+	info[16] = '<%ejGetWl(wlAuthMode_main0)%>';
+	info[17] = '<%ejGetWl(wlWpa_main0)%>';
+	info[18] = '<%ejGetWl(wlEnbl_main1)%>';
+	info[19] = htmlDecode('<%ejGetWl(wlSsid_main1)%>');
+	info[20] = '<%ejGetWl(wlHide_main1)%>';
+	info[21] = '<%ejGetWl(wlAuthMode_main1)%>';
+	info[22] = '<%ejGetWl(wlWpa_main1)%>';
+	info[23] = '<%ejGetOther(installation, serviceType)%>';
+	info[24] = '<%ejGetOther(installation, addressType)%>';
+	info[25] = '<%ejGetOther(installation, dvwanIPaddress)%>';
+	info[26] = '<%ejGetOther(installation, dvlanIPaddress)%>';
+
+	for (i=0; i<27; i++) {
+		$('td:eq('+(i*2+1)+')').text(info[i]);
+	}
+	// team Name
+	$('td:eq(1)').html('Equipo para acceso Fibra &Oacute;ptica -'+$('td:eq(1)').html());
+
+	// Model Name
+	$('td:eq(3)').html('RTF'+$('td:eq(3)').html());
+
+	// PPPoE Connection
+	switch ($('td:eq(13)').html()) {
+		case 'Connected':
+			$('td:eq(13)').html('Internet est&aacute; configurado'); break;
+		default:
+			$('td:eq(13)').html('Internet est&aacute; sin configurar'); break;
+	}
+
+	// DHCP Server
+	if ($('td:eq(21)').html() == '0')
+		$('td:eq(21)').html('Desactivado');
+	else
+		$('td:eq(21)').html('Activado');
+
+	// WiFi 2.4GHz
+	if ($('td:eq(27)').html() == '0')
+		$('td:eq(27)').html('Desactivado');
+	else
+		$('td:eq(27)').html('Activado');
+
+	// Hide SSID
+	if ($('td:eq(31)').html() == '0')
+		$('td:eq(31)').html('No');
+	else
+		$('td:eq(31)').html('Si');
+
+	// Authentication & Encryption
+	mode = $('td:eq(33)').html();
+	wpa = $('td:eq(35)').html();
+	switch (mode) {
+		case 'open':
+			$('td:eq(33)').html('Sin cifrado');
+			$('td:eq(35)').html('Desactivada'); break;
+		case 'shared':
+			$('td:eq(33)').html('WEP');
+			$('td:eq(34)').html('Compartido'); break;
+		case 'psk2':
+			$('td:eq(33)').html('WPA2');
+			$('td:eq(35)').html(wpa.toUpperCase()); break;
+		default:
+			$('td:eq(33)').html('WPA/WPA2 Mixto');
+			$('td:eq(35)').html(wpa.toUpperCase()); break;
+	}
+
+	// WiFi 5GHz
+	if ($('td:eq(37)').html() == '0')
+		$('td:eq(37)').html('Desactivado');
+	else
+		$('td:eq(37)').html('Activado');
+
+	// Hide SSID
+	if ($('td:eq(41)').html() == '0')
+		$('td:eq(41)').html('No');
+	else
+		$('td:eq(41)').html('Si');
+
+	// Authentication & Encryption
+	mode = $('td:eq(43)').html();
+	wpa = $('td:eq(45)').html();
+	switch (mode) {
+		case 'open':
+			$('td:eq(43)').html('Sin cifrado');
+			$('td:eq(45)').html('Desactivada'); break;
+		case 'shared':
+			$('td:eq(43)').html('WEP');
+			$('td:eq(44)').html('Compartido'); break;
+		case 'psk2':
+			$('td:eq(43)').html('WPA2');
+			$('td:eq(45)').html(wpa.toUpperCase()); break;
+		default:
+			$('td:eq(43)').html('WPA/WPA2 Mixto');
+			$('td:eq(45)').html(wpa.toUpperCase()); break;
+	}
+
+	// IPTV
+	if ($('td:eq(47)').html() == '0'){
+		$('td:eq(47)').html('Tr&iacute;o');
+		$('td:eq(50)').show();
+		$('td:eq(51)').show();
+		$('td:eq(52)').show();
+		$('td:eq(53)').show();
+	}
+	else{
+		$('td:eq(47)').html('D&uacute;o');
+		$('td:eq(50)').hide();
+		$('td:eq(51)').hide();
+		$('td:eq(52)').hide();
+		$('td:eq(53)').hide();
+	}
+
+	switch (info[24]) {
+		case '0':
+			$('td:eq(49)').html('Din&aacute;mico (NAT-PAT)'); break;
+		case '1':
+			$('td:eq(49)').html('Est&aacute;tico'); break;
+		case '2':
+			$('td:eq(49)').html('Ninguno'); break;
+	}
+	if ( info[24] == '0'){
+		$('td:eq(52)').hide();
+		$('td:eq(53)').hide();
+	}
+	if ( info[24] == '1'){
+		$('td:eq(52)').show();
+		$('td:eq(53)').show();
+	}
+
+    var msg = new Array();
+    msg[0] = 'restablecer configuraci&oacute;n actual! El sistema se est&aacute; reiniciando ahora...';
+    msg[1] = 'Cargando Error en la configuraci&oacute;n. El sistema no tiene memoria. El router de banda ancha se est&aacute; reiniciando.';
+    msg[2] = 'Cargando Error en la configuraci&oacute;n. No se seleccion&oacute; un archivo de configuraci&oacute;n.';
+    msg[3] = 'Cargando Error en la configuraci&oacute;n. El archivo seleccionado contiene una configuraci&oacute;n ilegal.';
+    msg[4] = 'Error grave durante la carga de configuraci&oacute;n.';
+    $('[value="Cargar"]').on('click', function(){
+		if ( $('[name="updateconfig"]').val() == '') {
+            alertSpecial('No se seleccion&oacute; un archivo de imagen.');
+            return false;
+        }
+		else{
+			$('form').on('submit', function(){
+			if ($('[name="updateconfig"]').val() == '') {
+				alertSpecial('Config vista previa no se admite en el tipo de documento a continuación IE10.\n\n &iquest;Realmente desea actualizar la configuraci&oacute;n?');
+				return false;
+			}
+			if (!confirmSpecial('&iquest;Realmente desea actualizar la configuraci&oacute;n?'))
+				return false;
+			});
+			
+			$('form').ajaxForm({
+				beforeSend: function() {
+					if (oldIE) {
+						$('#inputFile').hide();
+						$('#uploadInfo').show();
+						$('#caption').html('Subiendo...');
+						$('#message').html('');
+						$('#backButton').hide();
+						$('#countDown').hide();
+						$('#progress').show();
+						$('#bar').width('0%');
+						$('#percent').html('0%');
+						progress = 0;
+						oid = setInterval(oldIEProgress, 120);
+					}
+				},
+				uploadProgress: function(event, position, total, percentComplete) {
+					if (oldIE) {
+						$('#bar').width(percentComplete+'%');
+						$('#percent').html(percentComplete+'%');
+					}
+				},
+				success: function(response) {
+					if (oldIE)
+					{
+						clearInterval(oid);
+						if((response != null) && (response.search('error') == 0))		//upload error
+						{
+							alert('Cargar fallida!');
+							$('[name="updateconfig"]').val('');
+							$('#message').html('<font color="red">1: no se puede cargar archivos</font>');
+							$('#progress').hide();
+							$('#caption').html('<font color="red">Cargar fall&oacute;!</font>');
+							$('#backButton').show();
+							window.location.reload();
+						}
+						else															//upload success
+						{
+							$('#progress').hide();
+							
+							$('#caption').html('<font color="red">&iexcl;Reinicio del sistema!</font>');
+							$('#countDown').show();
+							$('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+							cid = setInterval(countDown, 1000);
+							
+							var loc = 'uploadsetting.cmd?action=add';
+							loc += '&ifname=' + $('[name="updateconfig"]').val();
+							loc += '&connMode=1';
+							loc += '&sessionKey='+sessionKey;
+							var code = 'location="' + loc + '"';
+							$.ajax({type:"GET", url:code, async:false, success: function(result){
+							}});
+						}
+					}					
+					else
+					{
+						if(response.match('error')==null)
+						{
+								showdata(response.slice(8));
+						}
+						else
+						{
+							$('[name="updateconfig"]').val('');
+							alert('ERROR: no se puede cargar archivos');
+							window.location.reload();
+						}
+					}
+					
+					if (oldIE) 
+					{
+						clearInterval(oid);
+					}
+				},
+				error: function() {
+				alert('upload error');
+					if (oldIE) clearInterval(oid);
+					$('#message').html('<font color="red">ERROR2: no se puede cargar archivos</font>');
+					$('#progress').hide();
+					$('#caption').html('<font color="red">Cargar fall&oacute;!</font>');
+					$('#backButton').show();
+					window.location.reload();
+				}
+			});
+        }
+    });
+
+    var oid;
+    var progress;
+    function oldIEProgress() {
+        if (progress < 100) progress++;
+        $('#bar').width(progress+'%')
+        $('#percent').html(progress+'%');
+    }
+
+    var cid;
+    var reboot = 160;
+    function countDown() {
+        reboot--;
+        $('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+
+         if (reboot <= 0) {
+            clearInterval(cid);
+            $('#reboot').html('Terminado! Redirigir a la p&aacute;gina iniciar sesi&oacute;n.');
+            cid = setInterval(wlInitWait, 3000);
+        }
+    }
+    function wlInitWait() {
+        $.ajaxSetup({async:false, cache:false});
+        $.get('te_wlinit_status.html', function(data, status) {
+            if (status == 'success') window.top.location = '/';
+        });
+    }
+
+    $('[value=Volver]').on('click touchstart',function(){
+        $('#uploadInfo').hide();
+        $('#inputFile').show();
+        $('input:file').clearInputs();
+    });
+});
+
+function showdata(data) {
+	//  defVal = 0:lanIp/1:lanMask/2:dhcpEnbl/3:dhcpDns/4:pmDesc/5:pmPrtl/6:pmExt1/7:pmExt2/8:pmInt1/9:pmInt2/10:pmIntIp/11:pmEnbl/12:wlEnbl/13:wlSsid/14:wlHide/15:wlAuth/16:wlWep/17:wlWpa/18:wanIp/19:wanMask/20:wanGw/21:wanType/22:wanNat
+	var defVal = '<%ejGetOther(defaultValues)%>'.replace(/\(null\)/g, '').split('/');
+
+	var msg = '';
+	msg += '----------------------------------------------------------------------------------------------------\n';
+	msg += 'Informaci&oacute;n de equipo\n';
+	msg += '&emsp;Nombre del equipo: '+ info[0] +'\n';
+	msg += '&emsp;Modelo: '+ info[1] +'\n';
+	msg += '&emsp;Serial Number: '+ info[2] +'\n';
+	msg += '&emsp;Versi&oacute;n Hardware: '+ info[3] +'\n';
+	msg += '&emsp;Versi&oacute;n Software: '+ info[4] +'\n';
+	msg += '&emsp;Versi&oacute;n Firmware: '+ info[5] +'\n';
+
+	msg += '----------------------------------------------------------------------------------------------------\n';
+	msg += 'Informaci&oacute;n Red Local\n';
+	var lanIP      = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>LANHostConfigManagement>IPInterface[instance=1]>IPInterfaceIPAddress').text();
+	var lanMask    = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>LANHostConfigManagement>IPInterface[instance=1]>IPInterfaceSubnetMask').text();
+	var dhcpEnbl   = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>LANHostConfigManagement>DHCPServerEnable').text();
+	var dnsServers = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>LANHostConfigManagement>DNSServers').text();
+	if (lanIP == '') lanIP = defVal[0];
+	if (lanMask == '') lanMask = defVal[1];
+	if (dhcpEnbl == '') dhcpEnbl = defVal[2];
+	if (dnsServers == '') dnsServers = defVal[3];
+	dhcpEnbl = (dhcpEnbl=='TRUE')?'Activado':'Desactivado';
+	dnsServers = dnsServers.replace(/0.0.0.0/g, '--');
+	if (dnsServers.search(',') < 0) dnsServers += ',--';
+	dnsServers = dnsServers.split(',');
+	msg += '&emsp;Direcci&oacute;n IP (Gateway): '+ lanIP +'\n';
+	msg += '&emsp;M&aacute;scara de subred: '+ lanMask +'\n';
+	msg += '&emsp;Servidor DHCP: '+ dhcpEnbl +'\n';
+	msg += '&emsp;Servidor DNS1: '+ dnsServers[0] +'\n';
+	msg += '&emsp;Servidor DNS2: '+ dnsServers[1] +'\n';
+
+	msg += '----------------------------------------------------------------------------------------------------\n';
+	msg += 'Informaci&oacute;n Puertos\n';
+	var portMap = $(data).find('InternetGatewayDevice>WANDevice[instance=1]>WANConnectionDevice[instance=1]>WANPPPConnection[instance=1]>PortMapping');
+	for (var i=0; i<portMap.length; i++) {
+		var name = $(portMap[i]).find('PortMappingDescription').text();         if (name == '') name = defVal[4];
+		var prtl = $(portMap[i]).find('PortMappingProtocol').text();            if (prtl == '') prtl = defVal[5]; 
+		var extp = $(portMap[i]).find('ExternalPort').text();                   if (extp == '') extp = defVal[6]; 
+		var ext2 = $(portMap[i]).find('ExternalPortEndRange').text();           if (ext2 == '') ext2 = defVal[7]; 
+		var intp = $(portMap[i]).find('InternalPort').text();                   if (intp == '') intp = defVal[8]; 
+		var int2 = $(portMap[i]).find('X_BROADCOM_COM_InternalPortEnd').text(); if (int2 == '') int2 = defVal[9]; 
+		var dest = $(portMap[i]).find('InternalClient').text();                 if (dest == '') dest = defVal[10]; 
+		var enbl = $(portMap[i]).find('PortMappingEnabled').text();             if (enbl == '') enbl = defVal[11]; 
+		enbl = (enbl=='TRUE')?'Activado':'Desactivado';
+		if (ext2 != '') extp += ':'+ext2;
+		//if (int2 != '') intp += ':'+int2;
+		msg += ('&emsp;'+ name +', '+ prtl +', '+ extp +' to '+ intp +', '+ dest +', '+ enbl +'\n');
+	}
+
+	msg += '----------------------------------------------------------------------------------------------------\n';
+	msg += 'Informaci&oacute;n Red Inal&aacute;mbrica\n';
+	var wlEnbl = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlEnblSsid').text();
+	var wlSsid = $(data).find("InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlSsid").text();
+	var wlHide = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlHide').text();
+	var wlAuth = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlAuthMode').text();
+	var wlWep  = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlWep').text();
+	var wlWpa  = $(data).find("InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=1]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlWpa").text();
+	if (wlEnbl == '') wlEnbl = defVal[12];
+	if (wlSsid == '') wlSsid = defVal[13];
+	if (wlHide == '') wlHide = defVal[14];
+	if (wlAuth == '') wlAuth = defVal[15];
+	if (wlWep  == '') wlWep  = defVal[16];
+	if (wlWpa  == '') wlWpa  = defVal[17];
+	wlEnbl = (wlEnbl=='1')?'Activado':'Desactivado';
+	wlHide = (wlHide=='0')?'No':'Si';
+	var authmode, encrypt;
+	if (wlAuth == 'open') {
+		authmode = (wlWep=='disabled')?'Sin cifrado':'WEP';
+		encrypt  = (wlWep=='disabled')?'Desactivada':'Compartido';
+	}
+	else {
+		authmode = (wlAuth=='psk2')?'WPA2':'WPA/WPA2 Mixto';
+		encrypt  = wlWpa.toUpperCase();
+	}
+	msg += '&emsp;WiFi 2.4GHz: '+ wlEnbl +'\n';
+	msg += '&emsp;Red Inal&aacute;mbrica (SSID): '+ htmlEncode(wlSsid) +'\n';
+	msg += '&emsp;Oculto SSID: '+ wlHide +'\n';
+	msg += '&emsp;Tipo cifrado: '+ authmode +'\n';
+	msg += '&emsp;Encriptaci&oacute;n: '+ encrypt +'\n\n';
+
+	var wlEnbl5 = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlEnblSsid').text();
+	var wlSsid5 = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlSsid').text();
+	var wlHide5 = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlHide').text();
+	var wlAuth5 = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlAuthMode').text();
+	var wlWep5  = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlWep').text();
+	var wlWpa5  = $(data).find("InternetGatewayDevice>LANDevice[instance=1]>WLANConfiguration[instance=2]>X_BROADCOM_COM_WlanAdapter>WlVirtIntfCfg[instance=1]>WlWpa").text();
+	if (wlEnbl5 == '') wlEnbl5 = defVal[12];
+	if (wlSsid5 == '') wlSsid5 = defVal[13];
+	if (wlHide5 == '') wlHide5 = defVal[14];
+	if (wlAuth5 == '') wlAuth5 = defVal[15];
+	if (wlWep5  == '') wlWep5  = defVal[16];
+	if (wlWpa5  == '') wlWpa5  = defVal[17];
+	wlEnbl5 = (wlEnbl5=='1')?'Activado':'Desactivado';
+	wlHide5 = (wlHide5=='0')?'No':'Si';
+	var authmode5, encrypt5;
+	if (wlAuth5 == 'open') {
+		authmode5 = (wlWep5=='disabled')?'Sin cifrado':'WEP';
+		encrypt5  = (wlWep5=='disabled')?'Desactivada':'Compartido';
+	}
+	else {
+		authmode5 = (wlAuth5=='psk2')?'WPA2':'WPA/WPA2 Mixto';
+		encrypt5  = wlWpa5.toUpperCase();
+	}
+	msg += '&emsp;WiFi Plus: '+ wlEnbl5 +'\n';
+	msg += '&emsp;Red Inal&aacute;mbrica (SSID): '+ htmlEncode(wlSsid5) +'\n';
+	msg += '&emsp;Oculto SSID: '+ wlHide5 +'\n';
+	msg += '&emsp;Tipo cifrado: '+ authmode5 +'\n';
+	msg += '&emsp;Encriptaci&oacute;n: '+ encrypt5 +'\n';
+
+	msg += '----------------------------------------------------------------------------------------------------\n';
+	msg += 'Informaci&oacute;n Movistar TV\n';
+	var dvlanIP  = $(data).find('InternetGatewayDevice>LANDevice[instance=1]>LANHostConfigManagement>IPInterface[instance=2]>IPInterfaceIPAddress').text();
+	var dvwanIP  = $(data).find('InternetGatewayDevice>WANDevice[instance=1]>WANConnectionDevice[instance=1]>WANIPConnection[instance=2]>ExternalIPAddress').text();
+	var dvwanNAT = $(data).find('InternetGatewayDevice>WANDevice[instance=1]>WANConnectionDevice[instance=1]>WANIPConnection[instance=2]>NATEnabled').text();
+	if (dvlanIP == '') dvlanIP = defVal[0];
+	if (dvwanIP == '') dvwanIP = defVal[18];
+	if (dvwanNAT == '') dvwanNAT = defVal[22];
+	if (dvwanNAT!='TRUE' && dvwanIP=='2.2.2.2') {
+		msg += '&emsp;Servicio contratado: D&uacute;o\n';
+	}
+	else {
+		msg += '&emsp;Servicio contratado: Tr&iacute;o\n';
+		if (dvwanNAT == 'TRUE') {
+			msg += '&emsp;Tipo de direccionamiento: Din&aacute;mico (NAT-PAT)\n';
+			msg += '&emsp;Direcci&oacute;n IP WAN Router: '+ dvwanIP +'\n';
+		}
+		else {
+			msg += '&emsp;Tipo de direccionamiento: Est&aacute;tico\n';
+			msg += '&emsp;Direcci&oacute;n IP WAN Router: '+ dvwanIP +'\n';
+			msg += '&emsp;Direcci&oacute;n IP acceso Imagenio: '+ dvlanIP +'\n';
+		}
+	}
+
+	msg += '\n&iquest;Realmente desea actualizar la configuraci&oacute;n?\n';
+
+	swal({
+		title: "Confirmar recuperar un perfil",
+		text: htmlDecode(msg),
+		showCancelButton: true,
+		cancelButtonText: "Cancelar",
+		confirmButtonText: "ok"
+	},
+	function(isConfirm){
+		if (isConfirm)
+		{
+			var loc = 'uploadsetting.cmd?action=add';
+			loc += '&ifname=' + $('[name="updateconfig"]').val();
+			loc += '&connMode=1';
+			loc += '&sessionKey='+sessionKey;
+			var code = 'location="' + loc + '"';
+			$.ajax({type:"GET", url:code, async:false, success: function(result){
+			}});
+			
+			$('[name="updateconfig"]').val('');
+
+			$('#inputFile').hide();
+            $('#uploadInfo').show();
+            $('#message').html('');
+            $('#backButton').hide();
+            $('#countDown').hide();
+			$('#bar').width('100%');
+			$('#percent').html('100%');
+
+			$('#caption').html('<font color="red">&iexcl;Reinicio del sistema!</font>');
+			$('#countDown').show();
+			$('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+			cid = setInterval(countDown, 1000);
+		}
+		else
+		{
+			var loc = 'canceluploadsetting.cmd?action=add';
+			loc += '&ifname=' + $('[name="updateconfig"]').val();
+			loc += '&connMode=1';
+			loc += '&sessionKey='+sessionKey;
+			var code = 'location="' + loc + '"';
+			$.ajax({type:"GET", url:code, async:false, success: function(result){
+			}});
+			
+			$('[name="updateconfig"]').val('');
+			
+			window.location.reload();
+		}
+	});
+	
+	var cid;
+    var reboot = 160;
+    function countDown() {
+        reboot--;
+        $('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+
+         if (reboot <= 0) {
+            clearInterval(cid);
+            $('#reboot').html('Terminado! Redirigir a la p&aacute;gina iniciar sesi&oacute;n.');
+            cid = setInterval(wlInitWait, 3000);
+        }
+    }
+    function wlInitWait() {
+        $.ajaxSetup({async:false, cache:false});
+        $.get('te_wlinit_status.html', function(data, status) {
+            if (status == 'success') window.top.location = '/';
+        });
+    }
+}
+
+function restoreClick() {
+   var loc = 'restoreinfo.cgi?';
+   loc += 'sessionKey='+sessionKey;
+   var code = 'location="' + loc + '"';
+   if (confirmSpecial("&iquest;Realmente deseas restaurar valores de f&aacute;brica de tu router?"))
+       eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body scroll="yes">
+<form method='post' ENCTYPE='multipart/form-data' action='uploadpreviewsettings.cgi'>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+		<div class="Body"></div>
+        <div class="Body2" id="inputFile">
+			<div class="title">Crear / Recuperar un perfil</div>
+			<div class="content">
+				<div class="littletitle">Crear / Recuperar un perfil</div>
+				<p class="content_word">Podr&aacute;s crear el perfil o recuperar uno guardado:</p>
+				<div class="saveimg">
+					<table class="editItems" border="0" style="width:100%;">
+					<tr>
+						<td class="titlesize">Nombre del equipo:</td>
+						<td></td>
+						<td class="titlesize">Modelo:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize">N&uacute;mero de serie:</td>
+						<td></td>
+						<td class="titlesize">Versi&oacute;n Hardware:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize">Versi&oacute;n Software:</td>
+						<td></td>
+						<td class="titlesize">Versi&oacute;n Firmware:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize">Estado:</td>
+						<td></td>
+						<td class="titlesize">Direcci&oacute;n IP WAN (Internet)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_red_local.html">Direcci&oacute;n IP (Gateway):</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_red_local.html">M&aacute;scara de subred:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_red_local.html">Servidor DHCP:</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_red_local.html">Servidor DNS1:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_red_local.html">Servidor DNS2:</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_wifi.html">WiFi 2.4GHz:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_wifi.html">Red Inal&aacute;mbrica (SSID):</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_wifi.html">Oculto SSID:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_wifi.html">Tipo cifrado:</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_wifi.html">Encriptaci&oacute;n:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_wifi_5ghz.html">WiFi Plus:</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_wifi_5ghz.html">Red Inal&aacute;mbrica (SSID):</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_wifi_5ghz.html">Oculto SSID:</a></td>
+						<td></td>
+						<td class="titlesize"><a href="te_wifi_5ghz.html">Tipo cifrado:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize"><a href="te_wifi_5ghz.html">Encriptaci&oacute;n:</a></td>
+						<td></td>
+						<td class="titlesize">Servicio contratado:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize">Tipo de direccionamiento:</td>
+						<td></td>
+						<td class="titlesize">Direcci&oacute;n IP WAN Router:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="titlesize">Direcci&oacute;n IP acceso Imagenio:</td>
+						<td></td>
+					</tr>
+					</table>
+				</div>
+				<table class="editItems" border="0" style="width:100%;">
+					<tr>
+						<td class="titlesize">Guardar configuraci&oacute;n en archivo:</td>
+						<td><input type="button" value="Guardar">&nbsp;&nbsp;<input type="button" value="Cancelar"></td>
+					</tr>
+					<tr	class="uploadconfig">
+						<td class="titlesize">Cargar configuraci&oacute;n desde un archivo:</td>
+				        <td><input class="Input_box" type="file" id="updateconfig" name="updateconfig" size="15"></td>
+						<td><input type="submit" value="Cargar"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="title">Restaurar valores de f&aacute;brica</div>
+			<div class="content">
+				<div class="littletitle">Restaurar valores de f&aacute;brica</div>
+				<p class="content_word">Esta opci&oacute;n te permitir&aacute; restaurar tu configuraci&oacute;n actual a los valores de f&aacute;brica. <b>Recuerda</b> que perder&aacute;s par&aacute;metros como el SSID, contrase&ntilde;a wifi, filtrado MAC, etc que tuvieras personalizados hasta ahora.</p>
+				<p class="content_word">
+                    <input type="button" value="Aceptar" onClick='restoreClick();'>
+                </p>
+			</div>
+			<div class="title">Firewall</div>
+			<div class="content">
+				<div class="littletitle">Firewall</div>
+				<p class="content_word">Desactivar el Firewall puede hacer mas vulnerable tu equipo, y la red del hogar, frente a ataques externos procedentes de Internet. No obstante, si a&uacute;n as&iacute; deseas realizar cambios sobre la configuraci&oacute;n de tu Firewall podr&aacute;s hacerlo <b><a href="scbidirectionalflt.cmd?action=view&escape=true">aqu&iacute;.</a></b></p>
+			</div>
+			<div class="title">UPnP (Universal Plug and Play)</div>
+			<div class="content">
+				<div class="littletitle">UPnP (Universal Plug and Play)</div>
+				<div><table class="editItems" border="0"><tr><td class="titlesize">Activar</td>&nbsp;&nbsp;&nbsp;<td><img class="active hand"></td></tr></table></div>
+			</div>
+        </div>
+        <div class="Body" id="uploadInfo" style="display:none">
+			<div class="title" id="caption"></div>
+			<div class="content">
+				<p class="content_word"><label id="message"></label></p>
+				<div id="backButton"><br>
+				<span style="position:relative;margin-left:50%;">
+					<input type="button" value="Volver">
+				</span>
+				</div>
+				<div id="countDown">
+                    <p class="content_word"><font color="red">Por favor, espere <label id="reboot"></label></font></p>
+				</div>
+                <div id="progress">
+                    <div id="bar"></div>
+                    <div id="percent">0%</div>
+                </div><br>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+		<div class="MBody"></div>
+        <div class="MBody2" id="inputFile">
+            <div class="Mtitle">Crear / Recuperar un perfil</div>
+			<div class="Mcontent">
+				<div class="littletitle">Crear / Recuperar un perfil</div>
+				<p class="Mcontent_word">Podr&aacute;s crear el perfil o recuperar uno guardado:</p>
+				<div class="saveimg">
+					<table class="editItems" border="0" style="width:100%;">
+					<tr>
+						<td>Nombre del equipo:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Modelo:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>N&uacute;mero de serie:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Versi&oacute;n Hardware:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Versi&oacute;n Software:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Versi&oacute;n Firmware:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Estado:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Direcci&oacute;n IP WAN (Internet)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_red_local.html">Direcci&oacute;n IP (Gateway):</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_red_local.html">M&aacute;scara de subred:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_red_local.html">DHCP:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_red_local.html">Servidor DNS1:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_red_local.html">Servidor DNS2:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi.html">Wifi:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi.html">Red Inal&aacute;mbrica (SSID):</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi.html">Oculto SSID:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi.html">Tipo cifrado:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi.html">Encriptaci&oacute;n:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi_5ghz.html">Wifi Plus:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi_5ghz.html">Red Inal&aacute;mbrica (SSID):</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi_5ghz.html">Oculto SSID:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi_5ghz.html">Tipo cifrado:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><a href="te_wifi_5ghz.html">Encriptaci&oacute;n:</a></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Servicio contratado:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Tipo de direccionamiento:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Direcci&oacute;n IP WAN Router:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Direcci&oacute;n IP acceso Imagenio:</td>
+						<td></td>
+					</tr>
+					</table>
+				</div>
+				<p>
+					<span class="Mtitlesize">Guardar configuraci&oacute;n en archivo:</span>
+				</p>
+				<p>
+					<input type="button" value="Guardar">
+				</p>
+				<p>
+					<input type="button" value="Cancelar">
+				</p>
+				<div class="uploadconfig">
+					<div class="Mtitlesize">Cargar configuraci&oacute;n desde un archivo:</div>
+					<div>
+						<input class="MInput_box" type="file" id="updateconfig" name="updateconfig" size="15">
+						<input type="submit" value="Cargar">
+					</div>
+                </div>
+			</div>
+			<div class="Mtitle">Restaurar valores de f&aacute;brica</div>
+			<div class="Mcontent">
+				<div class="littletitle">Restaurar valores de f&aacute;brica</div>
+				<p class="Mcontent_word">Esta opci&oacute;n te permitir&aacute; restaurar tu configuraci&oacute;n actual a los valores de f&aacute;brica. <b>Recuerda</b> que perder&aacute;s par&aacute;metros como el SSID, contrase&ntilde;a wifi, filtrado MAC, etc que tuvieras personalizados hasta ahora.</p>
+				<p class="Mcontent_word">
+                    <input type="button" value="Aceptar" onClick='restoreClick();'>
+                </p>
+			</div>
+			<div class="Mtitle">Firewall</div>
+			<div class="Mcontent">
+				<div class="littletitle">Firewall</div>
+				<p class="Mcontent_word">Desactivar el Firewall puede hacer mas vulnerable tu equipo, y la red del hogar, frente a ataques externos procedentes de Internet. No obstante, si a&uacute;n as&iacute; deseas realizar cambios sobre la configuraci&oacute;n de tu Firewall podr&aacute;s hacerlo <b><a href="scbidirectionalflt.cmd?action=view&escape=true">aqu&iacute;.</a></b></p>
+			</div>
+			<div class="Mtitle">UPnP (Universal Plug and Play)</div>
+			<div class="Mcontent">
+				<div class="littletitle">UPnP (Universal Plug and Play)</div>
+				<div><table class="editItems" border="0"><tr><td class="Mtitlesize">Activar</td>&nbsp;&nbsp;&nbsp;<td><img class="active hand"></td></tr></table></div>
+			</div>
+        </div>
+        <div class="MBody" id="uploadInfo" style="display:none">
+			<div class="Mtitle" id="caption"></div>
+			<div class="Mcontent">
+				<p class="Mcontent_word"><label id="message"></label></p>
+				<div id="backButton"><br>
+				<span style="position:relative;margin-left:50%;">
+					<input type="button" value="Volver">
+				</span>
+				</div>
+				<div id="countDown">
+                    <p class="Mcontent_word"><font color="red">Por favor, espere <label id="reboot"></label></font></p>
+				</div>
+                <div id="progress">
+                    <div id="bar"></div>
+                    <div id="percent">0%</div>
+                </div><br>
+			</div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

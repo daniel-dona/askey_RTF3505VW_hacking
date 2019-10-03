@@ -1,0 +1,54 @@
+body {
+    color: #5f5f5f;
+    background-color: #ffffff;
+}
+td {
+    color: #5f5f5f;
+    background-color: #ffffff;
+}
+td.txt {
+    background-color: #f1f0ee;
+}
+td.menu {
+    background-color: #f8f8f8;
+}
+td.hd {
+    color: #5f5f5f;
+    background-color: #e0e0e0;
+}
+input {
+    color: #5f5f5f;
+}
+.footerbody {
+    border-top: #b70024 1px solid;
+    border-bottom: #b70024 1px solid;
+    background: #000000 none;
+}
+.footertd {
+    background-color: #000000;
+}
+.mainMenuBody {
+    background: #ffffff none;
+}
+.menuLink {
+    color: #333333;
+}
+.menuLink:hover {
+    color: #ffffff;
+    background-color: #b70024;
+}
+.menuLink:active {
+    color: #e10027;
+    background-color: #f8f8f8;
+}
+.menuLink:focus {
+    color: #e10027;
+    background-color: #f8f8f8;
+}
+.menuLink:focus:hover {
+    color: #ffffff;
+    background-color: #b70024;
+}
+.menuCell {
+    background-color: #f8f8f8;
+}

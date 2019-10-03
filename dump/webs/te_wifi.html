@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+	<link rel="stylesheet" href="sweetalert.css" type="text/css">
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+    <script language="javascript" src="te_jquery.qrcode.min.js"></script>
+<!--<script language="javascript" src="sweetalert.min.js"></script>-->
+<script language="JavaScript">
+<!-- hide
+var oldIE = (navigator.userAgent.indexOf("MSIE") != -1 ) && (document.documentMode <=9 );
+var head = document.getElementsByTagName('head')[0];
+var js = document.createElement("script");
+js.type = "text/javascript";
+if (!oldIE) {
+    js.src = 'sweetalert.min.js';
+    head.appendChild(js);
+}
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var unitNum = '<%ejGetWl(wlInstance_id)%>';
+var wifiSSIDName = htmlDecode('<%ejGetWl(wlSsid_wl0v0)%>');
+var wifiActive = '<%ejGetWl(wlEnbl_wl0v0)%>';
+var wifiHideSSID = '<%ejGetWl(wlHide_wl0v0)%>';
+var wifiChannel='<%ejGetWl(wlChannel)%>';
+var wifiCurrentChannel = '<%ejGetWl(wlCurrentChannel)%>';
+var wifiRefresh = '<%ejGetWl(wlRefresh)%>';
+
+//refresh static ip devices for mapa red local
+var deviceData=<%ejGet(lanDevicesList)%>;
+
+var bit = '<%ejGetWl(wlKeyBit)%>';
+var mode='<%ejGetWl(wlAuthMode)%>';
+var keyIdx = '<%ejGetWl(wlKeyIndex)%>';
+var keys = new Array( "<%ejGetWl(wlKey1)%>", "<%ejGetWl(wlKey2)%>",
+                      "<%ejGetWl(wlKey3)%>", "<%ejGetWl(wlKey4)%>" );
+var wpaPskKey = htmlDecode('<%ejGetWl(wlWpaPsk)%>');
+var wep = '<%ejGetWl(wlWep)%>'; //wep encryption
+var wpa = '<%ejGetWl(wlWpa)%>'; //wpa encryption
+
+var wifiAuthType='';
+var wifiPassword='';
+var wifiMacFlt='<%ejGetWl(wlFltMacList)%>';
+var MAX_MAC_FLT=32;
+var active = '<%ejGetWl(wlFltMacMode)%>';
+/*
+var wep = 'disabled';
+var wpa = 'tkip+aes';
+var auth = '0';
+*/
+
+var channel = '<%ejGetWl(wlChannel)%>';
+var band= '<%ejGetWl(wlBand)%>';
+var nbwcap= '<%ejGetWl(wlNBwCap)%>'; 
+var nctrlsb = '<%ejGetWl(wlNCtrlsb)%>';
+var phy = '<%ejGetWl(wlPhyType)%>';
+
+<% /* CONFIG_QTN_SONIQ start */ %>
+var rmEnable = '<%ejGetWl(roamingEnable)%>';
+var rmRole = '<%ejGetWl(roamingRole)%>';
+<% /* CONFIG_QTN_SONIQ end */ %>
+
+if (mode == 'open')
+{
+	wifiAuthType = (wep == 'disabled')?'open':'wep';
+}
+else if (mode =='psk2')
+{
+	if (wpa == 'aes')
+		wifiAuthType = 'wpa2_a';
+	else if (wpa == 'tkip+aes')
+		wifiAuthType = 'wpa2_ta';
+}
+else if (mode =='psk psk2')
+{
+	wifiAuthType ='wpawpa2';
+}
+
+if (mode=='psk psk2' ||mode=='psk2')
+{
+	wifiPassword=wpaPskKey;
+}
+else if  (wifiAuthType == 'wep') 
+{
+	if (keyIdx > 0) wifiPassword=keys[keyIdx-1];
+}
+else
+{
+	wifiPassword='';
+}
+
+
+if ( wifiRefresh == '1' ) {
+	var code = 'location="te_wifirefresh.wl?wlRefresh=0"';
+	eval(code);   
+}
+
+$(function()
+{       
+    if(ismobile)
+    {
+        $("#PCformat").remove();
+		showtable("ActiveMAC1");
+    }
+    else
+    {
+        $("#mobileformat").remove();
+		showtable("ActiveMAC");
+    }
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[name=SSIDName],[name=SSIDName1]').val(wifiSSIDName);	
+	$('[name=hideSSID][value='+wifiHideSSID+'],[name=hideSSID1][value='+wifiHideSSID+']').click();
+	$('[name=wifiActive][value='+wifiActive+'],[name=wifiActive1][value='+wifiActive+']').click();
+	$('[name=AuthType]>option[value='+wifiAuthType+'],[name=AuthType1]>option[value='+wifiAuthType+']').prop('selected',true);
+	if(wifiAuthType=="open")
+		$('.pwdfield').hide();
+	else{
+		<% /* CONFIG_QTN_SONIQ start */ %>
+		if(wifiAuthType=="wep" || wifiAuthType=="wpawpa2")
+		{
+			<% /* (wep=enabled or wpa/wpa2 mix). WiFi Roaming is disabled due to its WiFi Security settings. */ %>
+			alertSpecial('Roaming WiFi est&#224 deshabilitado debido a su configuraci&#243n de Seguridad en WiFi. Para que Roaming se active debe de configurar los modos Open o WPA2');
+		}
+		<% /* CONFIG_QTN_SONIQ end */ %>
+		$('#SSIDPassword,#SSIDPassword1').val(wifiPassword);
+		var checkpass = checkPassLevel(wifiAuthType,wifiPassword);
+		showPassLevel(checkpass);
+	}
+	loadChannelList();
+	$('[name=currentChannel],[name=currentChannel1]').html(wifiCurrentChannel);
+	if( active=='allow' )
+		$('.active').prop('src','te_on.png');
+	else
+		$('.active').prop('src','te_off.png');
+
+	$('[name=SSIDName],[name=SSIDName1]').on('change keyup paste mouseup', function() {
+		var ssid = $('[name=SSIDName],[name=SSIDName1]').val();
+		if (getSSIDLength(ssid) > 32) {
+			alertSpecial("La longitud supera 32 bytes! SSID se trunca!");
+			while (getSSIDLength(ssid) > 32)
+				ssid = ssid.substring(0, ssid.length-1);
+			$('[name=SSIDName],[name=SSIDName1]').val(ssid);
+			$('[name=SSIDName],[name=SSIDName1]').select().focus();
+		}
+	});
+	$('#SSIDPassword,#SSIDPassword1').on('change keyup paste mouseup', function(){
+		var passlevel = checkPassLevel($('[name=AuthType],[name=AuthType1]').val(),$(this).val());
+		showPassLevel(passlevel);
+	});
+	$('[name=AuthType],[name=AuthType1]').change(function(){
+		if( $(this).val() == "open" ){
+			$('.pwdfield').hide();
+		}
+		else{
+			$('.pwdfield').show();
+            <% /* CONFIG_QTN_SONIQ start */ %>
+            if ( (("Master" == rmRole) || ("MASTER" == rmRole.toUpperCase())) &&
+                (parseInt(rmEnable) == 1))
+            {
+                if( ($(this).val() == "wep") || ($(this).val() == "wpawpa2") )
+                {
+                    var strMsg = "Los modos de seguridad WiFi WEP o mixto WPA/WPA2 no son seguros, le recomendamos utilizar WPA2.  Adem&#225s, si cambias los modos de seguridad en 2,4GHz a mixto WPA/WA2 o WEP, la WIFI no tendr&#225 la selecci&#243n autom&#225tica de tu mejor red WiFi disponible (Roaming WiFi). Estos modos de seguridad no son compatibles con la funcionalidad Roaming WiFi."
+                               + "\n\n&#191Est&#225 seguro que desea continuar con el cambio?";
+                    if (confirmSpecial(strMsg) != true ) {
+                        $('[name=AuthType]>option[value='+wifiAuthType+'],[name=AuthType1]>option[value='+wifiAuthType+']').prop('selected',true);
+                        return;
+                    }
+                }
+            }
+            <% /* CONFIG_QTN_SONIQ end */ %>
+			if( $(this).val() == "wep" ){
+				alertSpecial('Recuerda que puedes introducir 13 caracteres en codificaci&oacute;n ASCII (letras, n&uacute;meros y caracteres especiales) o bien 26 caracteres en codificaci&oacute;n Hexadecimal (0-9 y A-F).\n\nCon el cifrado WEP la funcionalidad WPS quedar&aacute; desactivada en tu router.');
+				wifiPassword=keys[keyIdx-1];
+			}
+			else{
+				wifiPassword=wpaPskKey;
+			}
+			$('#SSIDPassword,#SSIDPassword1').val(wifiPassword);
+			var passlevel = checkPassLevel($(this).val(),$('#SSIDPassword,#SSIDPassword1').val());
+			showPassLevel(passlevel);
+		}		
+    });
+
+    $('[name=wlChannel],[name=wlChannel1]').change(function(){
+        if( $(this).val() == -1 ){
+            $('[name=wlChannel]>option[value='+channel+'],[name=wlChannel]>option[value='+channel+']').prop('selected',true);
+            alertSpecial('Aviso: Para seleccionar otro canal WiFi, ve a la p&#225gina de configuraci&#243n avanzada del router');
+        }
+    });
+
+    var encodedSSID = wifiSSIDName.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/:/g, '\\:').replace(/'/g, '\\\'').replace(/"/g, '\\"').replace(/\./g, '\\\.');
+    var encodedPSK = wifiPassword.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/:/g, '\\:').replace(/'/g, '\\\'').replace(/"/g, '\\"').replace(/\./g, '\\\.');
+    var str;
+    if( wifiAuthType == 'wpa2_a' || wifiAuthType == 'wpa2_ta' || wifiAuthType == 'wpawpa2' ){
+        str = 'WIFI:T:WPA;S:'+encodedSSID+';P:'+encodedPSK+';';
+    }
+    else if( wifiAuthType == 'wep' ){
+        str = 'WIFI:T:WEP;S:'+encodedSSID+';P:'+encodedPSK+';';
+    }
+    else{
+        str = 'WIFI:T:nopass;S:'+encodedSSID+';P:'+encodedPSK+';';
+    }
+    str += ($('[name=hideSSID]:checked,[name=hideSSID1]:checked').val() == '1') ? 'H:true;' : ';';
+    str = utf16to8(str);
+    var str1 = str;
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    if (window.ActiveXObject)
+       Sys.ie = ua.match(/msie ([\d.]+)/)[1];
+    if(Sys.ie === '7.0' || Sys.ie === '8.0' || Sys.ie === '9.0' || Sys.ie === '10.0')
+    {
+        if(ismobile){
+			$('.code').qrcode({
+				render: "table",
+				width: 111,
+				height:111,
+				text: str1
+			});
+		}
+		else{
+			$('.code').qrcode({
+			    render: "table",
+				width: 111,
+				height:111,
+				text: str
+			});
+		}
+    }
+    else
+    {
+        if(ismobile){
+			$('.code').qrcode({
+				width: 111,
+				height:111,
+				text: str1
+			});
+		}
+		else{
+			$('.code').qrcode({
+				width: 111,
+				height:111,
+				text: str
+			});
+		}
+    }
+    $('.code').find('td').css({'width':'0px','height':'0px'});
+    $('[src="show.gif"]').click(function(){
+        var password=$('#SSIDPassword,#SSIDPassword1').val();
+        if($('#SSIDPassword[type=password]').length || $('#SSIDPassword1[type=password]').length){
+            $(this).prev('input').remove();
+            if(ismobile)
+                $(this).before('<input class="Input_box" type="text" id="SSIDPassword1" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)">');
+            else
+                $(this).before('<input class="Input_box" type="text" id="SSIDPassword" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)" size="32">');
+        }else{
+            $(this).prev('input').remove();
+            if(ismobile)
+                $(this).before('<input class="Input_box" type="password" id="SSIDPassword1" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)">');
+            else
+                $(this).before('<input class="Input_box" type="password" id="SSIDPassword" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)" size="32">');
+        }
+
+        $('#SSIDPassword,#SSIDPassword1').val(password);
+        $('#SSIDPassword,#SSIDPassword1').on('change keyup paste mouseup', function(){
+            var passlevel = checkPassLevel($('[name=AuthType],[name=AuthType1]').val(),$(this).val());
+            showPassLevel(passlevel);
+        });
+    });
+	$('[value="Aplicar cambios"]').on('click',function(){
+		var loc = 'te_wifi.wl?wlSsidIdx=0';
+		if(ismobile){
+			if( !checkSSIDValid($('[name=SSIDName1]').val()) )
+				return false;
+		}else{
+			if( !checkSSIDValid($('[name=SSIDName]').val()) )
+				return false;
+		}
+		loc += '&wlSsid='+encodeURIComponent($('[name=SSIDName],[name=SSIDName1]').val());
+		var hideSSID = $('[name=hideSSID]:checked,[name=hideSSID1]:checked').val();
+		if (hideSSID != wifiHideSSID) {
+			if (hideSSID == '1') {
+				if (confirmSpecial('Al ocultar el SSID, la funcionalidad WPS quedar&aacute; desactivada en tu router') == false)
+					return false;
+			}
+			else {
+				if (confirmSpecial('Al hacer visible el SSID, la funcionalidad WPS quedar&aacute; activada en tu router') == false)
+					return false;
+			}
+		}
+		loc += '&wlHide='+hideSSID;
+		if( $('[name=AuthType],[name=AuthType1]').val() == "open")
+		{
+			loc += '&wlAuthMode=open&wlAuth=0&wlWep=disabled';
+		}
+		else if ($('[name=AuthType],[name=AuthType1]').val() == "wep" )
+		{
+			var ssidpwd = $('#SSIDPassword,#SSIDPassword1').val();
+			if (ssidpwd.length!=13 && ssidpwd.length!=26) {
+				alertSpecial("Longitud de clave incorrecta. Recuerda que puedes introducir 13 caracteres en codificaci&oacute;n ASCII (letras, n&uacutemeros y caracteres especiales) o bien 26 caracteres en codificaci&oacute;n Hexadecimal (0-9 y A-F).");
+				$('#SSIDPassword,#SSIDPassword1').select().focus();
+				return false;
+			}
+
+			var checkspc = /(^ |  | $)/;
+			var checkhex = /^[\dA-F]{26}$/;
+			var checkasc = /^[\x20-\x7e]{13}$/;
+			if ( checkspc.test(ssidpwd) || (!checkhex.test(ssidpwd) && !checkasc.test(ssidpwd)) ) {
+				alertSpecial("Tu contrase&ntilde;a WiFi contiene caracteres no v&aacute;lidos. Recuerda que no puedes introducir espacios al inicio o final de la contrase&ntilde;a. Tampoco introducir varios espacios consecutivos.");
+				$('#SSIDPassword,#SSIDPassword1').select().focus();
+				return false;
+			}
+
+			loc += '&wlAuthMode=open&wlAuth=0&wlWep=enabled';
+			loc += '&wlKeyBit=0';	// Always use 128bit key
+			var pwd = encodeURIComponent($('#SSIDPassword,#SSIDPassword1').val());
+			switch (keyIdx) {
+				case '1': loc += '&wlKeyIndex='+keyIdx+'&wlKey1='+pwd; break;
+				case '2': loc += '&wlKeyIndex='+keyIdx+'&wlKey2='+pwd; break;
+				case '3': loc += '&wlKeyIndex='+keyIdx+'&wlKey3='+pwd; break;
+				case '4': loc += '&wlKeyIndex='+keyIdx+'&wlKey4='+pwd; break;
+			}
+		}
+		else if (($('[name=AuthType],[name=AuthType1]').val() == "wpa2_a") ||
+				 ($('[name=AuthType],[name=AuthType1]').val() == "wpa2_ta") ||
+				 ($('[name=AuthType],[name=AuthType1]').val() == "wpawpa2"))
+		{
+			var ssidpwd=$('#SSIDPassword,#SSIDPassword1').val();
+			if (ssidpwd.length<8 || ssidpwd.length>63) {
+				alertSpecial("Longitud clave WiFi incorrecta. Debe contener entre 8 y 63 caracteres.");
+				$('#SSIDPassword,#SSIDPassword1').select().focus();
+				return false;
+			}
+
+			var checkspc = /(^ |  | $)/;
+			if (checkspc.test(ssidpwd)) {
+				alertSpecial("Tu contrase&ntilde;a WiFi contiene caracteres no v&aacute;lidos. Recuerda que no puedes introducir espacios al inicio o final de la contrase&ntilde;a. Tampoco introducir varios espacios consecutivos.");
+				$('#SSIDPassword,#SSIDPassword1').select().focus();
+				return false;
+			}
+
+			var checkasc = /^[\x20-\x7e]{8,63}$/;
+			if (!checkasc.test(ssidpwd)) {
+				var chkResult = "";
+				var ascPatrn = /[\x20-\x7e]/;
+				for (var i=0; i<ssidpwd.length; i++) {
+					var chr = ssidpwd.charAt(i);
+					chkResult += ascPatrn.test(chr)?"_":chr;
+				}
+				alertSpecial("El car&aacute;cter introducido " + chkResult + " no es v&aacute;lido para establecer tu clave WiFi.");
+				$('#SSIDPassword,#SSIDPassword1').select().focus();
+				return false;
+			}
+
+			if ($('[name=AuthType],[name=AuthType1]').val() == "wpawpa2") 
+				loc += '&wlAuthMode=psk psk2&wlWpa=aes&wlAuth=0';
+			else
+				loc += '&wlAuthMode=psk2&wlAuth=0';
+			
+			if ($('[name=AuthType],[name=AuthType1]').val() == "wpa2_a")
+				loc += '&wlWpa=aes';
+			else if ($('[name=AuthType],[name=AuthType1]').val() == "wpa2_ta")
+				loc += '&wlWpa=tkip+aes';
+
+			loc += '&wlWpaPsk='+encodeURIComponent($('#SSIDPassword,#SSIDPassword1').val());
+			loc += '&wlWep=disabled'; <% /* not wep, so config wep to be disabled. */ %>
+		}
+		
+		loc += '&wlEnbl='+$('[name=wifiActive]:checked,[name=wifiActive1]:checked').val();
+
+		if( $('[name=wlChannel]').val() == -1 ){
+			alertSpecial('Aviso: Para seleccionar otro canal WiFi, ve a la p&#225gina de configuraci&#243n avanzada del router');
+			return;
+		}
+		loc += '&wlChannel='+ ($('[name=wlChannel]').val() == -1 ? 0 : $('[name=wlChannel]').val());
+		loc += '&wlSyncNvram=1';
+		if( $('.active').attr('src') == 'te_on.png' )
+			loc += '&wlFltMacMode=allow';
+		else
+			loc += '&wlFltMacMode=disabled';
+		var rowCount = $('#ActiveMAC tr, #ActiveMAC1 tr').length;
+		if (rowCount > MAX_MAC_FLT+1){
+			rowCount = MAX_MAC_FLT+1;
+			alertSpecial('Ya has introducido el n&uacute;mero m&aacute;ximo de direcciones MAC. Para introducir una nueva direcci&oacute;n MAC debes borrar alguna entrada de la tabla.');
+			return false;
+		}
+		loc += '&wlFltMacList=';
+		for(i=rowCount-1;i>0;i--){
+			mac = $('#ActiveMAC tr, #ActiveMAC1 tr').eq(i).children('td').eq(1).text();
+			loc += mac;
+			if (i > 1) loc += ",";
+		}
+		loc += '&unitNum='+unitNum;
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);		
+	});
+	
+	$('[value='+htmlDecode("A&ntilde;adir")+']').on('click',function(){
+		if(ismobile){
+			if(!checkMac(document.getElementsByName("MACAddress1")[0]))
+				return false;
+		}
+		else{
+			if(!checkMac(document.getElementsByName("MACAddress")[0]))
+				return false;
+		}
+	    if( $('#ActiveMAC tr, #ActiveMAC1 tr').length < MAX_MAC_FLT ){
+			for(var i=1;i<$('#ActiveMAC tr, #ActiveMAC1 tr').length;i++){
+				if( $('#ActiveMAC tr, #ActiveMAC1 tr').eq(i).children('td').eq(1).text() == $('[name=MACAddress],[name=MACAddress1]').val()){
+					alertSpecial("No es posible introducir direcciones MAC iguales");
+					return false;
+				}
+            }
+		}
+        if ($('#ActiveMAC tr, #ActiveMAC1 tr').length > MAX_MAC_FLT){
+			alertSpecial('Ya has introducido el n&uacute;mero m&aacute;ximo de direcciones MAC. Para introducir una nueva direcci&oacute;n MAC debes borrar alguna entrada de la tabla.');
+			return;
+		}
+		addRow();
+		$('[name=MACAddress],[name=MACAddress1]').val('');
+		/*var loc = 'te_wifi.cmd?action=add&wlMACaddr='+$('[name=MACAddress],[name=MACAddress1]').val();
+		loc += '&unitNum='+unitNum;
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);	*/	
+	});	
+	$('.active').on('click',function(){
+		if( $(this).attr('src') == 'te_on.png' ){
+			//$(this).fadeOut(function(){
+				$(this).prop('src','te_off.png');
+			//});
+		}
+		else{
+			//$(this).fadeOut(function(){
+			   $(this).prop('src','te_on.png');
+			//});
+		}	
+	});
+	$('.delall').on('click',function(){
+		$('#ActiveMAC, #ActiveMAC1').find('tr:not(:first)').remove();
+	});
+	$('[name=MACAddress]').keypress(function(e){
+		var code = (e.keyCode ? e.keyCode : e.which);
+		if (code == 13){
+			if(ismobile){
+				if(!checkMac(document.getElementsByName("MACAddress1")[0]))
+					return false;
+			}
+			else{
+				if(!checkMac(document.getElementsByName("MACAddress")[0]))
+					return false;
+			}
+		    if( $('#ActiveMAC tr, #ActiveMAC1 tr').length < MAX_MAC_FLT ){
+				for(var i=1;i<$('#ActiveMAC tr, #ActiveMAC1 tr').length;i++){
+					if( $('#ActiveMAC tr, #ActiveMAC1 tr').eq(i).children('td').eq(1).text() == $('[name=MACAddress],[name=MACAddress1]').val()){
+						alertSpecial("No es posible introducir direcciones MAC iguales");
+						return false;
+					}
+	            }
+			}
+	        if ($('#ActiveMAC tr, #ActiveMAC1 tr').length > MAX_MAC_FLT){
+				alertSpecial('MAX '+MAX_MAC_FLT+' entradas!');
+				return;
+			}
+			addRow();
+			$('[name=MACAddress],[name=MACAddress1]').val('');
+		}
+	});
+});
+
+function utf16to8(str) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for(i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+            out += str.charAt(i);
+        } else if (c > 0x07FF) {
+            out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        } else {
+            out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        }
+    }
+    return out;
+}
+
+function checkPassLevel(auth, pass) {
+	if (auth == "open") return 0;
+
+	var digitPatrn = /\d/;
+	var letterPatrn = /[a-z]/i;
+	var specialPatrn = /\W/;
+	var checkspc = /(^ |  | $)/;
+	var hexPatrn = /^[\dA-F]{26}$/;
+	var wepPatrn = /^[\x20-\x7e]{13}$/;
+	var wpaPatrn = /^[\x20-\x7e]{8,63}$/;
+	var ret = 0;
+
+	if (auth == "wep") {
+		if (pass.length > 26) {
+			alertSpecial("Longitud de clave incorrecta. Recuerda que puedes introducir 13 caracteres en codificaci&oacute;n ASCII (letras, n&uacutemeros y caracteres especiales) o bien 26 caracteres en codificaci&oacute;n Hexadecimal (0-9 y A-F).");
+			pass = pass.substr(0, 26);
+			$('#SSIDPassword,#SSIDPassword1').val(pass);
+			$('#SSIDPassword,#SSIDPassword1').select().focus();
+		}
+		if ((wepPatrn.test(pass) || hexPatrn.test(pass)) && !checkspc.test(pass)) {
+			ret = digitPatrn.test(pass) + letterPatrn.test(pass) + specialPatrn.test(pass);
+			if (hexPatrn.test(pass) || ret > 2) ret = 2;
+		}
+	}
+	else {
+		if (pass.length > 63) {
+			alertSpecial("Longitud clave WiFi incorrecta. Debe contener entre 8 y 63 caracteres.");
+			pass = pass.substr(0, 63);
+			$('#SSIDPassword,#SSIDPassword1').val(pass);
+			$('#SSIDPassword,#SSIDPassword1').select().focus();
+		}
+		if (wpaPatrn.test(pass) && !checkspc.test(pass)) {
+			ret = digitPatrn.test(pass) + letterPatrn.test(pass) + specialPatrn.test(pass);
+			if (pass.length<=10 && ret>2) ret = 2;
+		}
+	}
+	
+	return ret;
+}
+
+function showPassLevel(passlevel)
+{
+    if(passlevel == 0){
+        $('#security,#security1').find('img').attr("src","te_nopass.jpg");
+	}
+    else if(passlevel == 1){
+        $('#security,#security1').find('img').attr("src","te_low.jpg");
+	}
+    else if(passlevel == 2){
+        $('#security,#security1').find('img').attr("src","te_media.jpg");
+	}
+    else if(passlevel == 3){
+        $('#security,#security1').find('img').attr("src","te_high.jpg");
+	}
+}
+
+function showtable(obj){
+	var macFlt = wifiMacFlt.split(',');
+	for(var i=0;i<macFlt.length;i++){
+		if (macFlt[i] != ''){
+			$('#'+obj+' tr:last').after('<tr>\
+				<td align="center"><img class="hand" src="te_cross.png" onclick="deleteRow(this);"></td>\
+				<td>'+macFlt[i]+'</td>\
+				<td align="center"><img class="hand" src="te_edit.png" onclick="editRow(this);"></td>\
+			</tr>');
+		}
+	}		
+}
+
+function addRow(){
+	$("#ActiveMAC tr:last, #ActiveMAC1 tr:last").after('<tr>\
+		<td align="center"><img class="hand" src="te_cross.png" onclick="deleteRow(this);"></td>\
+		<td>'+$("[name=MACAddress],[name=MACAddress1]").val().toUpperCase()+'</td>\
+		<td align="center"><img class="hand" src="te_edit.png" onclick="editRow(this);"></td>\
+	</tr>');
+}
+
+function editRow(obj){
+	if (oldIE) {
+		alertSpecial('Funci&oacute;n de edici&oacute;n no es compatible con la versi&oacute;n anterior antes de IE10.');
+		return;
+	}
+
+	var mac = $(obj).closest("tr").children("td").eq(1).text();
+	swal({
+		title: "Direcci&oacute;n MAC",
+		text: "<br/><br/>Nueva direcci&oacute;n MAC:<br/>",
+		type: "input",
+		customClass: "sweet-alert1",
+		showCancelButton: true,
+		cancelButtonText: "Cancelar",
+		animation: "slide-from-bottom",
+		html: true,
+		inputValue: mac
+	},
+	function(inputValue){
+		if (inputValue === false) return false;
+		inputValue = inputValue.toUpperCase();
+		if (!isMacAddr(inputValue) || inputValue=="00:00:00:00:00:00") {
+			alertSpecial("Direcci&oacute;n MAC no v&aacute;lida. Debe ser un n&uacute;mero hexadecimal (0-9 ?A-F). Ej. XX:XX:XX:XX:XX:XX");
+			return false;
+		}
+		if (inputValue != mac) {
+			if( $('#ActiveMAC tr, #ActiveMAC1 tr').length < MAX_MAC_FLT ){
+				for(var i=1;i<$('#ActiveMAC tr, #ActiveMAC1 tr').length;i++){
+					if( $('#ActiveMAC tr, #ActiveMAC1 tr').eq(i).children('td').eq(1).text() == inputValue){
+						alertSpecial("No es posible introducir direcciones MAC iguales");
+						return false;
+					}
+				}
+			}
+		}
+		$(obj).closest("tr").children("td").eq(1).text(inputValue);
+	});
+}
+
+function deleteRow(obj){
+	$(obj).closest("tr").remove(); //remove row
+}
+
+function editTable(obj){
+    $('.edit').addClass('divHide');
+	$('.save').removeClass('divHide');
+
+	var macFlt = wifiMacFlt.split(',');
+	for(i=1;i<=macFlt.length;i++){
+		if( macFlt[i-1][0] == '-' ) macFlt[i-1] = macFlt[i-1].substring(1);
+	    $('#'+obj+' tr').eq(i).children('td').eq(0).removeClass('divHide');
+		$('#'+obj+' tr').eq(i).children('td').eq(1).remove();
+        $('#'+obj+' tr').eq(i).children('td').eq(1).html('<input type="text" value="'+macFlt[i-1]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(2).find('img').attr("onclick","activeMAC(this);");
+		$('#'+obj+' tr').eq(i).children('td').eq(2).find('img').attr("class","hand");
+    }
+}
+
+function saveTable(obj){
+	$('.edit').removeClass('divHide');
+	$('.save').addClass('divHide');
+	var rowCount = $('#'+obj+' tr').length;
+	var loc = 'te_wifi.cmd?action=save&wlMACaddr=';//wlMACaddr format to server "MAC1,-MAC2,...."
+	if (rowCount > MAX_MAC_FLT+1){
+		rowCount = MAX_MAC_FLT+1;
+		alertSpecial('Demasiadas entradas! Las primeras '+MAX_MAC_FLT+' entradas.');
+	}
+	for(i=rowCount-1;i>0;i--){
+		if( $('#'+obj+' tr').eq(i).children('td').eq(2).find('img').attr('src') == 'te_off.png')
+			loc += '-';
+		mac = $('#'+obj+' tr').eq(i).children('td').eq(1).find('input').val();
+		loc += mac;
+		if (i > 1) loc += ",";
+    }
+	loc += '&unitNum='+unitNum;
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	//location.reload();
+	eval(code); 
+}
+
+function activeMAC(obj){
+	if( $(obj).attr('src') == 'te_on.png' ){
+		$(obj).fadeOut(function(){
+			$(obj).attr('src','te_off.png').fadeIn(0.00000000001);
+		});
+	}
+	else{
+		$(obj).fadeOut(function(){
+		   $(obj).attr('src','te_on.png').fadeIn(0.00000000001);
+		});
+	}
+}
+
+function loadChannelList()
+{
+   var sel_ch;
+   var sel_band;
+   var sel_nbw_cap;
+   var sel_sb;
+   var idx;
+      
+   /* save selected */   
+   sel_ch = channel;
+   sel_band = band;
+   sel_nbw_cap = nbwcap;
+   sel_sb = nctrlsb;
+   
+   /* load list */
+   document.forms[0].wlChannel.length = 0;
+	      
+   if ((sel_band == "2") && ((phy != "n") && (phy != "v"))) {
+      <%ejGetWl(wlChannelList, b, b, 20)%>
+   }
+   else  if ((sel_band == "1") && ((phy != "n") && (phy != "v"))) {
+      <%ejGetWl(wlChannelList, a, a, 20)%>
+   }
+   else  if ((sel_band == "2") && (phy == "n") ) { 
+      if(sel_nbw_cap == "1") {
+         if(sel_sb == 1) {
+            <%ejGetWl(wlChannelList, n, b, 40, "upper")%>
+         } else {
+            <%ejGetWl(wlChannelList, n, b, 40, "lower")%>         
+         }            
+      } else if(sel_nbw_cap == "0" || sel_nbw_cap == "2"){      
+         <%ejGetWl(wlChannelList, n, b, 20 )%>
+      }         
+   }
+   else  if ((sel_band == "1") && (phy == "n") ) {    
+      if(sel_nbw_cap == "1" || sel_nbw_cap == "2") {
+         if(sel_sb == 1) {
+            <%ejGetWl(wlChannelList, n, a, 40, "upper")%>
+         } else {
+            <%ejGetWl(wlChannelList, n, a, 40, "lower")%>         
+         }  
+      } else if (sel_nbw_cap == "0") {
+         <%ejGetWl(wlChannelList, n, a, 20 )%>
+      }         
+   }      
+   else if ((sel_band == "1") && (phy == "v") && (sel_nbw_cap == "3")) {    
+      /* Band a and AC phy and 80M */
+      <%ejGetWl(wlChannelList, v, a, 80 )%>
+   }
+   else  if ((sel_band == "2") && (phy == "v") ) { 
+      if(sel_nbw_cap == "1") {
+         if(sel_sb == 1) {
+            <%ejGetWl(wlChannelList, v, b, 40, "upper")%>
+         } else {
+            <%ejGetWl(wlChannelList, v, b, 40, "lower")%>         
+         }            
+      } else if(sel_nbw_cap == "0" || sel_nbw_cap == "2"){      
+         <%ejGetWl(wlChannelList, v, b, 20 )%>
+      }         
+   }
+   else  if ((sel_band == "1") && (phy == "v")) {    
+      if(sel_nbw_cap == "1" || sel_nbw_cap == "2") {
+         if(sel_sb == 1) {
+            <%ejGetWl(wlChannelList, v, a, 40, "upper")%>
+         } else {
+            <%ejGetWl(wlChannelList, v, a, 40, "lower")%>         
+         }  
+      } else if (sel_nbw_cap == "0") {
+         <%ejGetWl(wlChannelList, v, a, 20 )%>
+      }         
+   }      
+   else {
+      document.forms[0].wlChannel[0] = new Option("Auto", "0")
+   }
+
+   for (idx=(document.forms[0].wlChannel.options.length-1); idx>=0; idx--)
+   {
+      var chan = document.forms[0].wlChannel.options[idx].value;
+      if ((0 != chan) && (1 != chan) && (6 != chan) && (11 != chan)) {
+         document.forms[0].wlChannel.remove(idx);
+      }
+   }
+
+   var new_option = new Option("Otro Fijo", "-1");
+   document.forms[0].wlChannel.options.add(new_option);
+
+   /* mark selected */
+   for (idx=0; idx<document.forms[0].wlChannel.options.length; idx++) {
+      if (document.forms[0].wlChannel.options[idx].value == sel_ch) {
+         document.forms[0].wlChannel.options[idx].selected = true;
+         break;
+      }
+   }
+   
+   /* set to first channel none-auto if not found */   
+   if (idx == document.forms[0].wlChannel.options.length &&
+       document.forms[0].wlChannel.options.length > 1) {
+      document.forms[0].wlChannel.options[idx-1].selected = true;
+   }
+}
+
+function passwordFocus(obj) {
+   $(obj).attr("readOnly", false);
+   $(obj).prop("readOnly", false);
+}
+
+function passwordBlur(obj) {
+   $(obj).attr("readOnly", true);
+   $(obj).prop("readOnly", true);
+}
+// done hiding -->
+</script>
+</head>
+
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+		<div class="Body"></div>
+        <div class="Body2">
+			<div class="title">WiFi</div>
+			<div class="content">
+				<div class="littletitle">WiFi</div>
+				<p class="content_word">Desde aqu&iacute; podr&aacute;s configurar tu red inal&aacute;mbrica. Escaneando el c&oacute;digo QR puedes incluso conectar tus equipos directamente. Tambi&eacute;n puedes a&ntilde;adir las direcciones MAC de los equipos que puedan acceder a tu WiFi.</p>
+				<table class="editItems" border="0" style="width:100%">
+				<tr>
+					<td class="titlesize">Nombre WiFi:</td>
+					<td><input class="Input_box" type="text" name="SSIDName" size="32"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Ocultar Nombre WiFi:</td>
+					<td>
+						<input type="radio" name="hideSSID" value="1">Si
+						<input type="radio" name="hideSSID" value="0">No
+					</td>
+				</tr>
+				<tr class="pwdfield">
+					<td class="titlesize" style="text-indent:0px;padding-left:20px;">Clave WiFi: Introduce letras, n&uacute;meros y caracteres especiales (@,&,!,+, etc) para que tu clave WiFi tenga seguridad alta</td>
+					<td><input class="Input_box" type="password" id="SSIDPassword" size="32" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)" autocomplete="off" size="32"><img class="hand" src="show.gif"></td>
+					<td id="security" style="width:250px;">Nivel de seguridad de la contrase&ntilde;a<img style="margin-left:10%;" src="te_nopass.jpg"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Estado Red Inal&aacute;mbrica:</td>
+					<td>
+						<input type="radio" name="wifiActive" value="1">Activado
+						<input type="radio" name="wifiActive" value="0">Desactivado
+					</td>
+				</tr>
+				<tr><td></td><td></td><td></td></tr>
+				</table>				
+				<div style="margin-left:2%;"><img style="height:50px;" src="te_quotation.png"></div>
+				<div style="margin-top:-50px;margin-left:75px;"><b>Aviso:</b> El m&eacute;todo de cifrado WEP no es compatible con WPS (2.0). Si lo seleccionas la funcionalidad WPS quedar&aacute; desactivada en tu router.</div><br>
+				<table class="editItems" border="0" style="width:100%">
+				<tr>
+					<td class="titlesize">Seguridad:</td>
+					<td>
+					<select class="Select_box" name="AuthType">
+						<option value="open">Sin cifrado</option>
+						<option value="wep">WEP</option>
+						<option value="wpa2_a">WPA2(AES)</option>
+						<!--<option value="wpa2_ta">WPA2(TKIP+AES)</option>-->
+						<option value="wpawpa2">WPA/WPA2 Mixto</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">N&uacute;mero canal WiFi:</td>
+					<td>
+					<form>
+					<select class="Select_box" name="wlChannel">
+					</select>
+					</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Canal actual:</td><td name="currentChannel"></td>
+				</tr>
+				<tr>
+					<td style="text-indent:0px;padding-left:20px;" colspan="2">Escanea este c&oacute;digo y guarda los datos de tu configuraci&oacute;n inal&aacute;mbrica en tu m&oacute;vil. Adem&aacute;s, si tu aplicaci&oacute;n de escaneo lo permite, podr&aacute;s compartirlo con tus amigos e incluso conectarte directamente</td>
+					<td class="code"></td>
+				</tr>
+				<tr><td><input type="button" value="Aplicar cambios"></td></tr>
+				</table>
+			</div>
+			<div class="title">WPS</div>
+			<div class="content">
+				<div class="littletitle">WPS</div>
+				<div class="content_word">Para habilitar la ventana WPS pulsa el bot&oacute;n f&iacute;sico de tu equipo dedicado a esta funcionalidad. <br><b>Aviso:</b> El metodo de cifrado WEP no es compatible con WPS2.0. Para m&aacute;s informaci&oacute;n consulta la opci&oacute;n de <a href="te_ayuda_configurador_web.html">Ayuda</a></div>
+			</div>
+			<div class="title">Filtrado MAC</div>
+			<div class="content">
+				<div class="littletitle">Filtrado MAC</div>
+				<div class="content_word">Para una sencilla y rápida definición de filtrado MAC.hemos creado una aplicación que puedes descargar en la tienda de aplicaciones de tu teléfono inteligente.</div>
+			</div>
+		</div>
+    </div>  
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+		<div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">WiFi</div>
+			<div class="Mcontent">
+			    <div class="littletitle">WiFi</div>
+				<p class="Mcontent_word">Desde aqu&iacute; podr&aacute;s configurar tu red inal&aacute;mbrica. Escaneando el c&oacute;digo QR puedes incluso conectar tus equipos directamente. Tambi&eacute;n puedes a&ntilde;adir las direcciones MAC de los equipos que puedan acceder a tu WiFi.</p>
+				<div class="Mtitlesize">Nombre WiFi:</div>
+				<div><input class="MInput_box" type="text" name="SSIDName1"></div>
+				<div>
+					<span class="Mtitlesize">Ocultar Nombre WiFi:</span>
+					<input type="radio" name="hideSSID1" value="1">Si
+					<input type="radio" name="hideSSID1" value="0">No
+				</div>
+				<div class="pwdfield">
+				<div class="Mtitlesize">Clave WiFi: Introduce letras, n&uacute;meros y caracteres especiales (@,&,!,+, etc) para que tu clave WiFi tenga seguridad alta</div>
+				<div><input class="MInput_box" type="password" id="SSIDPassword1" readOnly onmouseover="passwordFocus(this)" onfocus="passwordFocus(this)" onblur="passwordBlur(this)" autocomplete="off" size="32"><img class="hand" src="show.gif"></div>
+				<div style="text-align:center;">Nivel de seguridad de la contrase&ntilde;a</div>
+				<div id="security1"><img style="width:200px;height:16px;display:block;margin:auto;" src="te_nopass.jpg"></div>
+				</div>
+				<div>
+					<span class="Mtitlesize">Estado Red Inal&aacute;mbrica:</span>
+					<input type="radio" name="wifiActive1" value="1">Activado
+					<input type="radio" name="wifiActive1" value="0">Desactivado
+				</div>
+				<p class="Mcontent_word">Escanea este c&oacute;digo y guarda los datos de tu configuraci&oacute;n inal&aacute;mbrica en tu m&oacute;vil. Adem&aacute;s, si tu aplicaci&oacute;n de escaneo lo permite, podr&aacute;s compartirlo con tus amigos e incluso conectarte directamente</p>
+				<div style="text-align:center;"><span class="code"></span></div>
+				<p>
+					<img style="width:50px;height:50px;" src="te_quotation.png">
+					<div style="margin-top:-75px;margin-left:75px;"><b>Aviso:</b> El m&eacute;todo de cifrado WEP no es compatible con WPS (2.0). Si lo seleccionas la funcionalidad WPS quedar&aacute; desactivada en tu router.</div>
+				</p>          
+				<div class="Mtitlesize">Seguridad</div>
+				<div>
+					<select class="MSelect_box" name="AuthType1">
+						<option value="open">Sin cifrado</option>
+						<option value="wep">WEP</option>
+						<option value="wpa2_a">WPA2(AES)</option>
+						<!--<option value="wpa2_ta">WPA2(TKIP+AES)</option>-->
+						<option value="wpawpa2">WPA/WPA2 Mixto</option>
+					</select>
+				</div>
+				<div class="Mtitlesize">N&uacute;mero canal WiFi</div>
+				<div>
+				<form>
+					<select class="MSelect_box" name="wlChannel">
+					</select>
+				</form>
+				</div>
+				<span class="Mtitlesize">Canal actual</span>:<span name="currentChannel1"></span>
+				<div><input type="button" value="Aplicar cambios"></div>
+			</div>
+            <div class="Mtitle">WPS</div>
+			<div class="Mcontent">
+			    <div class="littletitle">WPS</div>
+				<div class="Mcontent_word">Para habilitar la ventana WPS pulsa el bot&oacute;n f&iacute;sico de tu equipo dedicado a esta funcionalidad.<br><b>Aviso:</b> El metodo de cifrado WEP no es compatible con WPS2.0. Para m&aacute;s informaci&oacute;n consulta la opci&oacute;n de <a href="te_ayuda_configurador_web.html">Ayuda</a></div>
+			</div>
+            <div class="Mtitle">Filtrado MAC</div>
+			<div class="Mcontent">
+			    <div class="littletitle">Filtrado MAC</div>
+				<div class="Mcontent_word">Para una sencilla y rápida definición de filtrado MAC.hemos creado una aplicación que puedes descargar en la tienda de aplicaciones de tu teléfono inteligente.</div>
+			</div><br>
+        </div>      
+    </div>
+</body>
+</html>

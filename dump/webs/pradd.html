@@ -1,0 +1,264 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+
+<!-- hide
+var glbDisplayPhysicalPort = false;
+var multisubnet = 0;
+
+
+function hideMultiSubnetInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('MultiSubnetInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.MultiSubnetInfo.style.visibility = status;
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      if (multisubnet == '1')
+      {
+         hideMultiSubnetInfo(0);
+      }
+      else
+      {
+         hideMultiSubnetInfo(1);
+      }
+
+
+   }
+}
+
+
+function btnApply() {
+   var loc = 'prmngr.cmd?action=add';
+
+   with ( document.forms[0] ) {
+      if ( PolicyName.value == '' ) {
+	      alert( 'Please enter a policy name' );
+	      return;
+      } else if ( isValidName(PolicyName.value) == false ) {
+	 alert( 'Please enter valid rule name: No special characters.' );
+	 return;
+      } else if (PolicyName.value.length > 8) {
+         msg = 'Maximum policy name cannot exceed 8 characters.';
+         alert(msg);
+         return;
+      }
+
+      if (multisubnet == '1')
+      {
+         if (SourceIp.value == '' && lanIfcName.selectedIndex == 0 && lanConfId.selectedIndex == 0) 
+         {
+   	      alert( 'Please at least enter a policy' );
+   	      return;
+         }
+      }
+      else
+      {
+         if (SourceIp.value == '' && lanIfcName.selectedIndex == 0) 
+         {
+   	      alert( 'Please at least enter a policy' );
+   	      return;
+         }
+      }
+
+      if (SourceIp.value != '' && isValidIpAddress(SourceIp.value) == false) {
+	      msg = 'Source Ip "' + SourceIp.value + '" is invalid IP address.';
+	      alert(msg);
+	      return;
+      }
+
+	var idx = wanIf.selectedIndex;
+	var ifc = wanIf.options[idx].value;
+	// if chosen interface is MER but does not specify static IP address then display error
+	if ( ifc.indexOf('nas_') != -1 && gwStr.value == '' ) {
+		alert('Default gateway IP address should be specified since MER interface is selected.');
+		return;
+	}
+	  if( isXSS(PolicyName.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Policy Name");
+			return false;
+	  }else{
+			loc += '&PolicyName=' + PolicyName.value;
+	  }
+      
+      if (SourceIp.value != '') {
+	      loc += '&SourceIp=' + SourceIp.value;
+      }
+
+      if (multisubnet == '1')
+      {
+         if (lanIfcName.selectedIndex != 0 && lanConfId.selectedIndex != 0 ) 
+         {
+            alert('Please select interface from EITHER physical LAN port OR interface group.');
+            return;
+         }
+      }
+	  
+      if (lanIfcName.selectedIndex != 0) {
+	      loc += '&lanIfcName=' + lanIfcName.options[lanIfcName.selectedIndex].value;
+      }
+      else if (multisubnet == '1' && lanConfId.selectedIndex != 0)
+      {
+	      loc += '&lanIfcName=' + lanConfId.options[lanConfId.selectedIndex].value;
+      }
+
+      loc += '&wanIf=' + wanIf.options[wanIf.selectedIndex].value;
+
+      if (gwStr.value != '') {
+         if (isValidIpAddress(gwStr.value) == false) {
+	      msg = 'Default Gateway IP "' + gwStr.value + '" is invalid address.';
+	      alert(msg);
+	      return;
+         }
+         loc += '&defaultgw=' + gwStr.value;		 
+      }
+
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+               <b>Policy Routing Settup</b><br>
+               Enter the policy name, policies, and WAN interface then click "Apply/Save" to add the entry to the policy routing table. <br>
+               Note: If selected "IPoE" as WAN interface, default gateway must be configured.<br>
+               <br>
+	    </P>
+            
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='150'>Policy Name: </td>
+                  <td><input type='text' name='PolicyName'></td>
+               </tr>
+            </table>
+	    <br>
+	    
+      <script language="javascript">
+<!-- hide
+         if (multisubnet == '1')
+         {
+            document.writeln("<P>Please select interfaces from either Physical LAN port or interface group created in Interface Group feature. </P>");
+         }
+
+// done hiding -->
+</script>
+
+
+
+      <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '';
+   var dispName = '';
+   var brdId = '<%ejGet(boardID)%>';
+
+   interfaceInfo = '<%ejGetOther(bridgeInterfaceInfo, all)%>';
+   var interfaces = interfaceInfo.split('|');   
+   interfaces.sort();
+
+   if (interfaces.length > 1) {
+      glbDisplayPhysicalPort = true;
+      document.writeln("           <table border='0' cellpadding='0' cellspacing='0'><tr>");
+      document.writeln("               <td width='150'>Physical LAN Port:");
+      document.writeln("               </td>");
+      document.writeln("               <td><select size='1' name='lanIfcName'>");
+      document.writeln("                      <option value='' selected>");
+      document.writeln("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+      var interfaces = interfaceInfo.split('|');
+ 	interfaces.sort();
+  	for ( i = 0; i < interfaces.length; i++ ) {
+      	 dispName = getUNameByLName(brdId + '|' + interfaces[i]);
+         if (interfaces[i] != '')
+          document.writeln("  <option value='" + interfaces[i] + "'>" + dispName);
+      }
+     	document.writeln("                    </select>");
+      document.writeln("                </td>");
+      document.writeln("            </tr></table>");      
+   }
+}
+// done hiding -->  
+</script>
+
+      <div id='MultiSubnetInfo'>
+         <br>
+	  <table border="0" cellpadding="0" cellspacing="0">	 
+         <td width="150">Interface Group:</td>
+         <td><%ejGet(lanlistpr)%></td>
+	  </table>	 
+      </div>
+
+<br>
+
+	    
+	    <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+	          <td width='150'>Source IP: </td>
+                  <td><input type='text' name='SourceIp'></td>
+               </tr>
+            </table>
+	    <br>
+
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='150'>Use Interface: </td>
+                  <td><select name='wanIf'>
+                        <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+   var interfaces = interfaceInfo.split('|');
+   
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+      document.write("  <option value='" + names[1] + "'>");
+      document.writeln(interfaces[i]);
+   }
+}
+// done hiding -->
+</script>
+                     </select></td>
+               </tr>
+            </table>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width='150'>Default Gateway IP: </td>
+                  <td><input type='text' name='gwStr'></td>
+               </tr>
+            </table>
+            <br>
+
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	<link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>   
+	<script language="javascript" src="te_util.js"></script>
+	<script language="javascript" src="te_jquery.min.js"></script>
+<script language="javascript">
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var isiPad = navigator.userAgent.match(/iPad/i) != null;
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var gponUp='<%ejGetOther(installation, gponUp)%>';
+var gponPw='<%ejGetOther(installation, gponPw)%>';
+var wrongGPONpwd='';
+var serviceType='<%ejGetOther(installation, serviceType)%>';
+var addressType='<%ejGetOther(installation, addressType)%>';
+var voiceService='<%ejGetOther(installation, voiceService)%>';
+var dvwanIPaddress='<%ejGetOther(installation, dvwanIPaddress)%>';
+var dvgatewayIPaddress='<%ejGetOther(installation, dvgatewayIPaddress)%>';
+var dvgatewayNetmask='<%ejGetOther(installation, dvgatewayNetmask)%>';
+var dvlanIPaddress='<%ejGetOther(installation, dvlanIPaddress)%>';
+var telephone='<%ejGetOther(installation, telephone)%>';
+var installWizard='<%ejGet(installWizard)%>';
+var ethIpAddress='<%ejGet(ethIpAddress)%>';
+var acsInstall='1';
+$(function(){
+	if(ismobile)
+	{
+		$("#PCformat").remove();
+		var width=$('.Mlogin_input').width();
+		if( width >= 481 ){
+			$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',481);
+			$("#Imobileformat").find('[name=gponpw]').css('width',473);
+		}else
+			$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',width);
+	}
+	else
+	{
+		$("#Imobileformat").remove();
+	}
+	$('#homepage').text('http' + ((window.location.protocol=='https:')?'s':'') + '://' + ethIpAddress);
+	if( gponUp == '1' ){
+		$("[name=gponpw]").attr('disabled',true);
+		$("[name=gponpw]").val(gponPw);
+	}else{
+		$("[name=gponpw]").attr('disabled',false);
+		$("[name=gponpw]").val(gponPw.substring(0,14));
+		$("[name=gponpw]").select().focus();
+	}
+	$('tr[value="menu"]').on('click touchstart',function(){
+	
+		if(isiPad){
+			$(document).on('mouseenter touchstart',function (event) {
+				var classname = $(event.target).attr('class');
+				var target = $(event.target).attr('target');
+				if (classname != 'menuimg' && classname != 'Mpopup' && classname != 'nextitems' && target != "mainFrame")
+					$('.Mpopup, .Mpopup_table').remove();
+			});
+		}else{
+			if( $('.popup >li:hover, .Mpopup >li:hover,.popup >li.nextitems>ul>li:hover, .Mpopup >li.nextitems>ul>li:hover').length == 0 && $('.menuimg:hover').length == 0 )
+				$('.popup,.Mpopup, .popup_table, .Mpopup_table').remove();
+		}
+			
+		if(ismobile){
+			$(this).after('</table><table class="Mpopup_table"><tr colspan="2"><span class="Mpopup">\
+							<li acsInstall="1"><div class="menushift" style="border:none;">Identificaci&oacute;n ONT</div></li>\
+							<li acsInstall="0"><div class="menushift">Selecci&oacute;n del servicio</div></li>\
+						</span></table>');
+		}
+		else{
+			$(this).after('</table><table class="popup_table"><span class="popup">\
+							<li acsInstall="1"><div class="menushift" style="border:none;">Identificaci&oacute;n ONT</div></li>\
+							<li acsInstall="0"><div class="menushift">Selecci&oacute;n del servicio</div></li>\
+						</span></table>');
+		}
+		$('.popup,.Mpopup').on('mouseenter touchstart',function(){
+			$(this).addClass('hand');
+			$('span>li.nextitems').on('mouseleave touchcancel',function(){
+				$(this).find('ul').addClass('divHide');
+			});
+			$('span>li').not('span>li.nextitems').on('click touchstart',function(){
+				$(".identification").hide();
+				$(".selection").hide();
+				$(".lineavoz").hide();
+				$(".lineavoz1").hide();
+				$(".showinfo").hide();
+				$(".applypage").hide();
+				acsInstall = $(this).attr('acsInstall');
+				$('[name=acsInstall]').val(acsInstall);
+				if (acsInstall == '1')
+					$(".identification").show();
+				else
+					$(".selection").show();
+				if( gponUp == '1' ){
+					$("[name=gponpw]").attr('disabled',true);
+					$("[name=gponpw]").val(gponPw);
+				}else{
+					$("[name=gponpw]").attr('disabled',false);
+					$("[name=gponpw]").val(gponPw.substring(0,14));
+					$("[name=gponpw]").select().focus();
+				}
+				$('.popup,.Mpopup').remove();
+			});
+		});
+		$('span>li,span>li.nextitems>ul>li').on('mouseenter touchstart',function(){
+			$(this).css('background-color','#E6E6E6');
+		})
+		.on('mouseleave touchcancel',function(){
+			$(this).css('background-color','#FFF');
+		});
+		setInterval(function(){
+			if(isiPad){
+				$(document).on('mouseenter touchstart',function (event) {
+					var classname = $(event.target).attr('class');
+					var target = $(event.target).attr('target');
+					if (classname != 'menuimg' && classname != 'Mpopup' && classname != 'nextitems' && target != "mainFrame")
+						$('.Mpopup, .Mpopup_table').remove();
+				});
+			}else{
+				if( $('.popup >li:hover, .Mpopup >li:hover,.popup >li.nextitems>ul>li:hover, .Mpopup >li.nextitems>ul>li:hover').length == 0 && $('.menuimg:hover').length == 0 )
+					$('.popup,.Mpopup, .popup_table, .Mpopup_table').remove();
+			}
+		},500);
+	});
+	if(wrongGPONpwd)
+		alertSpecial("Su contrase&ntilde;a es incorrecta.");
+	var info = [];
+	info[ 0] = '<%ejGet(teamName)%>';
+	info[ 1] = '<%ejGet(modelName)%>';
+	info[ 2] = '<%ejGet(sysVersion)%>';
+	info[ 3] = '<%ejGetOther(wanInterfaceInfo, connectionStatus)%>';
+	info[ 4] = '<%ejGet(serialNumber)%>';
+	info[ 5] = '<%ejGetOther(installation, deviceMac)%>';
+	info[ 6] = '<%ejGetOther(installation, opticalPower)%>';
+	info[ 6] = parseFloat(info[6].substr(info[6].search('RX:')+3)).toFixed(3);
+	if (info[6]=='NaN' || info[6]==-40) info[6] = '---'
+	for (var i=0; i<7; i++) {
+		if( i!= 1 && i!= 3 )
+			$('td:eq('+i+')').find('b').after(info[i]);
+	}
+	// Model Name
+	$('td:eq(1)').find('b').after('RTF'+info[1]);
+
+	// PPPoE Connection
+	switch (info[3]) {
+		case 'Connected':
+			$('td:eq(3)').find('b').after('Internet est&aacute; configurado'); break;
+		default:
+			$('td:eq(3)').find('b').after('Internet est&aacute; sin configurar'); break;
+	}
+	$("img[src='te_homepage.png']").on('click touchstart',function(){
+		window.location.replace("te_acceso_router.html");
+	});
+	$(".Mrouterinfo").on("touchstart",function(){
+		if( !$('.Infopopup').text().length ){
+		$('.Infopopup').append('<span class=hideinfo>\
+							<b>Router: </b><br>\
+							<b>Modelo: </b><br>\
+							<b>Firmware: </b><br>\
+							<b>Fabricante: </b><br>\
+							<b>N&ordm; serie del equipo: </b><br>\
+							<b>Direcci&oacute;n MAC: </b><br>\
+							<b>Potencia &oacute;ptica recibida[dBm]: </b><br>\
+						</span>');
+			var popwidth=$('body').width()/2;
+			for (var i=0; i<7; i++) {
+				if( i!= 1 && i!= 3 ){
+					var str="<span class='info'>"+info[i]+"</span>";
+					$('.Infopopup').find('b:eq('+i+')').after(str);	    
+					var totallen=$('.Infopopup').find('b:eq('+i+')').innerWidth()+$('.info').width();
+					$('.info').remove();
+					if(totallen>popwidth){
+						$('.Infopopup').find('b:eq('+i+')').after('<br>'+info[i]);
+					}
+					else
+						$('.Infopopup').find('b:eq('+i+')').after(info[i]);
+				}
+			}
+			var str="<span class='info'>RTF"+info[1]+"</span>";
+			$('.Infopopup').find('b:eq(1)').after(str);
+			var totallen=$('.Infopopup').find('b:eq(1)').innerWidth()+$('.info').width();
+			$('.info').remove();
+			if(totallen>popwidth){
+				$('.Infopopup').find('b:eq(1)').after('<br>RTF'+info[1]);
+			}
+			else
+				$('.Infopopup').find('b:eq(1)').after('RTF'+info[1]);
+			switch (info[3]) {
+				case 'Connected':
+					$('.Infopopup').find('b:eq(3)').after('Internet est&aacute; configurado');break;
+				default:
+					$('.Infopopup').find('b:eq(3)').after('Internet est&aacute; sin configurar');break;
+			}
+		}
+		$('.hideinfo').on('touchstart',function(){
+			$(this).remove();
+		});
+	});
+	if(installWizard=='2'){
+		$(".identification").hide();
+		acsInstall = '0';
+	}
+	else{
+		$(".applypage").hide();
+	}
+	$('[name=acsInstall]').val(acsInstall);
+	$(".selection").hide();
+	$(".lineavoz").hide();
+	$(".lineavoz1").hide();
+	$(".linea").hide();
+	$(".showinfo").hide();
+	$(window).on("orientationchange",function(){
+		var changewidth=width;
+		setTimeout(function(){
+			changewidth=$('[name=gponpw]').width();
+			if( changewidth >= 481 ){
+				$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',481);
+				$("#Imobileformat").find('[name=gponpw]').css('width',473);
+			}else	
+				$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',changewidth);
+		},300);
+	});
+	$('#Imobileformat').find('input[type!=button],select').parent().css('text-align','center');
+	$('[name=serviceType]>option[value='+serviceType+']').prop('selected',true);
+	if(	serviceType == '1'){
+		$("[name=addressType]").children('option[value=0],option[value=1]').remove();
+	}
+	else{
+		$("[name=addressType]").children('option[value=2]').remove();
+	}
+	$('[name=addressType]>option[value='+addressType+']').prop('selected',true);
+	$('[name=voiceService]>option[value='+voiceService+']').prop('selected',true);
+	$("[value='< Volver']").closest("div").css("height","200px");
+	$("[value=Aceptar]").on('click',function(e){
+		if( gponUp != '1' ){
+			var pwdpattern=/^[a-f0-9]{14}$/i;
+			if( !pwdpattern.test($('[name=gponpw]').val()) ){
+				alertSpecial('Formato de identificador inv&aacute;lido.Debe estar formado por 14 car&aacute;cteres en hexadecimal');
+				return false;
+			}
+			else{
+				$('[name=gponpw]').val($('[name=gponpw]').val().toLowerCase());
+			}
+		}
+		$('[name=sessionKey]').val(sessionKey);
+		$("*").css("cursor", "progress");
+		document.forms[0].submit();
+	});
+	$("[name=serviceType]").change(function(){
+		if($(this).val() == '0'){
+			$("[name=addressType]").find('option:last').before('<option value="0">Din&aacute;mico (NAT-PAT)</option><option value="1">Est&aacute;tico</option>');
+			$("[name=addressType]").children('option[value=0]').prop("selected", true);
+			$("[name=addressType]").children('option[value=2]').remove();
+			$(".selection").find("tr").eq(3).show();
+		}
+		else{
+			$("[name=addressType]").find('option:last').after('<option value="2">Ninguno</option>');
+			$("[name=addressType]").children('option[value=2]').prop("selected", true);
+			$("[name=addressType]").children('option[value!=2]').remove();
+			$(".selection").find("tr").eq(3).hide();
+		}	
+		$('[name=dvwanIPaddress]').val('');
+		$("[name=dvgatewayIPaddress]").val('');
+		$("[name=dvgatewayNetmask]").val('');
+		$("[name=dvlanIPaddress]").val('');
+		$("[name=telephone1]").val('');	
+		$("[name=telephone2]").val('');
+		$("[name=telephone3]").val('');
+	});
+	$("[name=addressType]").change(function(){
+	    if( $(this).val == addressType ){
+			$('[name=dvwanIPaddress]').val(dvwanIPaddress);
+			$("[name=dvgatewayIPaddress]").val(dvgatewayIPaddress);
+			$("[name=dvgatewayNetmask]").val(dvgatewayNetmask);
+			$("[name=dvlanIPaddress]").val(dvlanIPaddress);
+		}
+		else{
+			$('[name=dvwanIPaddress]').val('');
+			$("[name=dvgatewayIPaddress]").val('');
+			$("[name=dvgatewayNetmask]").val('');
+			$("[name=dvlanIPaddress]").val('');
+			$("[name=telephone1]").val('');	
+			$("[name=telephone2]").val('');
+			$("[name=telephone3]").val('');
+		}
+	});
+	$("[name=dvwanIPaddress1]").bind("keyup input", function(){
+	    var ippattern=/^(([1-9]?\d|1\d\d|2[0-5][0-5]|2[0-4]\d)\.){3}([1-9]?\d|1\d\d|2[0-5][0-5]|2[0-4]\d)$/;
+		if(ippattern.test($(this).val())){
+			if(calculategwIP($(this).val())){
+				return false;
+			}
+		}
+		else{
+			$('[name=dvgatewayIPaddress]').val('');
+		    $('[name=dvgatewayNetmask]').val('');
+		}
+	});
+	$(".selection").find("[value='< Volver'],[value='<']").on('click',function(){
+		$(".selection").hide();
+		$(".identification").show();
+		var width=$('.Mlogin_input').width();
+		if( width >= 481 ){
+			$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',481);
+			$("#Imobileformat").find('[name=gponpw]').css('width',473);
+		}else
+			$("#Imobileformat").find('.identification').find('[value=Aceptar]').css('width',width);
+	});
+	$(".selection").find("[value='Siguiente >'],[value='>']").on('click',function(){
+		$(".selection").hide();
+		showdiffpage("showinfo");
+	});
+	$(".lineavoz").find("[value='< Volver'],[value='<']").on('click',function(){
+		$(".selection").show();
+		$(".lineavoz").hide();
+	});
+	$(".lineavoz").find("[value='Siguiente >'],[value='>']").on('click',function(){
+		if( $('[name=dvwanIPaddress1]').val() == ethIpAddress ){
+			alertSpecial("La direcci&oacute;n IP WAN del router no es v&aacute;lida. Esta direcci&oacute;n debe ser diferente de la direccion IP WAN del Gateway del router");
+			return false;
+		}
+		var ip=$('[name=dvwanIPaddress1]').val().split(".");
+		if( !((ip[0] == 10 && (ip[1] >= 64 && ip[1] <= 127)) || (ip[0] == 10 && (ip[1] >= 128 && ip[1] <= 255)))){
+			alertSpecial("el formato de direcci&oacute;n IP debe estar entre 10.64.0.0 y 10.255.255.255");
+			//return false;
+		}
+//		else{
+			if(!checkIP(document.getElementsByName("dvgatewayIPaddress")[0]))
+				return false;
+			if(!checkMask(document.getElementsByName("dvgatewayNetmask")[0]))
+				return false;
+			if(!checknotequalsubnet($('[name=dvwanIPaddress1]').val(),$('[name=dvgatewayIPaddress]').val(),$('[name=dvgatewayNetmask]').val())) {
+				alertSpecial("lan y la direcci&oacute;n IP deben estar en la misma subred");
+				return false;
+			}
+//		}
+		if($('[name=voiceService]').val() == "1" ){
+			if( !checkPhoneNum(document.getElementsByName("telephone1")[0]) )
+				return false;
+		}
+		$('[name=dvwanIPaddress]').val($('[name=dvwanIPaddress1]').val());
+		$('[name=telephone]').val($('[name=telephone1]').val());
+		$(".showinfo").show();
+		showinfo();
+		$(".lineavoz").hide();
+	});
+	$(".lineavoz1").find("[value='< Volver'],[value='<']").on('click',function(){
+		$(".selection").show();
+		$(".lineavoz1").hide();
+	});
+	$(".lineavoz1").find("[value='Siguiente >'],[value='>']").on('click',function(){
+		if( $('[name=dvwanIPaddress2]').val() == ethIpAddress ){
+			alertSpecial("La direcci&oacute;n IP WAN del router no es v&aacute;lida. Esta direcci&oacute;n debe ser diferente de la direccion IP WAN del Gateway del router");
+			return false;
+		}
+		var ip=$('[name=dvwanIPaddress2]').val().split(".");
+		if(!(ip[0] == 172 && ip[1] == 26 && (ip[2]>=208 && ip[2]<=255) && (ip[3]>=0 && ip[3]<=255))){
+		    $('[name=dvgatewayIPaddress]').val('');
+		    $('[name=dvgatewayNetmask]').val('');
+			alertSpecial("Direcci&oacute;n IP WAN Router no es v&aacute;lida. Debe estar comprendida entre 172.26.208.0 y 172.26.225.255");
+			//return false;
+		}
+//		else{
+			ip[2]=(ip[2] & 240);
+			$('[name=dvgatewayIPaddress]').val(ip[0]+'.'+ip[1]+'.'+ip[2]+'.1');
+			$('[name=dvgatewayNetmask]').val("255.255.240.0");
+//		}
+		ip=$('[name=dvlanIPaddress]').val().split(".");
+		if(!(ip[0] == 10 && (ip[1]>=40 && ip[1]<=255) && (ip[2]>=0 && ip[2]<=255) && (ip[3]>=0 && ip[3]<=255))){
+			alertSpecial("Direcci&oacute;n IP WAN Router no es v&aacute;lida. Debe estar comprendida entre 10.40.0.0 y 10.255.255.255");
+			//return false;
+		}
+		if($('[name=voiceService]').val() == "1" ){
+			if( !checkPhoneNum(document.getElementsByName("telephone2")[0]) )
+			return false;
+		}
+		$('[name=dvwanIPaddress]').val($('[name=dvwanIPaddress2]').val());
+		$('[name=telephone]').val($('[name=telephone2]').val());
+		$(".showinfo").show();
+		showinfo();
+		$(".lineavoz1").hide();
+	});
+	$(".linea").find("[value='< Volver'],[value='<']").on('click',function(){
+		$(".selection").show();
+		$(".linea").hide();
+	});
+	$(".linea").find("[value='Siguiente >'],[value='>']").on('click',function(){
+		if( !checkPhoneNum(document.getElementsByName("telephone3")[0]) )
+			return false;
+		$('[name=telephone]').val($('[name=telephone3]').val());
+		$(".showinfo").show();
+		showinfo();
+		$(".linea").hide();
+	});
+	$(".showinfo").find("[value='< Volver'],[value='<']").on('click',function(){
+		$(".showinfo").hide();
+		showdiffpage("selection");
+	});	
+	$("[value='Aplicar']").on('click',function(){
+		$('[name=sessionKey]').val(sessionKey);
+		$("*").css("cursor", "progress");
+		document.forms[0].submit();
+	});	
+	$("[value="+htmlDecode('Atr&aacute;s')+"]").on("click",function(){
+		if( dvwanIPaddress != "2.2.2.2"){
+			if( addressType == '0' )
+				$('[name=dvwanIPaddress1]').val(dvwanIPaddress);
+			if( addressType == '1' ){
+				$('[name=dvwanIPaddress2]').val(dvwanIPaddress);
+				$('[name=dvlanIPaddress]').val(dvlanIPaddress);
+			}
+			$('[name=dvgatewayIPaddress]').val(dvgatewayIPaddress);
+			$('[name=dvgatewayNetmask]').val(dvgatewayNetmask);
+		}
+		$(".applypage").hide();
+		$(".showinfo").show();
+		showinfo();
+	});
+	$("[value='Salir']").on("click",function(){
+		window.top.location = '/te_acceso_router.html';
+	});
+});
+
+function showinfo(){
+    if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "0" && $('[name=voiceService]').val() == "1" ){
+		$('.showinfo').find('tr:eq(1)').show();
+		$('.showinfo').find('tr:eq(2)').show();
+		$('.showinfo').find('tr:eq(3)').show();
+		$('.showinfo').find('tr:eq(4)').show();
+		$('.showinfo').find('tr:eq(5)').hide();
+		$('.showinfo').find('tr:eq(6)').hide();
+		$('.showinfo').find('tr:eq(7)').show();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "0" && $('[name=voiceService]').val() == "0" ){
+		$('.showinfo').find('tr:eq(1)').show();
+		$('.showinfo').find('tr:eq(2)').show();
+		$('.showinfo').find('tr:eq(3)').show();
+		$('.showinfo').find('tr:eq(4)').show();
+		$('.showinfo').find('tr:eq(5)').hide();
+		$('.showinfo').find('tr:eq(6)').hide();
+		$('.showinfo').find('tr:eq(7)').hide();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "1" && $('[name=voiceService]').val() == "1" ){
+		$('.showinfo').find('tr:eq(1)').show();
+		$('.showinfo').find('tr:eq(2)').show();
+		$('.showinfo').find('tr:eq(3)').show();
+		$('.showinfo').find('tr:eq(4)').show();
+		$('.showinfo').find('tr:eq(5)').show();
+		$('.showinfo').find('tr:eq(6)').show();
+		$('.showinfo').find('tr:eq(7)').show();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "1" && $('[name=voiceService]').val() == "0" ){
+		$('.showinfo').find('tr:eq(1)').show();
+		$('.showinfo').find('tr:eq(2)').show();
+		$('.showinfo').find('tr:eq(3)').show();
+		$('.showinfo').find('tr:eq(4)').show();
+		$('.showinfo').find('tr:eq(5)').show();
+		$('.showinfo').find('tr:eq(6)').show();
+		$('.showinfo').find('tr:eq(7)').hide();
+	}else if( $('[name=serviceType]').val() == "1" && $('[name=voiceService]').val() == "1" ){
+		$('.showinfo').find('tr:eq(1)').hide();
+		$('.showinfo').find('tr:eq(2)').hide();
+		$('.showinfo').find('tr:eq(3)').hide();
+		$('.showinfo').find('tr:eq(4)').hide();
+		$('.showinfo').find('tr:eq(5)').hide();
+		$('.showinfo').find('tr:eq(6)').hide();
+		$('.showinfo').find('tr:eq(7)').show();
+	}
+	else if( $('[name=serviceType]').val() == "1" && $('[name=voiceService]').val() == "0" ){
+		$('.showinfo').find('tr:eq(1)').hide();
+		$('.showinfo').find('tr:eq(2)').hide();
+		$('.showinfo').find('tr:eq(3)').hide();
+		$('.showinfo').find('tr:eq(4)').hide();
+		$('.showinfo').find('tr:eq(5)').hide();
+		$('.showinfo').find('tr:eq(6)').hide();
+		$('.showinfo').find('tr:eq(7)').hide();
+	}
+	if( $('[name=serviceType]').val() == "0" )
+		$('.showinfo').find('td:eq(1)').html("Tr&iacute;o");
+	else 
+		$('.showinfo').find('td:eq(1)').html("D&uacute;o");
+	if( $('[name=addressType]').val() == "0" )
+		$('.showinfo').find('td:eq(3)').html("Din&aacute;mico (NAT-PAT)");
+	else if( $('[name=addressType]').val() == "1" ){
+	    $('.showinfo').find('td:eq(3)').html("Est&aacute;tico");
+		$('.showinfo').find('td:eq(13)').html('255.255.255.248');
+	}
+	else
+		$('.showinfo').find('td:eq(3)').html("Ninguno");
+	if( $('[name=dvwanIPaddress]').val() == '' )
+		$('[name=dvwanIPaddress]').val(dvwanIPaddress);
+	if( $('[name=dvgatewayIPaddress]').val() == '' )
+		$("[name=dvgatewayIPaddress]").val(dvgatewayIPaddress);
+	if( $('[name=dvgatewayNetmask]').val() == '' )
+		$("[name=dvgatewayNetmask]").val(dvgatewayNetmask);
+	if( $('[name=dvlanIPaddress]').val() == '' )
+		$("[name=dvlanIPaddress]").val(dvlanIPaddress);
+	if( $('[name=telephone]').val() == '' ){
+	    $("[name=telephone]").val(telephone);
+		$("[name=telephone1]").val(telephone);
+		$("[name=telephone2]").val(telephone);
+		$("[name=telephone3]").val(telephone);
+	}
+	$('.showinfo').find('td:eq(5)').text($("[name=dvwanIPaddress]").val());
+	$('.showinfo').find('td:eq(7)').text($("[name=dvgatewayIPaddress]").val());
+	$('.showinfo').find('td:eq(9)').text($("[name=dvgatewayNetmask]").val());
+	$('.showinfo').find('td:eq(11)').text($("[name=dvlanIPaddress]").val());
+	$('.showinfo').find('td:eq(15)').text($("[name=telephone]").val());
+}
+
+function showdiffpage(page){
+	/*if( $('[name=addressType]').val == addressType ){
+		//if( $('[name=dvwanIPaddress]').val() == '' )
+			$('[name=dvwanIPaddress]').val(dvwanIPaddress);
+		//if( $('[name=dvgatewayIPaddress]').val() == '' )
+			$("[name=dvgatewayIPaddress]").val(dvgatewayIPaddress);
+		//if( $('[name=dvgatewayNetmask]').val() == '' )
+			$("[name=dvgatewayNetmask]").val(dvgatewayNetmask);
+		//if( $('[name=dvlanIPaddress]').val() == '' )
+			$("[name=dvlanIPaddress]").val(dvlanIPaddress);
+	}
+	else{
+		//if( $('[name=dvwanIPaddress]').val() == '' )
+			$('[name=dvwanIPaddress]').val('');
+		//if( $('[name=dvgatewayIPaddress]').val() == '' )
+			$("[name=dvgatewayIPaddress]").val('');
+		//if( $('[name=dvgatewayNetmask]').val() == '' )
+			$("[name=dvgatewayNetmask]").val('');
+		//if( $('[name=dvlanIPaddress]').val() == '' )
+			$("[name=dvlanIPaddress]").val('');
+	}*/
+	if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "0" && $('[name=voiceService]').val() == "1" ){
+		$(".lineavoz").show();
+		$(".lineavoz").find('.voice').show();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "0" && $('[name=voiceService]').val() == "0" ){
+		$(".lineavoz").show();
+		$(".lineavoz").find('.voice').hide();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "1" && $('[name=voiceService]').val() == "1" ){
+		$(".lineavoz1").show();
+		$(".lineavoz1").find('.voice').show();
+	}else if( $('[name=serviceType]').val() == "0" && $('[name=addressType]').val() == "1" && $('[name=voiceService]').val() == "0" ){
+		$(".lineavoz1").show();
+		$(".lineavoz1").find('.voice').hide();
+	}else if( $('[name=serviceType]').val() == "1" && $('[name=voiceService]').val() == "1" ){
+		$(".linea").show();
+	}
+	else if( $('[name=serviceType]').val() == "1" && $('[name=voiceService]').val() == "0" ){
+		$("."+page).show();
+		if( page == "showinfo" )
+			showinfo();
+	}
+}
+
+function calculategwIP(ipvalue){
+	var ip=ipvalue.split(".");
+	if( ip[0] == 10 && (ip[1] >= 64 && ip[1] <= 127) ){
+		ip[1]=(ip[1] & 192);
+		$('[name=dvgatewayIPaddress]').val(ip[0]+'.'+ip[1]+'.0.1');
+		$('[name=dvgatewayNetmask]').val('255.192.0.0');
+	}
+	else if( ip[0] == 10 && (ip[1] >= 128 && ip[1] <= 255) ){
+		ip[1]=(ip[1] & 128);
+		$('[name=dvgatewayIPaddress]').val(ip[0]+'.'+ip[1]+'.0.1');
+		$('[name=dvgatewayNetmask]').val('255.128.0.0');
+	}
+	/*else if( ip[0] == "172" && (ip[1] >= "16" && ip[1] <= "31")){
+		ip[2]=(ip[2] & 240);
+		$('[name=dvgatewayIPaddress]').val(ip[0]+'.'+ip[1]+'.'+ip[2]+'.1');
+		$('[name=dvgatewayNetmask]').val("255.255.240.0");
+	}
+	else{
+		ip[2]=(ip[2] & 240);
+		$('[name=dvgatewayIPaddress]').val(ip[0]+'.'+ip[1]+'.'+ip[2]+'.1');
+		$('[name=dvgatewayNetmask]').val('255.255.240.0');
+	}*/
+	else{
+		//alertSpecial("el formato de direcci&oacute;n IP debe estar entre 10.64.0.0 y 10.255.255.255");
+		return false;
+	}
+	return true;
+}
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.top.location = '/te_acceso_router.html';
+}
+</script>
+</head>
+<body>
+<form method='post'  action='te_install.cmd'>
+<input type="hidden" name="dvwanIPaddress">
+<input type="hidden" name="telephone">
+<input type="hidden" name="sessionKey"/>
+<input type="hidden" name="acsInstall"/>
+	<div id="PCformat">
+		<div class="Header_title_box">
+				<div class="Header_title">Base</sup></div>
+		</div>
+		<img class="te_logo" src="logo.png">
+		<div class="Header Header_line">
+			<div class="Header_logout_box">
+				<a href="javascript:Logout();" class="Header_logout">Cerrar sesi&oacute;n</a>
+			</div>
+			<table width="220px" class="menu_table">
+				<tr bgcolor="white" style="border:0px;" value="menu" >
+					<td valign="center" style="border:0px;" width="40px" height="40px"><img class="menuimg" style="cursor:pointer;z-index:1;" src="menu_normal.png"></td>
+					<td valign="center" class="menuimg" style="border:0px;color:#00A9E0;cursor:pointer;">MENU</td>
+				</tr>
+			</table>
+		</div>
+		<div class="Body"></div>
+        <div class="Body2">
+			<div class="install_content">
+			<table class="routerinfo" border="0" style="100%;z-index:0;"> 
+				<tr>
+					<td style="background-color:#E9EAE8;"><b>Fabricante:&nbsp;</b></td>
+					<td style="background-color:#E9EAE8;"><b>Modelo:&nbsp;</b></td>
+					<td style="background-color:#E9EAE8;"><b>Firmware:&nbsp;</b></td>	
+					<td style="background-color:#E9EAE8;"><b>Router:&nbsp;</b></td>
+				</tr>
+				<tr>
+					<td style="background-color:#E9EAE8;"><b>N&ordm; serie del equipo:&nbsp;</b></td>
+					<td style="background-color:#E9EAE8;"><b>Direcci&oacute;n MAC:&nbsp;</b></td>
+					<td style="background-color:#E9EAE8;" colspan='2'><b>Potencia &oacute;ptica recibida[dBm]:&nbsp;</b></td>
+				</tr>
+			</table>
+			<div class="identification">
+				<p class="title" style="margin-left:0px;">Identificaci&oacute;n ONT</p>
+				<div class="line"></div>
+				<div style="margin-left:2%;">Introduce el identificador de la ONT y pulsa el bot&oacute;n "Aceptar". Al pulsal "Aceptar" se producir&aacute; la configuraci&oacute;n remota del equipo. Esta operaci&oacute;n puede llevar unos minutos y es posible que se produzca el reinicio del equipo.</div><br>
+				<table class="editItems" border="0" align="center"><tr>
+					<td align="right"><input class="login_input" type="text" name="gponpw" maxlength="14" style="padding:12px 15px 11px 15px;"></td>
+					<td><form id="login">
+					<input type="submit" value="Aceptar" style="margin-left:-30px;">
+					</form></td>
+				</table>
+				<table border="0" style="100%">
+					<tr>
+						<td style="width:80px;height:80px;background-color:#E9EAE8;"><img style="width:80px;height:80px;background-color:#E9EAE8;" src="te_quotation.png"></td>
+						<td style="margin-left:2%;background-color:#E9EAE8;"><b>Atenci&oacute;n:</b> Es necesario tener el cable &oacute;ptico desconectado del equipo para introducir el identificador de la ONT. La incorrecta introducci&oacute;n  de este identificador puede ocasionar la p&eacute;rdida del servicio.</td>
+					</tr>
+				</table>
+			</div>
+			<div class="selection">
+				<p class="title">Selecci&oacute;n del servicio</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">Tipo de servicio contratado:</td>
+					<td>
+						<select class="Select_box" name="serviceType">
+						  <option value="0">Tr&iacute;o</option>
+						  <option value="1">D&uacute;o</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Tipo de direccionamiento (Movistar TV):</td>
+					<td>
+						<select class="Select_box" name="addressType">
+						  <option value="0">Din&aacute;mico (NAT-PAT)</option>
+						  <option value="1">Est&aacute;tico</option>
+						  <option value="2">Ninguno</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Servicio L&iacute;nea de voz:</td>
+					<td>
+						<select class="Select_box" name="voiceService">
+						  <option value="1">S&iacute;</option>
+						  <option value="0">No</option>
+						</select>
+					</td>
+				</tr>
+				</table>
+				<div><!--<input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="< Volver">-->
+					<input style="position:relative;margin-top:5%;margin-left:75%;" type="button" value="Siguiente >">
+				</div>
+			</div>
+			<div class="lineavoz">
+				<p class="title">Movistar TV</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP WAN Router (Referencia UC de Visord):</td>
+					<td><input class="Input_box" type="text" name="dvwanIPaddress1">(Nota:10.X.X.X)</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP Gateway  WAN ROUTER:</td>
+					<td><input class="Input_box" type="text" name="dvgatewayIPaddress"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">M&aacute;scara de Subred:</td>
+					<td><input class="Input_box" type="text" name="dvgatewayNetmask"></td>
+				</tr>
+				</table>
+				<div class="voice">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">N&uacute;mero de tel&eacute;fono:</td>
+					<td><input class="Input_box" type="text" name="telephone1"></td>
+				</tr>
+				</table>
+				</div>
+				<div><input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="< Volver">
+					<input style="position:relative;margin-top:5%;margin-left:65%;" type="button" value="Siguiente >">
+				</div>
+			</div>
+			<div class="lineavoz1">
+				<p class="title">Movistar TV</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP WAN Router (Referencia WQ de Visord):</td>
+					<td><input class="Input_box" type="text" name="dvwanIPaddress2">(Nota:172.X.X.X)</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP acceso Imagenio (Referencia WU de Visord):</td>
+					<td><input class="Input_box" type="text" name="dvlanIPaddress">(Nota:10.X.X.X)</td>
+				</tr>
+				</table>
+				<div class="voice">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">N&uacute;mero de tel&eacute;fono:</td>
+					<td><input class="Input_box" type="text" name="telephone2"></td>
+				</tr>
+				</table>
+				</div>
+				<div><input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="< Volver">
+					<input style="position:relative;margin-top:5%;margin-left:65%;" type="button" value="Siguiente >">
+				</div>
+			</div>
+			<div class="linea">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<table class="editItems" border="0" style="100%">
+				<tr>
+					<td class="titlesize">N&uacute;mero de tel&eacute;fono:</td>
+					<td><input class="Input_box" type="text" name="telephone3"></td>
+				</tr>
+				</table>
+				<div><input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="< Volver">
+					<input style="position:relative;margin-top:5%;margin-left:65%" type="button" value="Siguiente >">
+				</div>
+			</div>
+			<div class="showinfo">
+				<p class="title">Resumen de la configuraci&oacute;n del servicio</p>
+				<p class="line"></p>
+				<table class="editItems" border="0" width="80%">
+				<tr>
+					<td class="titlesize">Servicio contratado:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Tipo de direccionamiento:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP Gateway  WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">M&aacute;scara subred IP WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP acceso Imagenio:</td><td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">M&aacute;scara subred acceso Imagenio:</td><td></td>
+				</tr>
+				<!--<tr>
+					<td class="titlesize">Servicio L&iacute;nea de Voz:</td><td></td>
+				</tr>-->
+				<tr>
+					<td class="titlesize">N&uacute;mero de Tel&eacute;fono:</td><td></td>
+				</tr>
+				</table>
+				<div><input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="< Volver">
+					<input style="position:relative;margin-top:5%;margin-left:65%;" type="button" value="Aplicar">
+				</div>
+			</div>
+			<div class="applypage">
+				<p class="title">Cambios aplicados correctamente</p>
+				<p class="line"></p>
+				<p style="margin-left:2%;">La configuraci&oacute;n del servicio ha sido aplicada correctamente.<br>Si deseas realizar alguna configuraci&oacute;n adicional tales como el cambio contrase&ntilde;a Wifi,filtrado MAC. accede a la web del configurador del equipo: <label id='homepage'></label></p>
+				<div><input style="position:relative;margin-top:5%;margin-left:2%;" type="button" value="Atr&aacute;s">
+					<input style="position:relative;margin-top:5%;margin-left:65%;" type="button" value="Salir">
+				</div>
+			</div>
+			</div>
+		</div>
+    </div>  
+    <div id="Imobileformat">
+        <!--<div class="MHeader">
+			<img style="max-width:10%;position:relative;top:10px;" src="te_homepage.png">
+            <div class="Mheadertitle">Acceso al Configurador Router</div>	
+			<div class="Mlogo"></div>
+			<p><a href="javascript:Logout();" style="margin-left:65%;font-size:18px;text-decoration:none;color:white;">Cerrar sesi&oacute;n</a></p>
+        </div>-->
+		<div class="MHeader" style="height:70px;">
+            <div class="MHeader_title_box">
+					<div class="MHeader_title">Base</sup></div>
+			</div>
+			<img class="Mte_logo" src="logo.png">
+			<div class="MHeader_line" style="height:25px;"></div>			
+        </div>
+		<div class="MBody"></div>
+        <div class="MBody2">
+			<div class="install_Mcontent"> 
+			<table class="Minfobg">
+				<tr>
+					<td class="Mrouterinfo">Tu equipo ></td>
+					<td><a href="javascript:Logout();" style="text-decoration:none;color:white;font-weight:bolder;">Cerrar sesi&oacute;n</a></td>
+				</tr>
+			</table>
+			<div class="Infopopup"></div>
+			<div class="identification">
+				<p class="title">Identificaci&oacute;n ONT</p>
+				<div class="line"></div>
+				<div style="margin-left:2%;">Introduce el identificador de la ONT y pulsa el bot&oacute;n "Aceptar". Al pulsal "Aceptar" se producir&aacute; la configuraci&oacute;n remota del equipo. Esta operaci&oacute;n puede llevar unos minutos y es posible que se produzca el reinicio del equipo.</div>
+				<p style="text-align:center;">
+					<input class="Mlogin_input" type="text" name="gponpw" maxlength="14">
+				</p>
+				<p style="text-align:center;">
+					<input type="button" value="Aceptar">
+				</p>
+				<p>
+					<img style="width:50px;height:50px;background-color:#E9EAE8;" src="te_quotation.png">
+					<div style="margin-top:-75px;margin-left:75px;background-color:#E9EAE8;"><b>Atenci&oacute;n:</b> Es necesario tener el cable &oacute;ptico desconectado del equipo para introducir el identificador de la ONT. La incorrecta introducci&oacute;n  de este identificador puede ocasionar la p&eacute;rdida del servicio.</div>
+				</p>
+			</div>
+			<div class="selection">
+				<p class="title">Selecci&oacute;n del servicio</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">Tipo de servicio contratado:</p>
+				<p>
+					<select class="MSelect_box" name="serviceType">
+						<option value="0">Tr&iacute;o</option>
+						<option value="1">D&uacute;o</option>
+					</select>
+				</p>
+				<p class="Mtitlesize">Tipo de direccionamiento (Movistar TV):</p>
+				<p>
+					<select class="MSelect_box" name="addressType">
+						<option value="0">Din&aacute;mico (NAT-PAT)</option>
+						<option value="1">Est&aacute;tico</option>
+						<option value="2">Ninguno</option>
+					</select>
+				</p>
+				<p class="Mtitlesize">Servicio L&iacute;nea de voz:</p>
+				<p>
+					<select class="MSelect_box" name="voiceService">
+						<option value="1">S&iacute;</option>
+						<option value="0">No</option>
+					</select>
+				</p>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="<"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value=">"></p>
+			</div>
+			<div class="lineavoz">
+				<p class="title">Movistar TV</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">Direcci&oacute;n IP WAN Router (Referencia UC de Visord):</p>
+				<p><input class="MInput_box" type="text" name="dvwanIPaddress1"></p>
+				<div>(Nota:10.X.X.X)</div>
+				<p class="Mtitlesize">Direcci&oacute;n IP Gateway  WAN ROUTER:</p>
+				<p><input class="MInput_box" type="text" name="dvgatewayIPaddress"></p>
+				<p class="Mtitlesize">M&aacute;scara de Subred:</p>
+				<p><input class="MInput_box" type="text" name="dvgatewayNetmask"></p>
+				<div class="voice">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">N&uacute;mero de tel&eacute;fono:</p>
+				<p><input class="MInput_box" type="text" name="telephone1"></p>
+				</div>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="<"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value=">"></p>
+			</div>
+			<div class="lineavoz1">
+				<p class="title">Movistar TV</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">Direcci&oacute;n IP WAN Router (Referencia WQ de Visord):</p>
+				<p><input class="MInput_box" type="text" name="dvwanIPaddress2"></p>
+				<div>(Nota:172.X.X.X)</div>
+				<p class="Mtitlesize">Direcci&oacute;n IP acceso Imagenio (Referencia WU de Visord):</p>
+				<p><input class="MInput_box" type="text" name="dvlanIPaddress"></p>
+				<div>(Nota:10.X.X.X)</div>
+				<div class="voice">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">N&uacute;mero de tel&eacute;fono:</p>
+				<p><input class="MInput_box" type="text" name="telephone2"></p>
+				</div>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="<"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value=">"></p>
+			</div>
+			<div class="linea">
+				<p class="title">L&iacute;nea de voz</p>
+				<div class="line"></div>
+				<p class="Mtitlesize">N&uacute;mero de tel&eacute;fono:</p>
+				<p><input class="MInput_box" type="text" name="telephone3"></p>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="<"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value=">"></p>
+			</div>
+			<div class="showinfo">
+				<p class="title">Resumen de la configuraci&oacute;n del servicio</p>
+				<p class="line"></p>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="Mtitlesize">Servicio contratado:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">Tipo de direccionamiento:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">Direcci&oacute;n IP WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">Direcci&oacute;n IP Gateway  WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">M&aacute;scara subred IP WAN Router:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">Direcci&oacute;n IP acceso Imagenio:</td><td></td>
+				</tr>
+				<tr>
+					<td class="Mtitlesize">M&aacute;scara subred acceso Imagenio:</td><td></td>
+				</tr>
+				<!--<tr>
+					<td class="Mtitlesize">Servicio L&iacute;nea de Voz:</td><td></td>
+				</tr>-->
+				<tr>
+					<td class="Mtitlesize">N&uacute;mero de Tel&eacute;fono:</td><td></td>
+				</tr>
+				</table>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="<"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value="Aplicar"></p>
+			</div>
+			<div class="applypage">
+				<p class="title">Cambios aplicados correctamente</p>
+				<p class="line"></p>
+				<p style="margin-left:2%;">La configuraci&oacute;n del servicio ha sido aplicada correctamente.<br>Si deseas realizar alguna configuraci&oacute;n adicional tales como el cambio contrase&ntilde;a Wifi,filtrado MAC. accede a la web del configurador del equipo: <label id='homepage'></label></p>
+				<p><input style="position:relative;margin-top:15%;margin-bottom:5%;float:left;" type="button" value="Atr&aacute;s"><input style="position:relative;margin-top:15%;margin-bottom:5%;float:right;" type="button" value="Salir"></p>
+			</div>
+			</div>
+		</div>
+    </div>
+</form>
+</body>
+</html>

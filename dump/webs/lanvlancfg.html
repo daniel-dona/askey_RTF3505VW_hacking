@@ -1,0 +1,229 @@
+<html>
+   <head>
+      <meta http-equiv="Pragma" content="no-cache">
+      <LINK href="stylemain.css" type="text/css" rel="stylesheet">
+         <LINK href="colors.css" type="text/css" rel="stylesheet">
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var brdId = '<%ejGet(boardID)%>';
+var interfaceInfo = '<%ejGetOther(ethL2AllIntf, 0)%>';
+var interfaces = interfaceInfo.split('|');
+var i,j;
+var intfDisp = '';
+var brdIntf = '';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var lanVlanEnable = '<%ejGet(lanVlanEnable)%>'
+var vlanList = '<%ejGet(lanVlanTagList, 0)%>';
+var vlanRule = vlanList.split('|');
+var hasVlan;
+var setVlanList;
+
+function changeIntf() {
+   var loc = 'lanvlancfgget.cgi?';   
+   with ( document.forms[0] ) { 
+       loc += 'lanName=' + lanName.value;   
+   }
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnRemove() {
+   var i;
+   var tableLen = document.getElementById("vlanTable").rows.length;
+
+   for (i=tableLen-1; i > 0 ; i--) 
+   if (document.getElementById("vlanTable").rows[i].cells[2].childNodes[0].checked == true)
+   {
+      document.getElementById("vlanTable").deleteRow(i);
+   }
+
+   if (document.getElementById("vlanTable").rows.length <= 1)
+      document.getElementById("chklanVlanEnable").checked = false;
+
+}
+
+
+function btnAdd() {
+   var row, cell;
+   var tableLen = document.getElementById("vlanTable").rows.length;
+
+   row = document.getElementById("vlanTable").insertRow(tableLen);
+   row.align = "center";
+   cell = document.getElementById("vlanTable").rows[tableLen].insertCell(0);
+   cell.innerHTML ="<input type='text'>";
+   cell = document.getElementById("vlanTable").rows[tableLen].insertCell(1);
+   cell.innerHTML ="<input type='text'  value='0'>";
+   cell = document.getElementById("vlanTable").rows[tableLen].insertCell(2);
+   cell.innerHTML ="<input type='checkbox'>";
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      lanName.value = '<%ejGet(lanName)%>';
+      if (lanVlanEnable == '1')
+      {
+         chklanVlanEnable.checked = true;
+         hideVlanInfo(0);
+      }   
+      else
+      {
+         chklanVlanEnable.checked = false;
+         hideVlanInfo(1);
+      }   
+   }
+}
+
+function checkVlanId(vid, pbits) {
+   var vidId, pbitsId;
+   if (vid == "")
+   {
+      alert('VLAN ID is not specified.');
+      return false;
+   }
+   
+   vidId = parseInt(vid);
+   if ((isNaN(vidId) == true) || vidId < 0 || vidId > 4095)
+   {
+      alert('VLAN ID "' + vid + '" is out of range [0-4095].');
+                return false;
+   }
+   
+   if (pbits == "")
+   {
+      alert('VLAN PBITS is not specified.');
+      return false;
+   }              
+
+   pbitsId = parseInt(pbits);
+   if ((isNaN(pbitsId) == true) || pbitsId < 0 || pbitsId > 7)
+    {
+      alert('VLAN PBITS "' + pbits + '" is out of range [0-7].');
+        return false;
+    }     
+      
+    return true;    
+}
+
+function btnSave() {
+   var loc = 'lanvlancfg.cgi?';
+   var i, j;
+   var tableLen;
+   var vlanTable =  document.getElementById('vlanTable');
+   var tableLen = vlanTable.rows.length;
+   var lanVlanEnable;
+
+   if (document.getElementById('chklanVlanEnable').checked)
+      lanVlanEnable = 1;
+   else
+      lanVlanEnable = 0;
+
+   if (lanVlanEnable && tableLen <= 1)
+   {
+      alert("No Vlan Id is specified when Vlan mode is enable");
+           return;
+   }
+                 
+   for (i=1; i < tableLen ; i++) 
+   {
+      if (checkVlanId(vlanTable.rows[i].cells[0].childNodes[0].value, 
+         vlanTable.rows[i].cells[1].childNodes[0].value) == false)
+       {
+           return;
+       }
+   }
+	  
+   for (i=1; i < tableLen-1 ; i++) 
+   {
+      for (j=i+1; j<tableLen; j++)
+      {
+         if (parseInt(vlanTable.rows[i].cells[0].childNodes[0].value) ==
+            parseInt(vlanTable.rows[j].cells[0].childNodes[0].value))
+         {
+            alert("Duplicate vid " + vlanTable.rows[i].cells[0].childNodes[0].value + " is not allowed");
+            return;
+         }
+      }
+   }
+	  
+   loc += 'lanVlanEnable=' + lanVlanEnable + '&lanVlanTagList=';
+                    
+   for (i=1; i < tableLen ; i++) 
+   {
+      loc += vlanTable.rows[i].cells[0].childNodes[0].value +
+         "/" + vlanTable.rows[i].cells[1].childNodes[0].value + '|';
+   }
+          
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Local Area Network (LAN)&nbsp;VLAN&nbsp;Setup</b><br>
+            <br><br>
+<script language="javascript">
+<!-- hide
+            if (interfaces.length > 0) 
+            {
+               document.write("Select a LAN port: ");
+               document.write("<select name='lanName' onChange='changeIntf()'>");
+               for (i = 0; i < interfaces.length; i++) 
+               {
+                  brdIntf = brdId + '|' + interfaces[i];
+                  intfDisp = getUNameByLName(brdIntf);
+                  brdIntf = '';
+                  document.write("<option value='" + interfaces[i] + "'>" + interfaces[i] + "/" + intfDisp);
+               }
+               document.write("</select>");
+            }
+// done hiding -->
+</script>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+               <td><input type='checkbox' name='chklanVlanEnable' id='chklanVlanEnable'>&nbsp;&nbsp;Enable VLAN Mode</td>
+               </tr>
+            </table>
+            <br>
+            <div id='vlanInfo'>
+         <table id=vlanTable border='1' cellpadding='4' cellspacing='0'>
+            <tr align='center'>
+               <td class='hd' width=120>Vlan Id</td>
+               <td class='hd' width=120>Pbits</td>
+               <td class='hd' width=80>Remove</td>  
+               </tr>
+ <script language="javascript">
+<!-- hide
+            for (i = 0; i < vlanRule.length; i++)
+            {
+                if (vlanRule != '') 
+                {
+                   var vlan = vlanRule[i].split('/');
+                   document.write("<tr align='center'>");
+                   document.write("<td><input type='text' id='vid" + i + "' value='" + vlan[0] + "'></td>");
+                   document.write("<td><input type='text' id='pbits" + i + "' value='" + vlan[1] + "'></td>");
+                   document.write("<td><input type='checkbox' id='rml" + i + "'></td>");
+                document.write("</tr>");
+            }
+            }
+// done hiding -->
+</script>
+            </table>
+            </div>
+            <br>
+               <input type='button' onClick='btnAdd()' value='Add'>
+               <input type='button' onclick='btnRemove()' value='Remove'>
+               <input type='button' onclick='btnSave()' value='Apply/Save'> 
+         </form>
+      </blockquote>
+   </body>
+</html>

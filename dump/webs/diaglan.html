@@ -1,0 +1,116 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+          <script language="javascript" src="portName.js"></script>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+   </head>
+      <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var currentMirrorEnabled='<%ejGetOther(PortMirror, portMirrorEnabled)%>';
+var currentMirrorLanPort='<%ejGetOther(PortMirror, portMirrorLan)%>';
+//var currentMirrorEnabled='false';
+//var currentMirrorLanPort='eth3';
+
+function frmLoad()
+{
+  with (document.forms[0])
+  {
+    mirrorEnabled.checked=(currentMirrorEnabled=='true'?true:false);
+    mirrorLanPort.value=currentMirrorLanPort;
+  }
+}
+
+function btnApply()
+{
+  with ( document.forms[0] )
+  {
+    var _enabled=mirrorEnabled.checked?'true':'false';
+    var _lanport=mirrorLanPort.value;
+    var loc = 'te_portmirror.cmd';
+    loc += '?action=apply';
+    loc += '&enabled='+_enabled;
+    loc += '&lanport='+_lanport;
+    loc += '&sessionKey='+sessionKey;
+    var code = 'location="' + loc + '"';
+    //alertSpecial( code + "\t" + code.length );
+    eval(code);
+  }
+}
+
+// done hiding -->
+      </script>
+
+   <body onLoad="frmLoad()">
+      <blockquote>
+         <form>
+            <b>Diagnostics</b><br>
+            <P>The individual tests are
+               listed below. If a test displays a fail status, click &quot;Rerun Diagnostic
+               Tests&quot; at the bottom of this page to make sure the fail status is
+               consistent. If the test continues to fail, click &quot;Help&quot; and follow
+               the troubleshooting procedures.
+            </P>
+            <P><B>Test the connection to your local network</B>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+ <script language="javascript">
+<!-- hide                     
+    <%ejGet(enetDiag)%>                                                      
+
+if ('<%ejGet(enblUsb)%>' == '1') {
+   document.writeln("<TR><TD class='hd'>Test your USB Connection: </TD>");
+   document.writeln("<TD><B><%ejGetOther(diagnostic, 13)%></B>&nbsp;</TD>");
+   document.writeln("<TD><A href='hlpusbconn.html'>Help</A></TD> </TR>");
+}
+if ('<%ejGet(enblWireless)%>' == '1') {
+   document.writeln("<TR><TD class='hd'>Test your Wireless Connection: </TD>");
+   document.writeln("<TD><B><%ejGetOther(diagnostic, 17)%></B>&nbsp;</TD>");
+   document.writeln("<TD><A href='hlpwlconn.html'>Help</A></TD></TR>");
+}
+// done hiding -->
+</script>
+                  </TBODY></TABLE>
+ <script language="javascript">
+<!-- hide  
+/*** This portion should not be in diaglan.  Preserved for moving to other places if needed later on
+            <P><B>Test the connection to your DSL service provider</B>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="250">Test xDSL Synchronization:
+                        </TD>
+                        <TD width="50"><B><%ejGetOther(diagnostic, 2)%></B>&nbsp;</TD>
+                        <TD><A href="hlpadslsync.html">Help</A></TD>
+                     </TR>
+                  </TBODY></TABLE>
+            <P>
+*/            
+// done hiding -->
+</script>            
+               <CENTER><br>
+                  <input type='button' onClick='location.href="diag.html"' value='Rerun Diagnostic Tests'/>
+               </CENTER><br/><br/><br/><br/>
+               <p><b>WAN Mirror</b></p>
+               <table border='1' cellpadding='3' cellspacing='0'>
+               <tr>
+                  <td class='hd'><label>Enabled:&nbsp;&nbsp;</label></td>
+                  <td><input type='checkbox' name="mirrorEnabled" /></td>
+               </tr>
+               <tr>
+                  <td class='hd'><label>To Port:&nbsp;&nbsp;</label></td>
+                  <td><select name="mirrorLanPort">
+                        <option value="eth0">&nbsp;&nbsp;eth0&nbsp;&nbsp;</option>
+                        <option value="eth1">&nbsp;&nbsp;eth1&nbsp;&nbsp;</option>
+                        <option value="eth2">&nbsp;&nbsp;eth2&nbsp;&nbsp;</option>
+                        <option value="eth3">&nbsp;&nbsp;eth3&nbsp;&nbsp;</option>
+                  </select></td>
+               </tr>
+               </table><br/>
+               <center><input type='button' name='apply' onClick='btnApply()' value='Apply/Save'/></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

@@ -1,0 +1,88 @@
+<html>
+   <head>
+      <meta http-equiv="Pragma" content="no-cache">
+      <LINK href="stylemain.css" type="text/css" rel="stylesheet">
+         <LINK href="colors.css" type="text/css" rel="stylesheet">
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var buildvlm =  '<%ejGetOther(sysInfo, buildWanVlanMux)%>';
+var brdId = '<%ejGet(boardID)%>';
+var interfaceInfo = '<%ejGetOther(wlL2AvaIntf, all)%>';
+var interfaces = interfaceInfo.split('|');
+
+var i;
+var intfDisp = '';
+var brdIntf = '';
+
+function frmLoad() {
+}
+
+function btnBack() {
+   var code = 'location="wifiwan.cmd"';
+   eval(code);
+}
+
+
+function btnSave() {
+   var loc = 'wifiwan.cmd?action=add';
+
+   with ( document.forms[0] ) {
+      var idx = wlIntf.selectedIndex;
+      var ifc = wlIntf.options[idx].value;
+      loc += '&ifname=' + ifc;
+
+      if (buildvlm == 0)
+         loc += '&connMode=0';  //default mode
+      else
+         loc += '&connMode=1';  //vlanmux mode
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+// done hiding -->
+</script>
+   </head>
+   <body onload="frmLoad()">
+      <blockquote>
+         <form ID="Form1">
+            <table border="0" cellpadding="4" cellspacing="0">
+               <tr>
+</script>
+               </tr>
+            </table>
+	     <center>
+            <br>
+            <strong>WiFi WAN Configuration</strong><br>
+            <br>
+            <br>
+ <script language="javascript">
+<!-- hide
+            if (interfaces.length > 0) 
+            {
+               document.write("<p>Select a WAN WiFi Interface from the list<br></p>");
+               document.write("<select name='wlIntf'>");
+               for (i = 0; i < interfaces.length; i++) 
+               {
+                  brdIntf = brdId + '|' + interfaces[i];
+                  intfDisp = getUNameByLName(brdIntf);
+                  brdIntf = '';
+                 // document.write("<option value='" + interfaces[i] + "'>" + interfaces[i] + "/" + intfDisp);
+		    document.write("<option value='" + interfaces[i] + "'>" + interfaces[i]);
+               }
+               document.write("</select>");
+            }
+// done hiding -->
+</script>
+            <br>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnSave()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

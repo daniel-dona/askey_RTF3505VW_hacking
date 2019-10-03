@@ -1,0 +1,71 @@
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+# Load all the variables
+. /etc/shgw/shgw.constants
+. /etc/shgw/shgw.common
+. /etc/shgw/shgw.errno
+
+fn_migrate_persistant_db() {
+	fn_retry_query_upto_five_times "UPDATE shgw_config_store SET value='${SHGW_VERSION}' WHERE key='version';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+
+	#
+	# Added in 11.0.63 for 'Added Config flag to control policy cache'
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('policy_cache_enable', '1');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('dns_cache_enable', '1');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+
+	#
+	# Added whitelisted domain and TLD fetch related
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('whitelisted_domains', '[]'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('redirector_map', '[]'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('whitelisted_domain_epoch', '0'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('whitelisted_domain_ttl', '0'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('whitelisted_domain_etag', 'default'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('tld_epoch', '0'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('tld_ttl', '0'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('tld_etag', 'default'); " "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	
+	#
+	# Added feature flag related
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('device_discovery_protocols', '["dhcp","arp","ndp"]');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('device_block_enable', '0');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('policy_control_enable', '1');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('inbound_security_enable', '1');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('potential_upload_triggers', '["newDeviceDiscovery","periodic","ipChange","deviceStatusChange"]');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "DELETE FROM shgw_config_store where key = 'upload_device';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+
+	#
+	# DNSProxy IPSET related
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('dns_server_port', '53');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('dns_server_ip', '8.8.8.8');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('shgw_dns_retry_time', '5');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	
+
+	#
+	# Expire SHP Service Discovery Validity
+	fn_retry_query_upto_five_times "UPDATE csp_service_discovery SET ttl='0' WHERE service='cloud_url_device_discovery';" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+		fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('upload_debug_duration',	'300');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+		fn_retry_query_upto_five_times "INSERT OR IGNORE INTO shgw_config_store(key, value) VALUES('limit_ipv6_address', '0');" "${SHGW_PERSISTANT_DB}" "${PERSISTANT_DB_UPDATE_FAILED}"
+	
+}

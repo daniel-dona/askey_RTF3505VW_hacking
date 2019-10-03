@@ -1,0 +1,244 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var interfaceInfo = '<%ejGetOther(tr69cInterfaceList)%>';
+var interfaces = interfaceInfo.split('|');
+var boundIfName = '<%ejGet(tr69cBoundIfName)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      acsURL.value = '<%ejGet(tr69cAcsURL)%>';
+      acsUser.value = '<%ejGet(tr69cAcsUser)%>';
+      acsPwd.value = '<%ejGet(tr69cAcsPwd)%>';
+      connReqUser.value = '<%ejGet(tr69cConnReqUser)%>';
+      connReqPwd.value = '<%ejGet(tr69cConnReqPwd)%>';
+      enblInform = '<%ejGet(tr69cInformEnable)%>';
+      enblNoneConnReqAuth = '<%ejGet(tr69cNoneConnReqAuth)%>';
+      enblDebug = '<%ejGet(tr69cDebugEnable)%>';
+      
+      if ( enblNoneConnReqAuth == '0')
+         connReqAuth.checked = true;
+      else
+         connReqAuth.checked = false;
+      
+      if ( enblInform == '1' )
+         inform[1].checked = true;
+      else
+         inform[0].checked = true;
+      informInterval.value = '<%ejGet(tr69cInformInterval)%>';
+	  
+      connAuthChange();  
+      if ( enblDebug == '1' )
+         debug[1].checked = true;
+      else
+         debug[0].checked = true;
+   }
+}
+
+function connAuthChange() {
+   with ( document.forms[0] ) {
+      if(connReqAuth.checked == true)
+         showhide("divConnAuth", 1);
+      else
+         showhide("divConnAuth", 0);
+   }
+}
+
+function btnApply() {
+   var loc = 'tr69cfg.cgi?';
+
+   with ( document.forms[0] ) {
+      if (acsURL.value == '') {
+         alert('ACS URL is required.');
+         return;
+      }
+      if ( inform[1].checked == true ) 
+         loc += 'tr69cInformEnable=1';
+	  else
+         loc += 'tr69cInformEnable=0';
+
+      loc += '&tr69cInformInterval=' + informInterval.value;
+
+      if (acsURL.value.length > 256) {
+         alert('The length of ACS URL (' + acsURL.value.length + ') is too long [1-256].');
+         return;
+      }
+      loc += '&tr69cAcsURL=' + encodeUrl(acsURL.value);
+      
+      if (acsUser.value.length > 256) {
+         alert('The length of ACS user name (' + acsUser.value.length + ') is too long [0-256].');
+         return;
+      }
+	  if( isXSS(acsUser.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on ACS User Name");
+		return false;
+	  }else{
+		loc += '&tr69cAcsUser=' + encodeUrl(acsUser.value);
+	  }
+            
+      if (acsPwd.value.length > 256) {
+         alert('The length of sysName (' + acsPwd.value.length + ') is too long [0-256].');
+         return;
+      }
+      loc += '&tr69cAcsPwd=' + encodeUrl(acsPwd.value);
+      
+      if (connReqUser.value.length > 256) {
+         alert('The length of connection request user name (' + connReqUser.value.length + ') is too long [0-256].');
+         return;
+      }
+	  if( isXSS(connReqUser.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Connection Request User Name");
+		return false;
+	  }else{
+		loc += '&tr69cConnReqUser=' + encodeUrl(connReqUser.value);
+	  }
+            
+      if (connReqPwd.value.length > 256) {
+         alert('The length of connection request password (' + connReqPwd.value.length + ') is too long [0-256].');
+         return;
+      }
+      loc += '&tr69cConnReqPwd=' + encodeUrl(connReqPwd.value);
+
+      if (connReqAuth.checked == true)
+         loc += '&tr69cNoneConnReqAuth=0'
+      else
+         loc += '&tr69cNoneConnReqAuth=1'
+         
+      if (debug[1].checked == true) 
+         loc += '&tr69cDebugEnable=1';
+      else
+         loc += '&tr69cDebugEnable=0';
+
+      var idx = wanIf.selectedIndex;
+      if(wanIf.options[idx].value != boundIfName)
+      {
+         alert('Interface has been changed, you MUST reboot after apply');
+      }
+      loc += '&tr69cBoundIfName=' + wanIf.options[idx].value;
+   }
+   
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location.assign("' + loc + '")';
+   eval(code);
+}
+
+function btnGet() {
+   var loc = 'tr69get.cgi?';
+   
+   loc += 'sessionKey=' + sessionKey;
+   var code = 'location.assign("' + loc + '")';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>TR-069 client - Configuration<br>
+            </b>
+            <br>
+            WAN Management Protocol (TR-069) allows an Auto-Configuration Server (ACS) to 
+            perform auto-configuration, provision, collection, and diagnostics to this device.<br>
+            <br>
+            Select the desired values and click "Apply/Save" to configure the TR-069 client options.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="240">Inform</td>
+                  <td><input name='inform' type='radio'>Disable</td>
+                  <td><input name='inform' type='radio'>Enable</td>
+               </tr>
+            </table>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="240">Inform Interval:</td>
+                  <td><input type='text' name='informInterval' size="20" maxlength="256"></td>
+               </tr>
+               <tr>
+                  <td>ACS URL:</td>
+                  <td><input type='text' name='acsURL' size="20" maxlength="256"></td>
+               </tr>
+               <tr>
+                  <td>ACS User Name:</td>
+                  <td><input type='text' name='acsUser' size="20" maxlength="256"></td>
+               </tr>
+               <tr>
+                  <td>ACS Password:</td>
+                  <td><input type='password' name='acsPwd' size="20" maxlength="256"></td>
+               </tr>
+            </table>
+
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width=240>WAN Interface used by TR-069 client:</td>
+	        <td><select name='wanIf'>
+	              <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+
+   for ( i = 0; i < interfaces.length; i++ ) {
+
+      if ( interfaces[i] == boundIfName )
+         document.write("  <option value='" + interfaces[i] + "' selected>");
+      else
+         document.write("  <option value='" + interfaces[i] + "'>");
+      document.writeln(interfaces[i]);
+   }
+}
+// done hiding -->
+</script>
+                      </select></td>
+                 </tr>
+                 <tr></tr>
+            </table>
+
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="240">Display SOAP messages on serial console</td>
+                  <td><input name='debug' type='radio'>Disable</td>
+                  <td><input name='debug' type='radio'>Enable</td>
+               </tr>
+            </table>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td><input type="checkbox" name="connReqAuth" onClick="connAuthChange()"> Connection Request Authentication</td>
+               </tr>
+            </table>
+            <br>
+            <div id="divConnAuth">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width="240">Connection Request User Name:</td>
+                     <td><input type='text' name='connReqUser' size="20" maxlength="256"></td>
+                  </tr>
+                  <tr>
+                     <td>Connection Request Password:</td>
+                     <td><input type='password' name='connReqPwd' size="20" maxlength="256"></td>
+                  </tr>
+                  <tr>
+                     <td>Connection Request URL:</td>
+                     <td><%ejGet(tr69cConnReqURL)%></td>
+                  </tr>
+               </table>
+            </div>
+            <p align="center">
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+               <input type='button' onClick='btnGet()' value='GetRPCMethods'>
+            </P>
+         </form>
+      </blockquote>
+   </body>
+</html>

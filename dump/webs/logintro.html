@@ -1,0 +1,49 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+var state = '<%ejGet(syslogRefresh)%>';
+if ( state == '1' ) {
+   var code = 'location="logintro.cgi?syslogRefresh=0&sessionKey=<%ejGetOther(sessionKey)%>"';
+   eval(code);
+}
+
+function btnView() {
+   var options;
+   options = 'menubar=yes,resizable=yes,scrollbars=yes,titlebar=yes,toolbar=no,width=640,height=600';
+
+   window.open('logview.cmd', 'BCM963xxSysLog', options);
+}
+
+function btnConfig() {
+   var loc = 'logconfig.html';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>System Log</b><br>
+            <br>
+            The System Log dialog allows you to view the System Log and configure the 
+            System Log options.<br>
+            <br>
+            Click "View System Log" to view the System Log.<br>
+            <br>
+            Click "Configure System Log" to configure the System Log options.<br>
+            <br>
+            <br>
+            <p align="center">
+               <input type='button' onClick='btnView()' value='View System Log'> <input type='button' onClick='btnConfig()' value='Configure System Log'>
+         </form>
+      </blockquote>
+   </body>
+</html>

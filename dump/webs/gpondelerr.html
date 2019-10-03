@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+function btnBack() {
+   var loc = 'gponwan.cmd';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnReset() {
+   var loc = 'rebootinfo.cgi';
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+
+<body>
+<blockquote>
+<b>GPON WAN Interface Remove Error</b><br><br>
+You CANNOT remove this GPON Interface if it is used by a WAN Service.
+You need to remove the WAN Service before you can remove this GPON interface.
+<br><br>
+Click on "Back" button to give it an another try.
+<br><br>
+Or
+<br><br>
+Click on "Reboot Router" button to reboot the DSL Router and try it again.
+<br><br><br>
+<center>
+<input type='button' onClick='btnBack()' value='Back'>
+<input type='button' onClick='btnReset()' value='Reboot Router'>
+</center>
+</blockquote>
+</body>
+</html>
+

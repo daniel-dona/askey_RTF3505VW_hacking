@@ -1,0 +1,304 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var needRefresh = 0;
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var wlWapiAsPending='<%ejGetWl(wlWapiAsPending)%>';
+var wlWapiAsEnable='<%ejGetWl(wlWapiAsEnable)%>';
+var wlWapiCertListFull='<%ejGetWl(wlWapiCertListFull)%>';
+var wlWapiRevokeListFull='<%ejGetWl(wlWapiRevokeListFull)%>';
+
+ function ButtonAsEnable_onclick() {
+    var loc = '';
+
+    needRefresh = 1;
+    loc += 'wlwapias.cmd?';
+
+    if (getSelect(document.forms[0].SelectAsEnable) == '1')
+    {
+        if (wlWapiAsEnable == 1)
+            return;
+
+        loc += 'action=start&';
+    }
+    else
+    {
+        if (wlWapiAsEnable == 0)
+            return;
+
+        loc += 'action=stop&';
+    }
+
+    loc += 'sessionKey=' + sessionKey;
+    var code = 'location="' + loc + '"';
+    eval(code);
+ }
+
+ function ButtonRevoke_onclick(cert_sn) {
+    var loc = '';
+
+    if (needRefresh == 0)
+    {
+        needRefresh = 1;
+    }
+    else
+    {
+        alert("Please refresh this page before performing revoke!");
+        return;
+    }
+
+    if (wlWapiRevokeListFull != 0)
+    {
+        alert('Revoke list full!');
+        return;        
+    }
+
+    loc += 'wlwapias.cmd?';
+    loc += 'action=revoke&';
+    loc += 'cert_sn=' + cert_sn + '&';
+    loc += 'sessionKey=' + sessionKey;
+    var code = 'location="' + loc + '"';
+    eval(code);
+ }
+
+ function ButtonDownloadAsCertificate_onclick() {
+    var loc = '';
+
+    if (wlWapiAsEnable != 1)
+    {
+        alert('AS server disabled!');
+        return;        
+    }
+
+    loc += 'wlwapias.cer?';
+    loc += 'need=ascert&';
+    loc += 'sessionKey=' + sessionKey;
+    var code = 'location="' + loc + '"';
+    eval(code);
+ }
+
+ function ButtonDownloadUserCertificate_onclick() {
+    var owner = document.forms[0].TextOwnerName.value;
+    var period = document.forms[0].TextPeriod.value
+    var period_unit = getSelect(document.forms[0].SelectPeriodUnit);
+    var loc = '';
+
+    if (needRefresh == 0)
+    {
+        needRefresh = 1;
+    }
+    else
+    {
+        alert("Please refresh this page before download!");
+        return;
+    }
+
+    if (wlWapiAsEnable != 1)
+    {
+        alert('AS server disabled!');
+        return;        
+    }
+
+    if (wlWapiCertListFull != 0)
+    {
+        alert('Certificate list full!');
+        return;        
+    }
+
+    if (!isValidNameWSpace(owner) || (owner.length <= 0) || (owner.length > 16) )
+    {
+        alert('Invalid Owner Name');
+        return;
+    }
+
+    if (!isValidName(period) || isNaN(period) || (period.length <= 0) || (period.length > 8) )
+    {
+        alert('Invalid Valid Period');
+        return;        
+    }
+
+    loc = 'wlwapiusr.cer?';
+    loc += 'need=usrcert&';
+    loc += 'owner=' + owner + '&';
+    loc += 'period=' + period + '&';
+    loc += 'period_unit=' + period_unit + '&';
+    loc += 'sessionKey=' + sessionKey;
+    var code = 'location="' + loc + '"';
+    eval(code);
+ }
+
+ function frmLoad() {
+    with(document.forms[0])
+    {
+        if (wlWapiAsPending != 0)
+        {
+           showhide("divAsPending", 1);
+           showhide("divAsTable", 0);
+           setTimeout("window.location='wlwapias.html'", 1000);
+        }
+        else
+        {
+           showhide("divAsPending", 0);
+           showhide("divAsTable", 1);
+           SelectAsEnable.selectedIndex = (wlWapiAsEnable == 1)? 1: 0;
+        }
+    }
+ }
+
+// done hiding -->
+</script>
+       <style type="text/css">
+           .style3
+           {
+               width: 180px;
+           }
+           .style4
+           {
+               width: 135px;
+           }
+           #ButtonDownloadAsCertificate
+           {
+               width: 175px;
+           }
+           #ButtonDownloadUserCertificate
+           {
+               width: 175px;
+           }
+           .style5
+           {
+               width: 75px;
+           }
+       </style>
+   </head>
+
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>AS Server<br> </b>
+                  This page allows you configure WAPI AS functions.<br><br>
+            <div id="divAsPending">
+            &nbsp;&nbsp;Please wait...
+            </div>
+            <div id="divAsTable">
+            <table>
+                <tr>
+                    <td class="style4">
+                        <b>AS Configuration:</td></b>
+                    <td class="style3">
+                        <select name="SelectAsEnable" id="SelectAsEnable">
+                           <option value="0">
+                           Disable
+                           <option value="1">
+                           Enable
+                        </select></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td class="style3">
+                        <input id="ButtonAsEnable" name="ButtonAsEnable" type="button" value="Apply" onclick="return ButtonAsEnable_onclick()" /></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td class="style3">
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        Export AS X.509 Certificate:</td>
+                    <td class="style3">
+                        <input type='button' value='Export AS Certificate' id="ButtonDownloadAsCertificate" name="ButtonDownloadAsCertificate" onclick="return ButtonDownloadAsCertificate_onclick()"></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td class="style3">
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        <b> User Certificate</td></b>
+                    <td class="style3">
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        Owner Name</td>
+                    <td class="style3">
+                        <input id="TextOwnerName" type="text" name="TextOwnerName" /></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        Valid Period</td>
+                    <td class="style3">
+                        <input id="TextPeriod" type="text" name="TextPeriod" /></td>
+                    <td class="style3">
+                        <select id="SelectPeriodUnit" name="SelectPeriodUnit">
+                           <option value="1">
+                           Day
+                           <option value="30">
+                           Month
+                           <option value="365">
+                           Year
+                        </select></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        Issue User X.509 Certificate:</td>
+                    <td class="style3">
+                        <input id="ButtonDownloadUserCertificate" type="button" value="Issue User Certicate" name="ButtonDownloadUserCertificate" onclick="return ButtonDownloadUserCertificate_onclick()" /></td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td class="style3">
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        <b>User Certificate List:</td></b>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+
+                <tr>
+                        <table border='1' cellpadding='2' cellspacing='0' align="left" >
+                            <tr>
+                                <td class='hd' valign="middle" align="center" width="100" height="30">Owner</td>                    
+                                <td class='hd' valign="middle" align="center" width="100" height="30">Serial Number</td>
+                                <td class='hd' valign="middle" align="center" width="30" height="30">Duration (days)</td>                       
+                                <td class='hd' valign="middle" align="center" width="30" height="30">Remaining (days) </td>
+                                <td class='hd' valign="middle" align="center" width="30" height="30">Type</td>
+                                <td class='hd' valign="middle" align="center" width="30" height="30">Status</td>
+                                <td class='hd' valign="middle" align="center" width="30" height="30">Action</td>                                            
+                            </tr>
+                            <%ejGetWl(wlWapiCertList)%>
+                        </table>
+                </tr>
+                <tr>
+                    <td class="style4">
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+            </table>
+            </div>
+            <br>
+            <p align="center">&nbsp;</p>
+         </form>
+      </blockquote>
+   </body>
+</html>

@@ -1,0 +1,189 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+
+function btnApply() {
+   var loc = 'scoutflt.cmd?action=add';
+
+   with ( document.forms[0] ) {
+      if ( txtfltname.value == '' ) {
+         msg = 'Please enter outgoing IP filtering name.';
+         alert(msg);
+         return;
+      }
+
+      if ( isValidName(txtfltname.value) == false ) {
+         msg = 'Please enter valid outgoing IP filtering name: No special characters.';
+         alert(msg);
+         return;
+      }      
+
+      if ( srcaddr.value == "" && srcport.value == "" &&
+           dstaddr.value == "" && dstport.value == "" &&
+           protocol.selectedIndex == 0 ) {
+         msg = 'At least one condition must be specified.'
+         alert(msg);
+         return;
+      }      
+
+      if ( srcaddr.value != "" ) {
+         if (ipver.options[ipver.selectedIndex].value == '4') {
+            if (isValidIpAddress(srcaddr.value) == false ) {
+               msg = 'Source address "' + srcaddr.value + '" is invalid IPv4 address.';
+               alert(msg);
+               return;
+            }
+         }
+         else {
+            if (isValidIpAddress6(srcaddr.value) == false ) {
+               msg = 'Source address "' + srcaddr.value + '" is invalid IPv6 address.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+
+      if ( srcport.value != "" && isValidPort(srcport.value) == false ) {
+         msg = 'Source port "' + srcport.value + '" is invalid port number or port range.';
+         alert(msg);
+         return;
+      }
+
+      if ( dstaddr.value != "" ) {
+         if (ipver.options[ipver.selectedIndex].value == '4') {
+            if (isValidIpAddress(dstaddr.value) == false ) {
+               msg = 'Destination address "' + dstaddr.value + '" is invalid IPv4 address.';
+               alert(msg);
+               return;
+            }
+         }
+         else {
+            if (isValidIpAddress6(dstaddr.value) == false ) {
+               msg = 'Destination address "' + dstaddr.value + '" is invalid IPv6 address.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+
+      if ( dstport.value != "" && isValidPort(dstport.value) == false ) {
+         msg = 'Destination port "' + dstport.value + '" is invalid port number or port range.';
+         alert(msg);
+         return;
+      }
+
+      if ( (srcport.value != "" || dstport.value != "") && 
+           (protocol.selectedIndex == 0 || protocol.selectedIndex == 4) ) {
+         msg = 'TCP or UDP Protocol must be selected together with port number';
+         alert(msg);
+         return;
+      } 
+      
+      // outgoing IP filter name
+      loc += '&fltName=' + encodeUrl(txtfltname.value);
+
+      // ip version
+      loc += '&ipver=' + ipver.options[ipver.selectedIndex].value;
+
+      // protocol
+      loc += '&protocol=' + protocol.options[protocol.selectedIndex].value;
+
+      // source address
+      if ( srcaddr.value != "" )
+         loc += '&srcAddr=' + srcaddr.value;
+
+      // source port
+      if ( srcport.value != "" )
+         loc += '&srcPort=' + srcport.value;
+
+      // destination address
+      if ( dstaddr.value != "" )
+         loc += '&dstAddr=' + dstaddr.value;
+
+      // destination port
+      if ( dstport.value != "" )
+         loc += '&dstPort=' + dstport.value;
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>Add IP Filter -- Outgoing</b><br>
+            <br>
+            The screen allows you to create a filter rule to identify outgoing IP traffic 
+            by specifying a new filter name and at least one condition below. All of the 
+            specified conditions in this filter rule must be satisfied for the rule to take 
+            effect. Click 'Apply/Save' to save and activate the filter.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Filter Name:</td>
+                  <td><input type='text' size="22" name="txtfltname"></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr><script language="javascript">
+<!-- hide 
+{
+                  document.writeln("<td>IP Version:</td>");
+                  document.writeln("<td><select name='ipver' size='1'>");
+                  document.writeln("      <option value='4'>IPv4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                  if (enblIP6 == '1')
+                     document.writeln("      <option value='6'>IPv6");
+                  document.writeln("    </select></td>");
+}
+// done hiding -->
+               </script></tr>
+               <tr><script language="javascript">
+<!-- hide 
+{
+                  document.writeln("<td>Protocol:</td>");
+                  document.writeln("<td><select name='protocol' size='1'>");
+                  document.writeln("      <option value='4'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                  document.writeln("      <option value='0'>TCP/UDP");
+                  document.writeln("      <option value='1'>TCP");
+                  document.writeln("      <option value='2'>UDP");
+                  document.writeln("      <option value='3'>ICMP");
+                  document.writeln("    </select></td>");
+}
+// done hiding -->
+               </script></tr>
+               <tr>
+                  <td>Source IP address[/prefix length]:</td>
+                  <td><input type='text' size="22" name="srcaddr"></td>
+               </tr>
+               <tr>
+                  <td>Source Port (port or port:port):</td>
+                  <td><input type='text' size="22" name="srcport"></td>
+               </tr>
+               <tr>
+                  <td>Destination IP address[/prefix length]:</td>
+                  <td><input type='text' size="22" name="dstaddr"></td>
+               </tr>
+               <tr>
+                  <td>Destination Port (port or port:port):</td>
+                  <td><input type='text' size="22" name="dstport"></td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center><input type='button' onClick='btnApply()' value='Apply/Save'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

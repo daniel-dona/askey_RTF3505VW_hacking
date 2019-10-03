@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$(".content,.Mcontent").after("<br>");
+	//include header
+	$('#includeHeader').load("te_header.html");
+    var info = [];
+	info[ 0] = '<%ejGet(teamName)%>';
+	info[ 1] = '<%ejGet(modelName)%>';
+	info[ 2] = '<%ejGet(serialNumber)%>';
+	info[ 3] = '<%ejGet(hardwareVersion)%>';
+	info[ 4] = '<%ejGet(sysVersion)%>';
+	info[ 5] = '<%ejGet(sysVersion)%>';
+	info[ 6] = '<%ejGetOther(wanInterfaceInfo, connectionStatus)%>';
+	info[ 7] = '<%ejGetOther(wanInterfaceInfo, externalIPAddress)%>';
+	info[ 8] = '<%ejGet(ethIpAddress)%>';
+	info[ 9] = '<%ejGet(ethSubnetMask)%>';
+	info[10] = '<%ejGet(enblDhcpSrv)%>';
+	var dns = '<%ejGet(lanHostDns)%>'.split(',');
+	if (dns[0]  !=  '') info[11] = dns[0]; else info[11] = '--';
+	if (dns.length > 1) info[12] = dns[1]; else info[12] = '--';
+	info[13] = '<%ejGetWl(wlEnbl_main0)%>';
+	info[14] = htmlDecode('<%ejGetWl(wlSsid_main0)%>');
+	info[15] = '<%ejGetWl(wlHide_main0)%>';
+	info[16] = '<%ejGetWl(wlAuthMode_main0)%>';
+	info[17] = '<%ejGetWl(wlWpa_main0)%>';
+	info[18] = '<%ejGetWl(wlEnbl_main1)%>';
+	info[19] = htmlDecode('<%ejGetWl(wlSsid_main1)%>');
+	info[20] = '<%ejGetWl(wlHide_main1)%>';
+	info[21] = '<%ejGetWl(wlAuthMode_main1)%>';
+	info[22] = '<%ejGetWl(wlWpa_main1)%>';
+	info[23] = '<%ejGetOther(installation, serviceType)%>';
+	info[24] = '<%ejGetOther(installation, addressType)%>';
+	info[25] = '<%ejGetOther(installation, dvwanIPaddress)%>';
+	info[26] = '<%ejGetOther(installation, dvlanIPaddress)%>';
+	info[27] = '<%ejGetOther(installation, gponPw)%>';
+	for (i=0; i<28; i++) {
+		$('td:eq('+(i*2+1)+')').html(info[i]);
+	}
+	// team Name
+	$('td:eq(1)').html('Equipo para acceso Fibra &Oacute;ptica -'+$('td:eq(1)').html());
+
+	// Model Name
+	$('td:eq(3)').html('RTF'+$('td:eq(3)').html());
+    
+	// PPPoE Connection
+	switch ($('td:eq(13)').html()) {
+		case 'Connected':
+			$('td:eq(13)').html('Internet est&aacute; configurado'); break;
+		default:
+			$('td:eq(13)').html('Internet est&aacute; sin configurar'); break;
+	}
+
+	// DHCP Server
+	if ($('td:eq(21)').html() == '0')
+		$('td:eq(21)').html('Desactivado');
+	else
+		$('td:eq(21)').html('Activado');
+
+	// WiFi 2.4GHz
+	if ($('td:eq(27)').html() == '0')
+		$('td:eq(27)').html('Desactivado');
+	else
+		$('td:eq(27)').html('Activado');
+
+	// Hide SSID
+	if ($('td:eq(31)').html() == '0')
+		$('td:eq(31)').html('No');
+	else
+		$('td:eq(31)').html('Si');
+		
+	// Authentication & Encryption
+	mode = $('td:eq(33)').html();
+	wpa = $('td:eq(35)').html();
+	switch (mode) {
+		case 'open':
+			$('td:eq(33)').html('Sin cifrado');
+			$('td:eq(35)').html('Desactivada'); break;			
+		case 'shared':
+			$('td:eq(33)').html('WEP');
+			$('td:eq(34)').html('Compartido'); break;			
+		case 'psk2':
+			$('td:eq(33)').html('WPA2');
+			$('td:eq(35)').html(wpa.toUpperCase()); break;
+		default:
+			$('td:eq(33)').html('WPA/WPA2 Mixto');
+			$('td:eq(35)').html(wpa.toUpperCase()); break;
+	}
+	
+	// WiFi 5GHz
+	if ($('td:eq(37)').html() == '0')
+		$('td:eq(37)').html('Desactivado');
+	else
+		$('td:eq(37)').html('Activado');
+
+	// Hide SSID
+	if ($('td:eq(41)').html() == '0')
+		$('td:eq(41)').html('No');
+	else
+		$('td:eq(41)').html('Si');
+		
+	// Authentication & Encryption
+	mode = $('td:eq(43)').html();
+	wpa = $('td:eq(45)').html();
+	switch (mode) {
+		case 'open':
+			$('td:eq(43)').html('Sin cifrado');
+			$('td:eq(45)').html('Desactivada'); break;			
+		case 'shared':
+			$('td:eq(43)').html('WEP');
+			$('td:eq(44)').html('Compartido'); break;			
+		case 'psk2':
+			$('td:eq(43)').html('WPA2');
+			$('td:eq(45)').html(wpa.toUpperCase()); break;
+		default:
+			$('td:eq(43)').html('WPA/WPA2 Mixto');
+			$('td:eq(45)').html(wpa.toUpperCase()); break;
+	}
+
+	// IPTV
+	if ($('td:eq(47)').html() == '0'){
+		$('td:eq(47)').html('Tr&iacute;o');
+		$('tr:eq(25)').show();	
+		$('tr:eq(26)').show();	
+	}
+	else{
+		$('td:eq(47)').html('D&uacute;o');
+		$('tr:eq(25)').hide();	
+		$('tr:eq(26)').hide();
+	}
+	switch (info[24]) {
+		case '0':
+			$('td:eq(49)').html('Din&aacute;mico (NAT-PAT)'); break;
+		case '1':
+			$('td:eq(49)').html('Est&aacute;tico'); break;
+		case '2':
+			$('td:eq(49)').html('Ninguno'); break;
+	}
+	if ( info[24] == '0'){	
+		$('tr:eq(26)').hide();	
+	}
+	if ( info[24] == '1'){
+		$('tr:eq(26)').show();
+	}
+});
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Acerca de...</div>
+			<p class="content_word">En el siguiente mapa de informaci&oacute;n de un solo vistazo se muestra la informaci&oacute;n relevante acerca de la configuraci&oacute;n de tu Router y tu conexi&oacute;n. Si aparecen subrayadas significa que podr&aacute;s modificarlas y haciendo clic sobre ellas te llevar&aacute;n a la secci&oacute;n del configurador donde se pueden realizar los cambios.</p>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n de equipo</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Nombre del equipo:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Modelo:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Serial Number:</td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize">Versi&oacute;n Hardware:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Versi&oacute;n Software:</td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize">Versi&oacute;n Firmware:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Estado:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n WAN</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>		
+					<td class="titlesize"><a href="te_multipuesto_monopuesto.html">Direcci&oacute;n IP WAN (Internet)</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n Red Local</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">Direcci&oacute;n IP (Gateway):</a></td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize"><a href="te_red_local.html">M&aacute;scara de subred:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">DHCP:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_red_local.html">Servidor DNS1:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">Servidor DNS2:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n Red Inal&aacute;mbrica(2.4GHz)</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Estado Wifi:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Identificador Red Inal&aacute;mbrica (SSID):</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Oculto SSID:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Tipo cifrado:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Encriptaci&oacute;n:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n Red Inal&aacute;mbrica(Wifi Plus)</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Estado Wifi Plus:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Identificador Red Inal&aacute;mbrica (SSID):</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Oculto SSID:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Tipo cifrado:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Encriptaci&oacute;n:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n Movistar TV</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Servicio contratado:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Tipo de direccionamiento:</td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize">Direcci&oacute;n IP WAN Router:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP acceso Imagenio:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="content">
+				<div class="littletitle">Informaci&oacute;n de acceso</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Id_ONT:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Acerca de...</div>
+			<p class="Mcontent_word">En el siguiente mapa de informaci&oacute;n de un solo vistazo se muestra la informaci&oacute;n relevante acerca de la configuraci&oacute;n de tu Router y tu conexi&oacute;n. Si aparecen subrayadas significa que podr&aacute;s modificarlas y haciendo clic sobre ellas te llevar&aacute;n a la secci&oacute;n del configurador donde se pueden realizar los cambios.</p>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n de equipo</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Nombre del equipo:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Modelo:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Serial Number:</td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize">Versi&oacute;n Hardware:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Versi&oacute;n Software:</td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize">Versi&oacute;n Firmware:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Estado:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n WAN</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>		
+					<td class="titlesize"><a href="te_multipuesto_monopuesto.html">Direcci&oacute;n IP WAN (Internet)</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n Red Local</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">Direcci&oacute;n IP (Gateway):</a></td>
+					<td></td>
+				</tr>
+				<tr>		
+					<td class="titlesize"><a href="te_red_local.html">M&aacute;scara de subred:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">DHCP:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_red_local.html">Servidor DNS1:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_red_local.html">Servidor DNS2:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n Red Inal&aacute;mbrica(2.4GHz)</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Estado Wifi:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Identificador Red Inal&aacute;mbrica (SSID):</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Oculto SSID:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Tipo cifrado:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi.html">Encriptaci&oacute;n:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n Red Inal&aacute;mbrica(Wifi Plus)</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Estado Wifi Plus:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Identificador Red Inal&aacute;mbrica (SSID):</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Oculto SSID:</a></td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Tipo cifrado:</a></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize"><a href="te_wifi_5ghz.html">Encriptaci&oacute;n:</a></td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n Movistar TV</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Servicio contratado:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Tipo de direccionamiento:</td>
+					<td></td>
+				</tr>
+				<tr>	
+					<td class="titlesize">Direcci&oacute;n IP WAN Router:</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP acceso Imagenio:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+			<div class="Mcontent">
+				<div class="littletitle">Informaci&oacute;n de acceso</div>
+				<table class="editItems" border="0" width="100%">
+				<tr>
+					<td class="titlesize">Id_ONT:</td>
+					<td></td>
+				</tr>
+				</table>
+			</div>
+        </div>
+    </div>
+</body>
+</html>

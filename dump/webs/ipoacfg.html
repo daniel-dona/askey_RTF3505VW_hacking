@@ -1,0 +1,74 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var addr = '<%ejGet(wanIpAddress)%>';
+var mask = '<%ejGet(wanSubnetMask)%>';
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      wanIpAddress.value = addr;
+      wanSubnetMask.value = mask;
+   }
+}
+
+function btnNext() {
+   var loc = 'natcfg2.cgi?';
+ 
+   with ( document.forms[0] ) {
+      // wan IP address
+      if ( isValidIpAddress(wanIpAddress.value) == false ) {
+         alert('WAN IP address "' + wanIpAddress.value + '" is invalid IP address.');
+         return;
+      }
+      loc += 'wanIpAddress=' + wanIpAddress.value;
+      // wan subnet mask
+      if ( isValidIpAddress(wanSubnetMask.value) == false &&  wanSubnetMask.value != '255.255.255.255') {
+         alert('WAN subnet mask "' + wanSubnetMask.value + '" is invalid IP address.');
+         return;
+      }
+      loc += '&wanSubnetMask=' + wanSubnetMask.value;
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var loc = 'wansrvc.cmd';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>WAN IP Settings</b><br>
+            <br>
+            Enter information provided to you by your ISP to configure the WAN IP settings.<br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="160">WAN IP Address:</td>
+                  <td><input type='text' name='wanIpAddress'></td>
+               </tr>
+               <tr>
+                  <td>WAN Subnet Mask:</td>
+                  <td><input type='text' name='wanSubnetMask'></td>
+               </tr>
+            </table><br>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

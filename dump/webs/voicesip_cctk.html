@@ -1,0 +1,228 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicesip_basic.html
+  Author:
+  Creation Date: 2008
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+   
+      <style type="text/css">
+      ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
+      ul#tabs li { display: inline; }
+      ul#tabs li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }
+      ul#tabs li a:hover { background-color: #f1f0ee; }
+      ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }
+      div.tabContent { border: 1px solid #c9c3ba; padding: 0.5em; background-color: #f1f0ee; }
+      div.tabContent.hide { display: none; }
+      </style>
+      
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+      <script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var progress = 0;
+var maxSp = '<%ejGetVoice(maxSp)%>';
+//var maxSp = 2
+
+for (var i = 0; i < maxSp; i++) {
+   eval( "var cctkdm" + i + " \= \"\" " );
+}
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+//var sessionKey='1234567890';
+
+function btnSubmitSip(tab_index) {
+   var loc = 'voicesipcctkupload.cmd?';
+
+   loc += 'currentview=cctk';
+   loc += '&sessionKey=' + sessionKey;
+   loc += '&CctkDigitMap' + tab_index + '=';
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   document.forms[0].action = loc;
+}
+
+function frmLoad(current_view) {
+
+   init();										
+   
+}
+
+var tabLinks = new Array();
+var contentDivs = new Array();
+var selectedTab;
+
+function init() {
+
+  // Grab the tab links and content divs from the page
+  var tabListItems = document.getElementById('tabs').childNodes;
+  for ( var i = 0; i < tabListItems.length; i++ ) {
+    if ( tabListItems[i].nodeName == "LI" ) {
+      var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+      var id = getHash( tabLink.getAttribute('href') );
+      tabLinks[id] = tabLink;
+      contentDivs[id] = document.getElementById( id );
+    }
+  }
+
+  // Assign onclick events to the tab links, and
+  // highlight the first tab
+  var i = 0;
+  selectedTab = 0;
+
+  for ( var id in tabLinks ) {
+    tabLinks[id].onclick = showTab;
+    tabLinks[id].onfocus = function() { this.blur() };
+    if ( i == 0 ) tabLinks[id].className = 'selected';
+    i++;
+  }
+
+  // Hide all content divs except the first
+  var i = 0;
+  
+  for ( var id in contentDivs ) {
+    if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
+    i++;
+  }
+}
+
+
+function showTab() {
+  var selectedId = getHash( this.getAttribute('href') );
+
+  // Highlight the selected tab, and dim all others.
+  // Also show the selected content div, and hide all others.
+  for ( var id in contentDivs ) {
+    if ( id == selectedId ) {
+      selectedTab = selectedId;
+      tabLinks[id].className = 'selected';
+      contentDivs[id].className = 'tabContent';
+    } else {
+      tabLinks[id].className = '';
+      contentDivs[id].className = 'tabContent hide';
+    }
+  }
+
+  // Stop the browser following the link
+  return false;
+}
+
+function getFirstChildWithTagName( element, tagName ) {
+  for ( var i = 0; i < element.childNodes.length; i++ ) {
+    if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+  }
+}
+
+function getHash( url ) {
+  var hashPos = url.lastIndexOf ( '#' );
+  return url.substring( hashPos + 1 );
+}
+
+function createTabs() {
+  document.writeln("<ul id='tabs'>");
+
+  for ( var i = 0; i < maxSp; i++ ) {
+     document.writeln("<li><a href='#" + i + "'>Service Provider " + i + "</a></li>");
+  } 
+}
+
+function isInProgress() {
+   if ( progress == 0 )  {
+      progress = 1;
+      return true;
+   }
+   alert('Upload software is in progress. Please wait for a minute.');
+   return false;
+}
+
+function createContent() {
+
+  for ( var index = 0; index < maxSp; index++ ) {
+    document.writeln("<div class='tabContent' id='" + index + "'>");
+     document.writeln("  <b> Upload CCTK DigitMap Setting</b><br>");
+     document.writeln("  <br>");
+     document.writeln("  <b>Step 1:</b> Obtain an updated cctk digitmap file (plain text).<br>");
+     document.writeln("  <br>");
+     document.writeln("  <b>Step 2:</b> Enter the path to the setting file location in the box below or ");
+     document.writeln("  click the &quot;Browse&quot; button to locate the file.<br>");
+     document.writeln("  <br>");
+     document.writeln("  <b>Step 3:</b> Click the \"Upload\" button once to upload the new setting ");
+     document.writeln("  file.<br>");
+     document.writeln("  <br>");
+     document.writeln("  <table border='0' cellpadding='0' cellspacing='0'>");
+     document.writeln("  <tr>");
+     document.writeln("  <td>CCTK digitmap File Name:&nbsp;");
+     document.writeln("  </td>");
+     document.writeln("  <td><input type='file' name='filename' size='15'></td>");
+     document.writeln("  </tr>");
+     document.writeln("  </table>");
+     document.writeln("  <p align='center'><input type='submit' onClick='btnSubmitSip(" + index + ")' value='Upload file' id='SubmitButton" + -1 + "'></p>");
+    document.writeln("   <br>");
+    document.writeln("</div>");
+  }
+}
+
+</script>
+</head>
+
+<body onLoad="frmLoad('cctk')">
+   <blockquote>
+      <form method='post' ENCTYPE='multipart/form-data' action='uploadcctk.cgi?currentview=cctk' onSubmit='return isInProgress();'>
+      <script TYPE="text/javascript">
+        createTabs();
+        createContent();
+     </script>     
+     
+      </form>
+   </blockquote>
+</body>
+</html>

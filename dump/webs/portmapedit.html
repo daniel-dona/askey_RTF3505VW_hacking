@@ -1,0 +1,268 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var groupName = '<%ejGetOther(getPMapGroupName)%>';
+var vid0 = '<%ejGetOther(vendorid, 0)%>';
+var vid1 = '<%ejGetOther(vendorid, 1)%>';
+var vid2 = '<%ejGetOther(vendorid, 2)%>';
+var vid3 = '<%ejGetOther(vendorid, 3)%>';
+var vid4 = '<%ejGetOther(vendorid, 4)%>';
+
+function frmLoad() {
+   with ( document.choiceForm ) {
+      var gName = '<%ejGetOther(getPMapGroupName)%>';
+      if ( groupName == gName )
+         groupName = '';
+      else
+         txtGroupName.value = groupName;
+      vendorid0.value = vid0;
+      vendorid1.value = vid1;
+      vendorid2.value = vid2;
+      vendorid3.value = vid3;
+      vendorid4.value = vid4;
+   }
+}
+
+function btnRemove() {
+   with ( document.choiceForm ) {
+      var arrSelected = new Array();
+      var count = 0;
+      for ( i = 0; i < lstChoice.options.length; i++ ) {
+         if ( lstChoice.options[i].selected == true ) {
+            arrSelected[count] = lstChoice.options[i].value;
+            //varOpt = new Option(lstChoice.options[i].text, lstChoice.options[i].value);
+            //lstAvailable.options[lstAvailable.length] = varOpt;
+            //lstChoice.options[i] = null;
+         }
+         count++;
+      }
+      var x = 0;
+      for (i = 0; i < lstChoice.options.length; i++) {
+         for (x = 0; x < arrSelected.length; x++) {
+            if (lstChoice.options[i].value == arrSelected[x]) {
+               varOpt = new Option(lstChoice.options[i].text, lstChoice.options[i].value);
+               lstAvailable.options[lstAvailable.length] = varOpt;
+               lstChoice.options[i] = null;
+            }
+         }
+      }
+   }
+}
+
+function btnAdd() {
+   with ( document.choiceForm ) {
+      var arrSelected = new Array();
+      var count = 0;
+      for ( i = 0; i < lstAvailable.options.length; i++ ) {
+         if ( lstAvailable.options[i].selected == true ) {
+            arrSelected[count] = lstAvailable.options[i].value;
+         }
+         count++;
+      }
+      var x = 0;
+      for (i = 0; i < lstAvailable.options.length; i++) {
+         for (x = 0; x < arrSelected.length; x++) {
+            if (lstAvailable.options[i].value == arrSelected[x]) {
+               varOpt = new Option(lstAvailable.options[i].text, lstAvailable.options[i].value);
+               lstChoice.options[lstChoice.length] = varOpt;
+               lstAvailable.options[i] = null;
+            }
+         }
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'portmapcfg.cmd?action=edit';
+   with ( document.forms[0] ) {
+      var i = 0;
+
+      loc += '&groupName=' + '<%ejGetOther(getPMapGroupName)%>';
+      var ifc = '';
+      var tempList = '';
+      var interfaces = '';
+      var brdId = '<%ejGet(boardID)%>';
+      //if (lstChoice.length == 0) {
+      //   alert('Need to provide at least one interface "Select one from the Available list."');
+      //   return;
+      //}
+      for (i = 0; i < lstChoice.length; i++ ) {
+         if (lstChoice.options[i].value == '')
+            continue;
+         tempList += lstChoice.options[i].value + '|';
+      }
+
+      if(tempList != '')
+      {
+      interfaces = tempList.split('|');
+      interfaces.sort();
+	  
+      for (i = 0; i < interfaces.length; i++) {
+         ifc += getLNameByUName(brdId + '|' + interfaces[i]) + '|';
+      }
+	  }
+	  
+      loc += '&choiceBox=' + ifc;
+      if (vendorid0.value != '')
+         loc += '&vendorid0=' + vendorid0.value;
+      if (vendorid1.value != '')
+         loc += '&vendorid1=' + vendorid1.value;
+      if (vendorid2.value != '')
+         loc += '&vendorid2=' + vendorid2.value;
+      if (vendorid3.value != '')
+         loc += '&vendorid3=' + vendorid3.value;
+      if (vendorid4.value != '')
+         loc += '&vendorid4=' + vendorid4.value;
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form name="choiceForm">
+            <b>Edit Port Mapping Configuration</b><br>
+            <br>
+            To edit the port mapping configuration:
+            <br>
+            <b>1.</b> To add interfaces to the grouped list, select the interfaces from
+            available interface list.
+            <br><br>
+            <b>2.</b> Use the left arrow button to move the selected interfaces to the grouped
+            list.
+            <br><br>
+            <b>3.</b> To remove the interfaces, select the interface from the grouped list
+            and click the right arrow button.
+            <br><br>
+            <b>4.</b> To automatically add LAN clients to the specified group PVC edit the list.
+             <br><b>Note that by adding the DHCP vendor ID (OPTION 60) string. The clients will
+             be automatically denied an IP address by the local DHCP server and may obtain public
+             IP address.</b>
+            <br><br>
+            <b>Note that the selected interfaces will be removed from their
+            existing groups and added to the</b>
+            <br><br>
+            <b>5.</b> Click Save/Apply button to make the changes effective immediately
+            <br><br>
+            <b>Note that the selected interfaces will be removed from their
+            existing groups and added to the</b>
+            <br><br>
+            <table border="1" cellpadding="3" cellspacing="0">
+               <tr>
+                  <td class='hd'>Group Name:</td>
+                  <td><%ejGetOther(getPMapGroupName)%></td></b>
+               </tr>
+            </table>
+            <br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="150"><b>Grouped Interfaces</b></td>
+                  <td width="100"></td>
+                  <td width="150"><b>Available Interfaces</b></td>
+               </tr>
+               <tr><td colspan="3">&nbsp;</td></tr>
+               <tr>
+                  <td>
+                      <select multiple name="lstChoice" size="10" style="width: 100">
+<script language="javascript">
+<!-- hide
+{
+   if ( groupName != '' ) {
+      var i = 0;
+      var brdId = '<%ejGet(boardID)%>';
+      var dispName = '';
+      var grpedIntfInfo = '<%ejGetOther(bridgeGroupInfo, group)%>';
+      var grpedInterfaces = grpedIntfInfo.split('|');
+      grpedInterfaces.sort();
+      for ( i = 0; i < grpedInterfaces.length; i++ ) {
+         if (grpedInterfaces[i] != '') {
+            document.write("  <option value='" + grpedInterfaces[i] + "'>");
+         }
+         dispName = getUNameByLName(brdId + '|' + grpedInterfaces[i]);
+         document.writeln(dispName);
+      }
+   }
+}
+// done hiding -->
+</script>
+                    </select>
+                  </td>
+                  <td>
+                     <table border="0" cellpadding="0" cellspacing="5">
+                        <tr><td>
+                           <input type="button" value="->" onClick="btnRemove()" style="width: 30; height: 30">
+                        </td></tr>
+                        <tr><td>
+                           <input type="button" value="<-" onClick="btnAdd()" style="width: 30; height: 30">
+                        </td></tr>
+                     </table>
+                  </td>
+                  <td>
+                      <select multiple name="lstAvailable" size="10" style="width: 100">
+<script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '';
+   var dispName = '';
+   var brdId = '<%ejGet(boardID)%>';
+   if (groupName == '') {
+      interfaceInfo = '<%ejGetOther(bridgeInterfaceInfo, all)%>';
+   } else {
+      interfaceInfo = '<%ejGetOther(bridgeInterfaceInfo, group)%>';
+   }
+   var interfaces = interfaceInfo.split('|');
+   interfaces.sort();
+   for ( i = 0; i < interfaces.length; i++ ) {
+      if (interfaces[i] != '') {
+         document.write("  <option value='" + interfaces[i] + "'>");
+      }
+      dispName = getUNameByLName(brdId + '|' + interfaces[i]);
+      document.writeln(dispName);
+   }
+}
+// done hiding -->
+</script>
+                      </select>
+                  </td>
+               </table>
+               <br><br>
+               <table>
+                  <tr>
+                     <td width="150"><b>Automatically Add Clients With the following DHCP Vendor IDs</b></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid0' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid1' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid2' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid3' size="32" maxlength="64"></td>
+                  </tr>
+                  <tr>
+                     <td><input type='text' name='vendorid4' size="32" maxlength="64"></td>
+                  </tr>
+               </table>
+            <br><br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Save/Apply'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

@@ -1,0 +1,322 @@
+0 @ 06c00000 (reserved)
+<6> memory: 00400000 @ 06800000 (reserved)
+<6> memory: 06800000 @ 00000000 (usable)
+<4>Zone PFN ranges:
+<4>  DMA      0x00000000 -> 0x00001000
+<4>  Normal   0x00001000 -> 0x00006800
+<4>Movable zone start PFN for each node
+<4>Early memory PFN ranges
+<4>    0: 0x00000000 -> 0x00006800
+<7>On node 0 totalpages: 26624
+<7>free_area_init_node: node 0, pgdat 8040eb80, node_mem_map 81000000
+<7>  DMA zone: 32 pages used for memmap
+<7>  DMA zone: 0 pages reserved
+<7>  DMA zone: 4064 pages, LIFO batch:0
+<7>  Normal zone: 176 pages used for memmap
+<7>  Normal zone: 22352 pages, LIFO batch:3
+<6>PERCPU: Embedded 7 pages/cpu @810d3000 s5088 r8192 d15392 u32768
+<7>pcpu-alloc: s5088 r8192 d15392 u32768 alloc=8*4096
+<7>pcpu-alloc: [0] 0 [0] 1 
+<4>Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 26416
+<5>Kernel command line: ro noinitrd  irqaffinity=0
+<6>PID hash table entries: 512 (order: -1, 2048 bytes)
+<6>Dentry cache hash table entries: 16384 (order: 4, 65536 bytes)
+<6>Inode-cache hash table entries: 8192 (order: 3, 32768 bytes)
+<4>Primary instruction cache 64kB, VIPT, 4-way, linesize 16 bytes.
+<4>Primary data cache 32kB, 2-way, VIPT, cache aliases, linesize 16 bytes
+<6>Memory: 100908k/106496k available (3245k kernel code, 5588k reserved, 847k data, 200k init, 0k highmem)
+<6>Preemptible hierarchical RCU implementation.
+<6>NR_IRQS:256
+<6>console [ttyS0] enabled
+<4>Allocating memory for DSP module core and initialization code
+<4>Allocated DSP module memory - CORE=0x0 SIZE=0, INIT=0x0 SIZE=0
+<6>Calibrating delay loop... 599.04 BogoMIPS (lpj=1198080)
+<6>pid_max: default: 32768 minimum: 301
+<6>Mount-cache hash table entries: 512
+<6>--Kernel Config--
+<6>  SMP=1
+<6>  PREEMPT=1
+<6>  DEBUG_SPINLOCK=0
+<6>  DEBUG_MUTEXES=0
+<4>Broadcom Logger v0.1 Mar 16 2018 15:20:54
+<6>CPU revision is: 0002a080 (Broadcom BMIPS4350)
+<4>Primary instruction cache 64kB, VIPT, 4-way, linesize 16 bytes.
+<4>Primary data cache 32kB, 2-way, VIPT, cache aliases, linesize 16 bytes
+<6>Brought up 2 CPUs
+<6>NET: Registered protocol family 16
+<4>PMC Driver Init... done.
+<4>registering PCI controller with io_map_base unset
+<4>registering PCI controller with io_map_base unset
+<4>registering PCI controller with io_map_base unset
+<6>bio: create slab <bio-0> at 0
+<6>PCI host bridge to bus 0000:00
+<6>pci_bus 0000:00: root bus resource [mem 0xeff00000-0xefffffff]
+<6>pci_bus 0000:00: root bus resource [io  0xf1000000-0xf100ffff]
+<6>PCI host bridge to bus 0000:01
+<6>pci_bus 0000:01: root bus resource [mem 0xd0000000-0xdfffffff]
+<6>pci_bus 0000:01: root bus resource [??? 0x00000000 flags 0x0]
+<7>pci 0000:01:00.0: [14e4:6838] type 01 class 0x060400
+<7>pci 0000:01:00.0: PME# supported from D0 D3hot
+<7>pci 0000:02:00.0: [14e4:a8db] type 00 class 0x028000
+<7>pci 0000:02:00.0: reg 10: [mem 0x00000000-0x00007fff 64bit]
+<7>pci 0000:02:00.0: supports D1 D2
+<6>pci 0000:01:00.0: BAR 8: assigned [mem 0xd0000000-0xd00fffff]
+<6>pci 0000:02:00.0: BAR 0: assigned [mem 0xd0000000-0xd0007fff 64bit]
+<6>pci 0000:01:00.0: PCI bridge to [bus 02-02]
+<6>pci 0000:01:00.0:   bridge window [mem 0xd0000000-0xd00fffff]
+<4>PCI: Enabling device 0000:01:00.0 (0000 -> 0002)
+<6>PCI host bridge to bus 0000:03
+<6>pci_bus 0000:03: root bus resource [mem 0xe0000000-0xefefffff]
+<6>pci_bus 0000:03: root bus resource [??? 0x00000000 flags 0x0]
+<7>pci 0000:03:00.0: [14e4:6838] type 01 class 0x060400
+<7>pci 0000:03:00.0: PME# supported from D0 D3hot
+<6>pci 0000:03:00.0: PCI bridge to [bus 04-04]
+<6>bcmhs_spi bcmhs_spi.1: master is unqueued, this is deprecated
+<4>skbFreeTask created successfully
+<4>[0;34mBLOG v3.0 Initialized[0m
+<4>BLOG Rule v1.0 Initialized
+<4>Broadcom IQoS v0.1 Mar 16 2018 15:24:07 initialized
+<4>Broadcom GBPM v0.1 Mar 16 2018 15:24:08 initialized
+<6>Switching to clocksource MIPS
+<6>NET: Registered protocol family 2
+<6>IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
+<6>TCP established hash table entries: 4096 (order: 3, 32768 bytes)
+<6>TCP bind hash table entries: 4096 (order: 3, 32768 bytes)
+<6>TCP: Hash tables configured (established 4096 bind 4096)
+<6>TCP: reno registered
+<6>UDP hash table entries: 128 (order: 0, 4096 bytes)
+<6>UDP-Lite hash table entries: 128 (order: 0, 4096 bytes)
+<6>NET: Registered protocol family 1
+<7>PCI: CLS 0 bytes, default 16
+<4>init_bcm_tstamp: unhandled mips_hpt_freq=300000000, adjust constants in bcm_tstamp.c
+<6>bcm_tstamp initialized, (hpt_freq=300000000 2us_div=300 2ns_mult=0 2ns_shift=0)
+<6>squashfs: version 4.0 (2009/01/31) Phillip Lougher
+<6>jffs2: version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+<6>msgmni has been set to 197
+<6>io scheduler noop registered (default)
+<6>Broadcom NAND controller (BrcmNand Controller)
+<6>mtd->oobsize=0, mtd->eccOobSize=0
+<4>NAND_CS_NAND_XOR=00000000
+<4>B4: NandSelect=40000001, nandConfig=15142200, chipSelect=0
+<4>brcmnand_read_id: CS0: dev_id=01f1001d
+<4>After: NandSelect=40000001, nandConfig=15142200
+<4>Block size=00020000, erase shift=17
+<6>NAND Config: Reg=15142200, chipSize=128 MB, blockSize=128K, erase_shift=11
+<6>busWidth=1, pageSize=2048B, page_shift=11, page_mask=000007ff
+<4>timing1 not adjusted: 6574845b
+<4>timing2 not adjusted: 00001e96
+<6>BrcmNAND mfg 1 f1 SPANSION_S30ML01GP_08 128MB on CS0
+<6>
+<6>Found NAND on CS0: ACC=f7441010, cfg=15142200, flashId=01f1001d, tim1=6574845b, tim2=00001e96
+<6>BrcmNAND version = 0x80000500 128MB @00000000
+<4>brcmnand_scan: B4 nand_select = 40000001
+<4>brcmnand_scan: After nand_select = 40000001
+<6>handle_acc_control: default CORR ERR threshold  1 bits
+<4>ACC: 16 OOB bytes per 512B ECC step; from ID probe: 16
+<6>page_shift=11, bbt_erase_shift=17, chip_shift=27, phys_erase_shift=17
+<6>Brcm NAND controller version = 5.0 NAND flash size 128MB @18000000
+<4>ECC layout=brcmnand_oob_bch4_2k
+<6>brcmnand_scan:  mtd->oobsize=64
+<6>brcmnand_scan: oobavail=35, eccsize=512, writesize=2048
+<6>brcmnand_scan, eccsize=512, writesize=2048, eccsteps=4, ecclevel=4, eccbytes=7
+<4>-->brcmnand_default_bbt
+<4>brcmnand_default_bbt: bbt_td = bbt_slc_bch4_main_descr
+<7>Bad block table Bbt0 found at page 0000ffc0, version 0x01 for chip on CS0
+<7>Bad block table 1tbB found at page 0000ff80, version 0x01 for chip on CS0
+<6>brcmnand_reset_corr_threshold: default CORR ERR threshold  1 bits for CS0
+<6>brcmnand_reset_corr_threshold: CORR ERR threshold changed to 3 bits for CS0
+<7>nand_read_bbt: Bad block at 0x05ca0000
+<6>brcmnandCET: Status -> Deferred
+<5>Creating 7 MTD partitions on "brcmnand.0":
+<5>0x000002580000-0x000004ae0000 : "rootfs"
+<5>0x000000020000-0x000002580000 : "rootfs_update"
+<5>0x000007b00000-0x000007f00000 : "data"
+<5>0x000000000000-0x000000020000 : "nvram"
+<5>0x000002580000-0x000004ae0000 : "image"
+<5>0x000000020000-0x000002580000 : "image_update"
+<5>0x000004b00000-0x000007b00000 : "aux_fs"
+<6>PPP generic driver version 2.4.2
+<6>PPP BSD Compression module registered
+<6>PPP Deflate Compression module registered
+<6>NET: Registered protocol family 24
+<6>i2c /dev entries driver
+<4>brcmboard: brcm_board_init entry
+<4>SES: ses_5g_Btn_irq 0x8002
+<4>SES: ses_5g_Btn_gpio 0x8004
+<4>SES: 5g Button Interrupt 0x8002 is enabled
+<4>SES: 5g_ext_irq_idx 0x2
+<4>SES: 5g Button Interrupt gpio is 4
+<4>SES: 5g_external_irq 0x8a
+<4>SES: 5g_dev_id = 80406188 
+<4>SES: 5g LED GPIO 0x9007 is enabled
+<4>SES: 2.4g_sesBtn_irq 0x1
+<4>SES: 2.4g_sesBtn_gpio 0x800e
+<4>SES: Button Interrupt 0x1 is enabled
+<4>SES: 2.4g_external_irq 0x89
+<4>SES: 2.4g_dev_id = 8040618c 
+<4>At booting process.....
+<4>brcm_board_init: Reset config Interrupt gpio is 69
+<6>Serial: BCM63XX driver $Revision: 3.00 $
+<6>[0;33mMagic SysRq with Auxilliary trigger char enabled (type ^ h for list of supported commands)[0m
+<6>ttyS0 at MMIO 0xb4e00500 (irq = 9) is a BCM63XX
+<6>ttyS1 at MMIO 0xb4e00520 (irq = 10) is a BCM63XX
+<4>BPM: tot_mem_size=134217728B (128MB), buf_mem_size <10%> =13421770B (12MB), num of buffers=5178, buf size=2592
+<4>Broadcom BPM Module Char Driver v0.1 Mar 16 2018 15:21:16 Registered<244>[0m
+<6>TCP: cubic registered
+<6>NET: Registered protocol family 10
+<6>IPv6 over IPv4 tunneling driver
+<6>NET: Registered protocol family 17
+<5>Bridge firewalling registered
+<6>Initializing MCPD Module
+<6>Ebtables v2.0 registered
+<6>ebt_time registered
+<6>ebt_ftos registered
+<6>ebt_wmm_mark registered
+<6>8021q: 802.1Q VLAN Support v1.8
+<4>jffs2: Empty flash at 0x0005298c ends at 0x00053000
+<6>VFS: Mounted root (jffs2 filesystem) readonly on device 31:0.
+<6>Freeing unused kernel memory: 200k freed
+<4>jffs2: Empty flash at 0x0006b4ec ends at 0x0006b800
+<4>jffs2: Empty flash at 0x000a95b4 ends at 0x000a9800
+<4>jffs2: Empty flash at 0x001edc48 ends at 0x001ee000
+<4>jffs2: Empty flash at 0x00395d88 ends at 0x00396000
+<4>jffs2: Empty flash at 0x003987ac ends at 0x00398800
+<4>jffs2: Empty flash at 0x0039afac ends at 0x0039b000
+<5>UBI: attaching mtd6 to ubi2
+<5>UBI: physical eraseblock size:   131072 bytes (128 KiB)
+<5>UBI: logical eraseblock size:    126976 bytes
+<5>UBI: smallest flash I/O unit:    2048
+<5>UBI: VID header offset:          2048 (aligned 2048)
+<5>UBI: data offset:                4096
+<5>UBI: max. sequence number:       1300
+<5>UBI: attached mtd6 to ubi2
+<5>UBI: MTD device name:            "aux_fs"
+<5>UBI: MTD device size:            48 MiB
+<5>UBI: number of good PEBs:        383
+<5>UBI: number of bad PEBs:         1
+<5>UBI: number of corrupted PEBs:   0
+<5>UBI: max. allowed volumes:       128
+<5>UBI: wear-leveling threshold:    4096
+<5>UBI: number of internal volumes: 1
+<5>UBI: number of user volumes:     1
+<5>UBI: available PEBs:             0
+<5>UBI: total number of reserved PEBs: 383
+<5>UBI: number of PEBs reserved for bad PEB handling: 3
+<5>UBI: max/mean erase counter: 6/4
+<5>UBI: image sequence number:  0
+<5>UBI: background thread "ubi_bgt2d" started, PID 225
+<5>jffs2: notice: (208) check_node_data: wrong data CRC in data node at 0x0039c768: read 0x628613c2, calculated 0x37b64c3a.
+<5>jffs2: notice: (208) check_node_data: wrong data CRC in data node at 0x00399f68: read 0x628613c2, calculated 0x37b64c3a.
+<5>UBIFS: recovery needed
+<5>jffs2: notice: (208) check_node_data: wrong data CRC in data node at 0x00397768: read 0x628613c2, calculated 0x37b64c3a.
+<5>jffs2: notice: (208) check_node_data: wrong data CRC in data node at 0x00394d44: read 0x628613c2, calculated 0xd32486d7.
+<5>UBIFS: recovery completed
+<5>UBIFS: mounted UBI device 2, volume 0, name "aux_fs"
+<5>UBIFS: file system size:   46346240 bytes (45260 KiB, 44 MiB, 365 LEBs)
+<5>UBIFS: journal size:       9023488 bytes (8812 KiB, 8 MiB, 72 LEBs)
+<5>UBIFS: media format:       w4/r0 (latest is w4/r0)
+<5>UBIFS: default compressor: zlib
+<5>UBIFS: reserved for root:  0 bytes (0 KiB)
+<5>jffs2: notice: (208) check_node_data: wrong data CRC in data node at 0x001ecc04: read 0x3482641d, calculated 0x4fb8fb23.
+<3>i2c i2c-0: Failed to register i2c client laser_i2c at 0x4f (-16)
+<3>i2c i2c-0: Failed to register i2c client laser_i2c at 0x4f (-16)
+<4>bosa_drv: module license 'Proprietary' taints kernel.
+<4>Disabling lock debugging due to kernel taint
+<4>/home/Public/_Build/release/BRCMGPON/RTF35XX/414L04A_n27_r2043/bcmdrivers/broadcom/char/rtfdef/bosa/bosa_drv.c:bosa_tx_power_enable[LN359] enable gpon tx power, gpio[72]
+<4>m2099_register_init[LN554]Mod_DAC_L = 0x7f0
+<4>m2099_register_init[LN566]Mod_DAC_H = 0x810
+<4>m2099_register_init[LN578]Mod_DAC_M = 0x800
+<4>m2099_register_init[LN590]FreezeTempR1 = 1280 (1/256 C)
+<4>m2099_register_init[LN602]FreezeTempR2 = 1280 (1/256 C)
+<4>m2099_register_init[LN618]Mod_DAC_Int = 1
+<4>m2099_register_init[LN628] Read table 4 reg 0xA5 = 0x92
+<4>m2099_register_init[LN641]BOSA_vendor = EZCONN
+<4>Start RPE for QWE radio
+<4>LOGGER driver Init Done : 0x86503600
+<4>START GPON SerDes Init script
+<4> !!!!   PLL locked !!!!!!     !!!!   RX CDR locked !!!!!!     !!!!   TX CDR locked !!!!!!    GPON BEN Calibration Done 
+<4>GPON SerDes Initialization Sequence Done 
+<4>f_initialize_bbh_dma_sdma_related_arrays:(967) errorenable IH Wan-Wan forwarding...
+<4>Initializing port 0
+<4>Initializing port 1
+<4>Initializing port 2
+<4>Initializing port 3
+<4>Initializing port 4
+<4>oren_data_path_go done!!!
+<4>Creating CPU ring for queue number 0 with 128 packets descriptor=0xc05c26d0
+<4> Done initializing Ring 0 Base=0xa5354080 End=0xa5354880 calculated entries= 128 RDD Base=0x05354080 descriptor=0xc05c26d0
+<4>Bridge fastpath module. compiled Mar 16 2018 , 15:23:45
+<4>brcmchipinfo: brcm_chipinfo_init entry
+<4>NBUFF v1.0 Initialized
+<4>[0;36;44mInitialized fcache state[0m
+<4>[0;36;44mBroadcom Packet Flow Cache  Char Driver v2.2 Mar 16 2018 15:21:20 Registered<242>[0m
+<4>Created Proc FS /procfs/fcache
+<4>[0;36;44mBroadcom Packet Flow Cache registered with netdev chain[0m
+<4>[0;36;44mBroadcom Packet Flow Cache learning via BLOG enabled.[0m
+<4>[0;35m[FHW]  pktDbgLvl[0xc0674880]=0[0m
+<4>[0;34m[FHW]  fhw_construct: [0m
+<4>[0;36;44mInitialized Fcache HW accelerator layer state[0m
+<4>flwStatsThread created
+<4>[0;36;44mConstructed Broadcom Packet Flow Cache v2.2 Mar 16 2018 15:21:20[0m
+<4>[0;36;44mBroadcom Packet Flow Cache HW acceleration enabled.[0m
+<4>[0;36;44mBroadcom Packet Flow Cache HW acceleration enabled.[0m
+<6>i2c i2c-0: new_device: Instantiated device gpon_i2c at 0x50
+<6>i2c i2c-0: new_device: Instantiated device gpon_i2c at 0x51
+<4>Broadcom BCM68380_B0 Ethernet Network Device v0.1 Mar 16 2018 15:23:45
+<4>dgasp: kerSysRegisterDyingGaspHandler: bcmsw registered 
+<4>eth0: MAC Address: D8:FB:5E:30:A9:34
+<4>eth1: MAC Address: D8:FB:5E:30:A9:34
+<4>eth2: MAC Address: D8:FB:5E:30:A9:34
+<4>eth3: MAC Address: D8:FB:5E:30:A9:34
+<4>eth4: MAC Address: D8:FB:5E:30:A9:34
+<4>Creating CPU ring for queue number 3 with 896 packets descriptor=0xc05c2754
+<4> Done initializing Ring 3 Base=0xa4594080 End=0xa4597880 calculated entries= 896 RDD Base=0x04594080 descriptor=0xc05c2754
+<2>eth4 Link UP 1000 mbps full duplex
+<6>message received before monitor task is initialized kerSysSendtoMonitorTask 
+<4>cpu Ring 3 has been flushed
+<4>Creating CPU ring for queue number 8 with 1024 packets descriptor=0xc05c2830
+<4> Done initializing Ring 8 Base=0xa3ee8080 End=0xa3eec080 calculated entries= 1024 RDD Base=0x03ee8080 descriptor=0xc05c2830
+<4>[1m[34m Wifi Forwarding Driver initialized !
+<4>timer = 500, threshold = 1024 number_of_packets_to_read = 128 fist pci queue 8 number_of_queues = 1
+<4>[0m
+<2>eth0 Link UP 100 mbps full duplex
+<6>message received before monitor task is initialized kerSysSendtoMonitorTask 
+<4>--SMP support
+<4>wl: dsl_tx_pkt_flush_len=338
+<4>wl: norm_wmark_tot=3365, pktc_wmark_tot=2048
+<6>Initializing WLCSM Module
+<4>PCI: Enabling device 0000:02:00.0 (0000 -> 0002)
+<4>wl: passivemode=1
+<6>wl0: creating kthread wl0-kthrd
+<4>wl: napimode=0
+<4>Neither SPROM nor OTP has valid image
+<4>wl:srom/otp not programmed, using main memory mapped srom info(wombo board)
+<4>wl: ID=pci/2/0/
+<4>wl: ID=pci/2/0/
+<4>wl: loading /etc/wlan/bcm43217_map.bin
+<4>srom rev:8
+<4>wl0: wlc_bsscfg_ap_init: bsscfg 82c80000
+<4>wl0: allocskbmode=1 currallocskbsz=1024
+<4>wl0: Broadcom BCMa8db 802.11 Wireless Controller 6.37.14.4803.cpe4.14L04ACCUpatch4.0-kdb
+<4>rtl_init_rpeLN1686
+<4>dgasp: kerSysRegisterDyingGaspHandler: wl0 registered 
+<5>Loading PCM shim driver
+<4>Endpoint: endpoint_init entry
+<4>Endpoint: endpoint_init COMPLETED
+<4>Creating CPU ring for queue number 2 with 32 packets descriptor=0xc05c2728
+<4> Done initializing Ring 2 Base=0xa30a8c80 End=0xa30a8e80 calculated entries= 32 RDD Base=0x030a8c80 descriptor=0xc05c2728
+<4>[0;34m[NTC ploamFsm] printSerialPasswd: SN=41:53:4b:59:00:0d:4f:60[0m
+<4>[0;34m[NTC ploamFsm] printSerialPasswd: PW=f2:01:90:12:22:74:67:00:00:00[0m
+<4>dgasp: kerSysRegisterDyingGaspHandler: gpon0 registered 
+<4>[0;34m[NTC ploamFsm] bcm_ploamCreate: ploam driver created.[0m
+<4>Creating CPU ring for queue number 4 with 64 packets descriptor=0xc05c2780
+<4> Done initializing Ring 4 Base=0xa3e9d880 End=0xa3e9dc80 calculated entries= 64 RDD Base=0x03e9d880 descriptor=0xc05c2780
+<4>
+<4>Ploam init and Tx disable !
+<6>Broadcom 802.1Q VLAN Interface, v0.1
+<4>PCIe1: No device found - Powering down
+<4>[0;32m[INF rdpadrv] rdpa_cmd_drv_init: Broadcom Runner Packet Processor Char Driver v0.2 Mar 16 2018 15:23:36 Registered. Device: bcmrdpa Ver:<251>
+<4>[0m
+<4>[0;32m[INF rdpadrv] rdpa_cmd_drv_init: RDPA driver init: OK[0m
+<6>gre: GRE over IPv4 demultiplexor driver
+<6>ip_gre: GRE over IPv4 tunneling driver

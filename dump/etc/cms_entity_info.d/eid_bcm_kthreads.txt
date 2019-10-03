@@ -1,0 +1,316 @@
+#
+# The entities listed in this file are kernel threads.
+# Kernel threads should use EID 4000-4999 (see cms_eid.h)
+# This range is further subdivided:
+# -- Linux kernel threads: 4000-4399
+# -- Broadcom kernel threads: 4400-4699
+# -- Customer kernel threads: 4700-4999
+#
+
+BEGIN
+  eid          = 4001
+  name         = init
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4002
+  name         = kthreadd
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+# The linux kernel configures migration at 99/FIFO, but it should be ok
+# to keep it in the rt/data group
+BEGIN
+  eid          = 4003
+  name         = migration/0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4004
+  name         = migration/1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4005
+  name         = ksoftirqd/0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4006
+  name         = ksoftirqd/1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+# kworkers run functions queued to the Linux workqueue
+# The number of kworkers is dynamic, so let them have EID 4010-4029
+BEGIN
+  eid          = 4010
+  name         = kworker/0:0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4011
+  name         = kworker/0:1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4012
+  name         = kworker/u:0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4013
+  name         = kworker/1:0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4014
+  name         = kworker/1:1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4015
+  name         = kworker/u:1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4016
+  name         = deferwq
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4030
+  name         = khelper
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+# filesystem related threads can use 4031-4049
+BEGIN
+  eid          = 4031
+  name         = sync_supers
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4032
+  name         = bdi-default
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4033
+  name         = kblockd
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4034
+  name         = kswapd0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4035
+  name         = fsnotify_mark
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+
+# mtdblockd runs at 5/RR because high prio threads might page fault.
+# It would be better if the high prio threads can lock their pages in memory.
+# the sched priority is set in kernel/drivers/mtd/mtd_blkdevs.c, so don't do
+# it here. 
+BEGIN
+  eid          = 4040
+  name         = mtdblock0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4041
+  name         = mtdblock1
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4042
+  name         = mtdblock2
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4043
+  name         = mtdblock3
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+# USB related threads can use 4050-4059
+# USB workqueue thread (see drivers/usb/core/hub.c)
+# Could also bind this thread to a CPU with EIF_SET_CPUMASK and
+# cpuMask = 0x1
+BEGIN
+  eid          = 4050
+  name         = khubd
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_DATA
+  cpuGroupName = rt/media
+END
+
+BEGIN
+  eid          = 4051
+  name         = usb-storage
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_DATA
+  cpuGroupName = rt/media
+END
+
+BEGIN
+  eid          = 4060
+  name         = crypto
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4061
+  name         = linkwatch
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+# Broadcom Buffer Pool Manager thread
+BEGIN
+  eid          = 4400
+  name         = bpm
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_HIGH
+  cpuGroupName = rt/high
+END
+
+# Broadcom FAP keep alive watchdog (should it run at high prio?)
+BEGIN
+  eid          = 4401
+  name         = kpAliveWatchdog
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+# Broadcom FAP GSO LOOPBACK thread 
+BEGIN
+  eid          = 4402
+  name         = fapGsoLoopBk 
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_DATA
+  cpuGroupName = rt/data
+END
+
+# Broadcom dedicated skb freeing thread
+BEGIN
+  eid          = 4405
+  name         = skbFreeTask
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+# Broadcom Automatic Voltage Scaling(?) kernel thread
+BEGIN
+  eid          = 4410
+  name         = Avs65_Task
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4420
+  name         = dsl0
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+# next 3 are threads created by broadcom bcmenet driver
+BEGIN
+  eid          = 4430
+  name         = bcmsw
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid          = 4431
+  name         = bcmsw_timer
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4432
+  name         = bcmsw_rx
+  flags        = EIF_SET_SCHED|EIF_SET_CPUMASK|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_DATA
+  cpuMask      = 0x1
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid          = 4433
+  name         = wfd
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  schedPolicy  = SCHED_RR
+  schedPriority= BCM_RTPRIO_DATA
+  cpuGroupName = rt/data
+END
+
+# wlan processing threads
+# wl0 is typically the built in wifi, used for data
+BEGIN
+  eid          = 4440
+  name         = wl0-kthrd
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/wifi-data
+END
+
+# wl1 is typically the high performance wifi, used for video
+BEGIN
+  eid          = 4441
+  name         = wl1-kthrd
+  flags        = EIF_SET_CGROUPS
+  cpuGroupName = rt/wifi-video
+END

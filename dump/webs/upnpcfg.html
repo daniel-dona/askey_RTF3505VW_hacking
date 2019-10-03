@@ -1,0 +1,63 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function btnApplySave() {
+   var loc = 'upnpcfg.cgi?';
+
+   with ( document.forms[0] ) {
+     if (chkUpnp.checked == true)
+        loc += 'enblUpnp=1';
+     else
+        loc += 'enblUpnp=0';
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      var enblUpnp = '<%ejGet(enblUpnp)%>';
+	  
+      if (enblUpnp == 1)
+         chkUpnp.checked = true;
+      else 
+         chkUpnp.checked = false;
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+               <b>UPnP Configuration</b><br><br>
+               <b>NOTE: UPnP is activated only when there is a live WAN service with NAT enabled.<br><br>
+            </P>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td valign="center" align="middle" colspan="2" width="30" height="30">
+                     <input type='checkbox' name='chkUpnp'></td>
+                  <td colspan="2">
+                  Enable UPnP</td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnApplySave()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

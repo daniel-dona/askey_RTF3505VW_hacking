@@ -1,0 +1,152 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var enblQos = '<%ejGetOther(qosMgmtDefEnbl, all)%>';
+var defMark = '<%ejGetOther(qosMgmtDefMark, all)%>';
+function hideQosInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('qosinfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.qosinfo.style.visibility = status;
+   }
+   // if QoS is enabled, make sure that one drop dowm selection box for
+   // default queue and default dspc mark is selected.
+}
+
+
+function qosClick(cb) {
+   if (cb.checked == true)
+      hideQosInfo(0);
+   else
+      hideQosInfo(1);
+}
+
+function btnApply() {
+   var loc = 'qosmgmt.cmd?action=savapply';
+
+   with ( document.forms[0] ) {
+      if (enableQos.checked == true) {
+         //if(defaultqueue.value == '0')
+         //{
+         //   alert('Please assign default queue!');
+         //   return;
+         //}
+   
+         loc += '&enblQos=1';
+         //loc += '&defaultQueue=' + defaultqueue.value;
+         loc += '&defaultQueue=' + '-1';
+         loc += '&defaultDscpMark=' + dscpMark.value;
+      } else {
+         loc += '&enblQos=0';
+         loc += '&defaultQueue=' + '-1';
+         loc += '&defaultDscpMark=' + '-1';
+      }
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      if (enblQos == '1') {
+         enableQos.checked = true;
+         hideQosInfo(0);
+
+         for (var i=0; i< document.forms[0].dscpMark.options.length; i++) {
+            if (document.forms[0].dscpMark.options[i].value == defMark) {
+                document.forms[0].dscpMark.options[i].selected = true;
+                break;
+            }
+         }
+      } else {
+         enableQos.checked = false;
+         hideQosInfo(1);
+         
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+               <b>QoS -- Queue Management Configuration</b><br>
+               <br>
+               If Enable QoS&nbsp;checkbox is selected, choose a default DSCP mark 
+               to automatically mark incoming traffic without reference to a particular 
+               classifier. Click 'Apply/Save' button to save it.</P>
+               <br><br>
+               <b> Note: If Enable Qos checkbox is not selected, all QoS will be
+                   disabled for all interfaces.</b>
+               <br><br>
+               <b> Note: The default DSCP mark is used to mark all egress packets that
+                   do not match any classification rules.</b>
+               <br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td valign="center" align="middle" colspan="2" width="30" height="30">
+                     <input type='checkbox' name='enableQos' onclick='qosClick(this)'></td>
+                  <td colspan="2">
+                     Enable QoS</td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <div id='qosinfo'>
+               <table>
+                  <tr>
+                     <td> Select Default DSCP Mark
+                     </td>
+                     <td> <select size="1" name="dscpMark">
+                              <option value="-1" selected>No Change(-1)
+                              <option value="-2" >Auto Marking(-2)
+                              <option value="0"> default(000000)
+                              <option value="56"> AF13(001110)
+                              <option value="48"> AF12(001100)
+                              <option value="40"> AF11(001010)
+                              <option value="32"> CS1(001000)
+                              <option value="88"> AF23(010110)
+                              <option value="80"> AF22(010100)
+                              <option value="72"> AF21(010010)
+                              <option value="64"> CS2(010000)
+                              <option value="120"> AF33(011110)
+                              <option value="112"> AF32(011100)
+                              <option value="104"> AF31(011010)
+                              <option value="96">  CS3(011000)
+                              <option value="152"> AF43(100110)
+                              <option value="144"> AF42(100100)
+                              <option value="136"> AF41(100010)
+                              <option value="128"> CS4(100000)
+                              <option value="184"> EF(101110)
+                              <option value="160"> CS5(101000)
+                              <option value="192"> CS6(110000)
+                              <option value="224"> CS7(111000)
+                              </option>
+                           </select>
+                     </td>
+                  </tr>
+               </table>
+               <br>
+            </div>
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

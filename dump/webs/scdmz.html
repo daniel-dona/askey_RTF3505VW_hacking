@@ -1,0 +1,65 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var nat = '<%ejGetOther(sysInfo, enblNat)%>';
+
+function frmLoad() {
+   var addr = '<%ejGetOther(dmzHost)%>';
+
+   with ( document.forms[0] ) {
+      if (nat == '1')
+         dmzAddr.value = addr;
+   }
+}
+
+function btnApply() {
+   var loc = 'scdmz.cmd?';
+   with ( document.forms[0] ) {
+      if ( dmzAddr.value != '' &&
+           isValidIpAddress(dmzAddr.value) == false ) {
+         alert('DMZ host address "' + dmzAddr.value + '" is invalid IP address.');
+         return;
+      }
+      loc += 'address=' + dmzAddr.value;
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+ <script language="javascript">
+<!-- hide
+   if (nat != '1') {
+     document.writeln("<b>NAT is not enabled. A routed WAN service with NAT enabled is needed to configure this service.</b><br><br>");
+   }	
+   else {
+     document.writeln("<b>NAT -- DMZ Host</b><br><br>");
+     document.writeln("The Broadband Router will forward IP packets from the WAN that do not belong to any");
+     document.writeln("of the applications configured in the Virtual Servers table to the DMZ host computer.<br><br>");
+     document.writeln("Enter the computer's IP address and click 'Apply' to activate the DMZ host.<br><br>");
+     document.writeln("Clear the IP address field and click 'Apply' to deactivate the DMZ host.<br><br>");
+     document.writeln("<table border='0' cellpadding='0' cellspacing='0'>");
+     document.writeln("<tr>");
+     document.writeln("<td width='140'>DMZ Host IP Address:</td>");
+     document.writeln("<td><input type='text' name='dmzAddr'></td>");
+     document.writeln("</tr>");
+     document.writeln("</table><br>");
+     document.writeln("<center><input type='button' onClick='btnApply()' value='Save/Apply'></center>");
+   }	  
+// done hiding -->
+</script>            
+         </form>
+      </blockquote>
+   </body>
+</html>

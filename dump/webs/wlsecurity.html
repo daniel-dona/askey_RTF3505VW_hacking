@@ -1,0 +1,1420 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="te_util.js"></script>
+            <script language="javascript" src="te_jquery.min.js"></script>
+            <script language="javascript">
+<!-- hide
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var unitNum = '<%ejGetWl(wlInstance_id)%>';
+var ssidIdx = '<%ejGetWl(wlSsidIdx)%>';
+var enblWireless = '<%ejGetWl(wlEnbl_wl0v0)%>';
+var radiusServerIP = '<%ejGetWl(wlRadiusServerIP)%>';
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var bit = '<%ejGetWl(wlKeyBit)%>';
+var keyIdx = '<%ejGetWl(wlKeyIndex)%>';
+var keys = new Array( "<%ejGetWl(wlKey1)%>", "<%ejGetWl(wlKey2)%>",
+                      "<%ejGetWl(wlKey3)%>", "<%ejGetWl(wlKey4)%>" );
+var wpaPskKey = htmlDecode('<%ejGetWl(wlWpaPsk)%>');
+var wpaGTKRekey = '<%ejGetWl(wlWpaGTKRekey)%>';
+var radiusPort = '<%ejGetWl(wlRadiusPort)%>';
+var radiusKey = '<%ejGetWl(wlRadiusKey)%>';
+var wep = '<%ejGetWl(wlWep)%>';
+var wpa = '<%ejGetWl(wlWpa)%>';
+var auth = '<%ejGetWl(wlAuth)%>';
+var wlCorerev = '<%ejGetWl(wlCoreRev)%>';
+
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+var varPreauth = '<%ejGetWl(wlPreauth)%>';
+var varNetReauth = '<%ejGetWl(wlNetReauth)%>';
+
+var WscDevPin    = '<%ejGetWl(wlWscDevPin)%>';
+var WscStaPin     = '<%ejGetWl(wlWscStaPin)%>';
+var WscMode       = '<%ejGetWl(wlWscMode)%>';
+var WscIRMode   = '<%ejGetWl(wlWscIRMode)%>';
+var WscAPMode  = '<%ejGetWl(wlWscAPMode)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var WscCfgMethod = '<%ejGetWl(wlWscCfgMethod)%>';
+var WscVer2 = '<%ejGetWl(wlWscVer2)%>';
+var WscIsForceWpsDisable = '<%ejGetWl(wlIsForceWpsDisable)%>'; 
+var phy = '<%ejGetWl(wlPhyType)%>'; 
+var nmode = '<%ejGetWl(wlNmode)%>'; 
+var wlWapiAvail = '<%ejGetWl(wlWapiAvail)%>';
+var preAuthMode;
+var WscIsEnrSta = '<%ejGetWl(wlWscIsEnrSta)%>';
+var WscIsEnrAp = '<%ejGetWl(wlWscIsEnrAp)%>';
+
+<% /* CONFIG_QTN_SONIQ start */ %>
+var rmEnable = '<%ejGetWl(roamingEnable)%>';
+var rmRole = '<%ejGetWl(roamingRole)%>';
+<% /* CONFIG_QTN_SONIQ end */ %>
+
+if ( wlRefresh == '1' ) {
+   var code = 'location="wlsecrefresh.wl?wlRefresh=0"';
+   eval(code);
+}
+
+function getWpaIndex(v) {
+    var i;
+
+    for (i = 0; i < document.forms[0].wlWpa.length; i++) {
+        if (document.forms[0].wlWpa[i].value == v)
+            return i;
+    }
+
+    return 0;
+}
+
+function getPreauth(wlPreauth) {
+   var ret;
+
+   if ( wlPreauth == "on" )
+      ret = 1;
+   else
+      ret = 0;
+   return ret;
+}
+
+function isValidWPAPskKey(val) {
+   var checkspc = /(^ |  | $)/;
+   var checkasc = /^[\x20-\x7e]{8,63}$/;
+
+   return ( checkasc.test(val) && !checkspc.test(val) );
+}
+
+function hideAllElements()
+{
+   showhide("wlWpaD", 0);
+   showhide("wpaPreShareKey", 0);
+   showhide("wpaGTKRekey", 0);
+   showhide("wlRadius", 0);
+   showhide("Preauth", 0);
+   showhide("NetReauth", 0);
+   //showhide("wlWepD", 0);
+   //showhide("keyInfo", 0);
+//   showhide("divWscConfigAp", 0);
+//   showhide("divWscDevPin", 0);
+//   showhide("divWscAddClient", 0);
+//   showhide("divWscStaPin", 0);
+}
+
+function encrypChange()
+{
+   with ( document.forms[0] ) {
+      var cwep = getSelect(wlWep);
+      var authMode = getSelect(wlAuthMode)
+
+      if (cwep == "enabled") {
+         showhide("keyInfo", 1);
+         if (authMode != "open" && authMode != "shared") {
+            wlKeys[0].disabled = 1;
+            wlKeys[1].disabled = 0;
+            wlKeys[2].disabled = 0;
+            wlKeys[3].disabled = 1;
+            wlKeyIndex.length = 0;
+            wlKeyIndex[0] = new Option("2", "2");
+            wlKeyIndex[1] = new Option("3", "3");
+            if (keyIdx != "2" && keyIdx != "3") {
+                keyIdx = "2";
+            }
+            wlKeyIndex.selectedIndex = parseInt(keyIdx) - 2;
+         }
+         else {
+            wlKeys[0].disabled = 0;
+            wlKeys[1].disabled = 0;
+            wlKeys[2].disabled = 0;
+            wlKeys[3].disabled = 0;
+            wlKeyIndex.length = 0;
+            wlKeyIndex[0] = new Option("1", "1");
+            wlKeyIndex[1] = new Option("2", "2");
+            wlKeyIndex[2] = new Option("3", "3");
+            wlKeyIndex[3] = new Option("4", "4");
+            wlKeyIndex.selectedIndex = parseInt(keyIdx) - 1;
+         }
+         if (WscVer2 == "enabled") {
+            wlWscMode.disabled = true;
+            setSelect(wlWscMode, 'disabled');
+         }
+
+         <% /* CONFIG_QTN_SONIQ start */ %>
+         if(unitNum == 0)
+         {
+            if ( (("Master" == rmRole) || ("MASTER" == rmRole.toUpperCase())) &&
+               (parseInt(rmEnable) == 0))
+            {
+               <% /* (wep=enabled). WiFi Roaming is disabled due to its WiFi Security settings. */ %>
+               alertSpecial('Roaming WiFi est&#224 deshabilitado debido a su configuraci&#243n de Seguridad en WiFi. Para que Roaming se active debe de configurar los modos Open o WPA2');
+            }
+         }
+         <% /* CONFIG_QTN_SONIQ end */ %>
+      } 
+      else {
+         showhide("keyInfo", 0);
+      }
+
+      <% /* CONFIG_QTN_SONIQ start */ %>
+      if(unitNum == 0)
+      {
+         if ( (("Master" == rmRole) || ("MASTER" == rmRole.toUpperCase())) &&
+            (parseInt(rmEnable) == 0))
+         {
+            if (authMode == "psk psk2")
+            {
+               <% /* The security is wpa/wpa2 mix. WiFi Roaming is disabled due to its WiFi Security settings. */ %>
+               alertSpecial('Roaming WiFi est&#224 deshabilitado debido a su configuraci&#243n de Seguridad en WiFi. Para que Roaming se active debe de configurar los modos Open o WPA2');
+            }
+         }
+      }
+      <% /* CONFIG_QTN_SONIQ end */ %>
+   }
+}
+	
+function authModeChange(OnPageLoad) {
+   var showCert = 0;
+   with ( document.forms[0] ) {
+      var authMode = getSelect(wlAuthMode);
+      var locWscMode = getSelect(wlWscMode);
+      var i, algos;
+      var disableWepD = false;
+
+      //alert('authModeChange:authMode= "' + authMode+ '" (EOM).');
+
+      hideAllElements();
+
+      //show adequate forms for each mode
+      switch ( authMode ) {
+
+      case 'shared':
+         if (WscVer2 == "enabled" ) {
+            if (wlWscMode.options[wlWscMode.selectedIndex].value != 'disabled') {
+                if (confirmSpecial("WPS does not support WEP, are you sure to continue with WPS disabled?") == true ) {
+                    /* WPS2.0 supports WPA2-PSK and WPA2PSK+WPA-PSK now */
+                    wlWscMode.disabled = true;
+                    setSelect(wlWscMode, 'disabled');
+                } else {
+                    setSelect(wlAuthMode, preAuthMode);
+                    return;
+                }
+            }
+         } else {
+             wlWscMode.disabled = true;
+             setSelect(wlWscMode, 'disabled');
+         }
+//document.forms[0].mytext.value = 'shared';		 
+         showhide("wlWepD", 1);
+         showhide("keyInfo", 1);
+         break;
+      case 'open':
+         wlWscMode.disabled = false;
+//document.forms[0].mytext.value = 'open';
+	 if(WscMode == 'enabled')
+	  setSelect(wlWscMode,WscMode);
+	 else 
+	  setSelect(wlWscMode, locWscMode );
+		 
+         showhide("wlWepD", 1);
+         showhide("keyInfo", 1);
+         break;
+      case 'radius':
+         wlWscMode.disabled = true;
+//document.forms[0].mytext.value = 'radius';
+         setSelect(wlWscMode, 'disabled');
+         showhide("wlRadius", 1);
+         showhide("wlWepD", 1);
+         break;
+
+      case 'wpa2':
+      case 'wpa wpa2':
+         wlWscMode.disabled = true;
+         wlWpa.disabled = false;
+         setSelect(wlWscMode, 'disabled');
+//document.forms[0].mytext.value = 'wpa2';
+         showhide("Preauth", 1);
+         showhide("NetReauth", 1);
+      case 'wpa':
+         wlWscMode.disabled = true;
+         wlWpa.disabled = false;
+         setSelect(wlWscMode, 'disabled');
+//document.forms[0].mytext.value = 'wpa';
+         showhide("wlWpaD", 1);
+         showhide("wlRadius", 1);
+         showhide("wpaGTKRekey", 1);
+         disableWepD = true;
+         break;
+
+      case 'psk2':
+      case 'psk psk2':
+      case 'psk':
+         if ((WscVer2 == "enabled" ) &&
+            (authMode == 'psk')) {
+            if (wlWscMode.options[wlWscMode.selectedIndex].value != 'disabled') {
+                if (confirmSpecial("WPS does not support WPA-PSK, are you sure to continue with WPS disabled?") == true ) {
+                    setSelect(wlWscMode, 'disabled');
+                } else {
+                    setSelect(wlAuthMode, preAuthMode);
+                    return;
+                }
+            }
+            wlWscMode.disabled = true;
+         } else { 
+            wlWscMode.disabled = false;
+            if(WscMode == 'enabled') 
+	      setSelect(wlWscMode,WscMode);
+	    else 
+	      setSelect(wlWscMode, locWscMode );
+         }
+         wlWpa.disabled = false;
+         showhide("wlWpaD", 1);
+         showhide("wpaGTKRekey", 1);
+         showhide("wpaPreShareKey", 1);
+         disableWepD = true;
+//document.forms[0].mytext.value = 'psk';		 
+         break;
+
+     case 'wapi':
+     case 'wapi_psk':
+     case 'wapi wapi_psk':
+         setSelect(wlWscMode, 'disabled');
+         wlWscMode.disabled = true;
+         wlWpa.disabled = true;
+         showhide("wlWpaD", 1);
+         showhide("wpaGTKRekey", 0);
+         showhide("wpaPreShareKey", (authMode == 'wapi') ? 0: 1);
+         showhide("wlWepD", 0);
+         showCert = ((authMode == 'wapi') || (authMode == 'wapi wapi_psk'))? 1: 0;
+         break;
+      }
+
+
+      /* if Hidden is detected or MacFlt is empty with 'allow' enabled,  wlWscMode should be disabled in WPS2  */
+      if (WscVer2 == "enabled" ) {
+         //alert('WscIsForceWpsDisable"'+WscIsForceWpsDisable+'"end');
+         if (WscIsForceWpsDisable == '1') {
+            wlWscMode.disabled = true;
+            setSelect(wlWscMode, 'disabled');
+         }
+      } 
+
+      with (document.forms[1]) {
+         showhide("divCert", showCert);
+      }
+      if(OnPageLoad==1){
+     // Define new algorithms
+         if (wlCorerev >= 3) {
+		if (wlWapiAvail == '1' ) {
+	            if ((phy == 'n' || phy == 'v') && nmode != "off")
+	               algos = new Array("AES", "TKIP+AES", "SMS4");
+	            else
+	               algos = new Array("TKIP", "AES", "TKIP+AES", "SMS4");
+		}
+		else {
+	            if ((phy == 'n'|| phy == 'v') && nmode != "off")
+            	{
+            	   // jiachen, 2015/5/7, WPA2 just support AES encryption
+		            if (authMode == "wpa2" || authMode == "psk2") {
+	                   algos = new Array("AES");
+		            }
+		            else if (authMode == "wpa wpa2" || authMode == "psk psk2") {
+	                   algos = new Array("AES");
+		            }
+					else
+					{
+	                   algos = new Array("AES");
+					}
+            	}
+	            else
+            	{
+		            if (authMode == "wpa2" || authMode == "psk2") {
+	                   algos = new Array("AES");
+		            }
+		            else if (authMode == "wpa wpa2" || authMode == "psk psk2") {
+	                   algos = new Array("AES");
+		            }
+					else
+					{
+	                   algos = new Array("AES");
+					}
+            	}
+		}
+			
+         }
+         else {
+		if (wlWapiAvail == '1' )
+	            algos = new Array("TKIP", "SMS4");
+		else
+	            algos = new Array("AES");
+         }
+
+         // Reconstruct algorithm array from new algorithms
+         wlWpa.length = algos.length;
+
+         for (var i in algos) {
+            wlWpa[i] = new Option(algos[i], algos[i].toLowerCase());
+            wlWpa[i].value = algos[i].toLowerCase();
+
+            if (algos[i].toLowerCase() == wpa)
+                wlWpa[i].selected = true;
+         }
+      }  
+     
+      //advice default cipher selection,remove if not desired
+      if (OnPageLoad == 0) {
+         if (wlCorerev >= 3) {
+            if (authMode == "wpa" || authMode == "psk") {
+               if ((phy == 'n' || phy == 'v') && nmode != "off")
+                  wlWpa.selectedIndex = getWpaIndex("tkip+aes");
+               else
+                  wlWpa.selectedIndex = getWpaIndex("aes");
+            }
+
+            if (authMode == "wpa2" || authMode == "psk2") {
+				{
+			    	 algos = new Array("AES");
+		        	 wlWpa.length = algos.length;
+			         for (var i in algos) {
+			            wlWpa[i] = new Option(algos[i], algos[i].toLowerCase());
+			            wlWpa[i].value = algos[i].toLowerCase();
+
+			            if (algos[i].toLowerCase() == wpa)
+			                wlWpa[i].selected = true;
+			         }
+            	}
+	
+               if ((phy == 'n' || phy == 'v') && nmode != "off")
+               {
+                  wlWpa.selectedIndex = getWpaIndex("aes");
+               }
+               else
+               {
+                  wlWpa.selectedIndex = getWpaIndex("aes");
+               }
+            }
+
+            if (authMode == "wpa wpa2" || authMode == "psk psk2") {
+				{
+			    	 algos = new Array("AES");
+		        	 wlWpa.length = algos.length;
+			         for (var i in algos) {
+			            wlWpa[i] = new Option(algos[i], algos[i].toLowerCase());
+			            wlWpa[i].value = algos[i].toLowerCase();
+
+			            if (algos[i].toLowerCase() == wpa)
+			                wlWpa[i].selected = true;
+			         }
+            	}
+				
+               if ((phy == 'n' || phy == 'v') && nmode != "off")
+               {
+                  wlWpa.selectedIndex = getWpaIndex("aes");
+               }
+               else
+               {
+                  wlWpa.selectedIndex = getWpaIndex("aes");
+               }
+            }
+         }
+         else {
+            wlWpa.selectedIndex = getWpaIndex("aes");
+         }
+         
+         if (authMode == "wapi" || authMode == "wapi_psk" || authMode == "wapi wapi_psk") {
+            wlWpa.selectedIndex = getWpaIndex("sms4");
+         }
+
+         wpa=wlWpa[wlWpa.selectedIndex].value;
+      }
+
+      // wep options
+      wlWep.length = 0;
+      if (authMode == "shared" || authMode == "radius") {  // shared and radius must have wep on
+         wlWep[0] = new Option("Enabled", "enabled");
+         wlWep[0].selected = true;
+      }
+      else {
+         wlWep[0] = new Option("Disabled", "disabled");
+		 if(unitNum!=1)
+         	wlWep[1] = new Option("Enabled", "enabled");
+		 
+         if ((authMode.indexOf("wpa")!= -1 || authMode.indexOf("psk")!= -1) && (mode == "open" || mode == "shared" || mode == "radius")) { // set wep off if switch to wpa modes
+            wlWep[0].selected = true;
+         }
+         else if (wep == "enabled") {
+            wlWep[1].selected = true;
+         }
+         else {
+            wlWep[0].selected = true;
+         }
+      }
+
+      /* -start: not coexist with WPA-*/
+      if(disableWepD) {
+         setSelect(wlWep, "disabled");
+         wlWep.disabled = 1;
+      } else {
+         wlWep.disabled = 0;
+      }
+      /* -end: not coexist with WPA-*/
+   }
+
+    wscModeChange(0);
+    wscAPModeChange(0);
+      
+    encrypChange();
+
+    preAuthMode = authMode;
+}
+
+function wscModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscMode = getSelect(wlWscMode);
+      var authMode = getSelect(wlAuthMode);
+
+      mytext.value += wscMode;
+
+      //switch ( wscMode ) {
+      switch ( 'disabled' ) { // always hide WPS settings
+
+      case 'enabled': // WSC Enable
+      case 'enr_enabled': // WSC Enr Enable
+         showhide("divWscIRMode", 0); //IR always enabled and hide
+         showhide("divWscAddClient", 1);
+         showhide("divWscStaPin", 0);
+         showhide("divWscDevPin", 1);
+         showhide("divWscConfigAp", 1 );
+         showhide("divWscAuthoStaMac", 0);
+         showhide("divWscAPMode", 1 );
+         if (wscMode == 'enr_enabled')
+             showhide("divWscAPMode", 0 );
+	  break;
+	  
+      case  'disabled':  //WSC Disable
+         showhide("divWscIRMode", 0);
+         showhide("divWscAddClient", 0);
+         showhide("divWscStaPin", 0);
+         showhide("divWscDevPin", 0);
+         showhide("divWscConfigAp", 0 );
+         showhide("divWscAPMode", 0 );
+         showhide("divWscAuthoStaMac", 0 );
+	  break;
+      	}
+   }
+}
+
+function wscAPModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscApMode = getSelect(wlWscAPMode);
+      var wscMode = getSelect(wlWscMode);
+
+      if ((wscMode == "enabled") || (wscMode == "enr_enabled")) {
+              if ( wscApMode == "0" ) {   //WSC enabled and AP unconfigured
+                   showhide("divWscDevPin", 1);
+                   showhide("divWscConfigAp", 1 );
+/*                   showhide("divWscAddClient", 0);
+                   showhide("divWscStaPin", 0);
+*/
+              } else {          //WSC enabled and AP configured
+                   showhide("divWscDevPin", 1);
+                   showhide("divWscConfigAp", 1 );
+                   showhide("divWscAddClient", 1);
+ 	          }
+              /* PBC button is hidden in WPS2 */ 
+              if ((WscVer2 == "enabled") && (WscIsEnrSta == '0'))   
+                  if (WscCfgMethod == 'pbc')
+                     WscCfgMethod = 'sta-pin';
+
+              if (WscCfgMethod == 'pbc') {
+                  raClientMethod[0].checked = true;  
+                  showhide('divWscStaPin', 0);
+                  showhide("divWscAuthoStaMac", 0);
+                  document.forms[0].addEnBtn.disabled = false;
+              } else if (WscCfgMethod == 'sta-pin') {
+                  raClientMethod[1].checked = true; 
+                  if (WscIsEnrSta == '1') {
+                      showhide('divWscStaPin', 0);
+                      showhide("divWscAuthoStaMac", 0);
+                  } else {
+                      showhide('divWscStaPin', 1);
+                      if (WscVer2 == "enabled" )
+					  {
+					      if(unitNum==1)
+						  {
+							  showhide("divWscAuthoStaMac", 0);
+						  }
+						  else
+						  {
+							  showhide("divWscAuthoStaMac", 1);
+						  }
+					  }
+                      else
+                          showhide("divWscAuthoStaMac", 0);              
+                  }
+                  document.forms[0].addEnBtn.disabled = false;
+              } else if (WscCfgMethod == 'ap-pin') {
+                  raClientMethod[2].checked = true;
+
+                  if (WscIsEnrSta == '1')
+                      showhide('divWscStaPin', 1);
+                  else
+                      showhide('divWscStaPin', 0);
+                  showhide("divWscDevPin", 0);
+                  showhide("divWscAuthoStaMac", 0);
+                  document.forms[0].addEnBtn.disabled = true; // disable AddEnrollee button
+              }
+
+/*            raApMethod[1].checked = true;
+*/
+              showhide("divWscDevPin", 1);
+
+              /** always hide WPS settings **/
+              wscModeChange(1);
+      	}
+   }
+}
+
+
+function wscIRModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscApMode = getSelect(wlWscIRMode);
+
+   }
+}
+
+function pin_window(pin)
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('<font size=5><b><center>' + htmlEncode(pin) + '</center></b></font>');
+      w.document.close();
+    }
+}
+
+function devpin_window(pin)
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('Device Pin is generated by AP<br>');
+      w.document.close();
+    }
+}
+
+function help_window()
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('Input Station Pin from Client<br>');
+      w.document.close();
+    }
+}
+
+function authoStaMac_window()
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('Input Authorized Station MAC: xx:xx:xx:xx:xx:xx<br>');
+      w.document.close();
+    }
+}
+
+function frmLoad() {
+     var i, authModeName, authModeValue;
+	
+     with ( document.forms[0] ) {
+         setSelect(wlSsidIdx, ssidIdx);
+
+	  if (wlWapiAvail =='1') {
+             authModeName = new Array("Open", "Shared", "802.1X", "WPA2", "WPA2 -PSK", "Mixed WPA2/WPA", "Mixed WPA2/WPA -PSK", "WAPI", "WAPI-PSK", " Mixed WAPI/WAPI PSK");
+             authModeValue = new Array("open", "shared", "radius", "wpa2", "psk2", "wpa wpa2", "psk psk2", "wapi", "wapi_psk", "wapi wapi_psk");
+	  }
+	  else {
+	  	     if(unitNum==1)
+	  	     {
+	             authModeName = new Array("Open", "WPA2 -PSK");
+	             authModeValue = new Array("open", "psk2");
+	  	     }
+			 else
+			 {
+	             authModeName = new Array("Open", "WPA2 -PSK", "Mixed WPA2/WPA -PSK");
+	             authModeValue = new Array("open", "psk2", "psk psk2");
+			 }
+	  }
+		 
+         wlAuthMode.length = authModeName.length;
+
+         for (var i in authModeName) {
+            wlAuthMode[i] = new Option(authModeName[i], authModeValue[i]);
+            wlAuthMode[i].value = authModeValue[i];
+
+         }  
+         setSelect(wlAuthMode, mode);
+
+         wlWpaPsk.value = wpaPskKey;
+         wlWpaGtkRekey.value = wpaGTKRekey;
+         wlRadiusIPAddr.value = radiusServerIP;
+         wlRadiusPort.value = radiusPort;
+         wlRadiusKey.value = radiusKey;
+         wlKeyBit.selectedIndex = parseInt(bit);
+         wlPreauth.selectedIndex = parseInt(varPreauth);
+         wlNetReauth.value = varNetReauth;
+
+         for ( i = 0; i < 4; i++ ) {
+            wlKeys[i].value = keys[i];
+         }
+
+         wlWscDevPin.value = WscDevPin;
+         wlWscDevPin.readOnly = true;
+         wlWscStaPin.value = WscStaPin;
+         wlWscStaPin.readOnly = false;
+         if ( (WscMode != 'enabled') && (WscMode != 'enr_enabled') && WscMode!= 'disabled' ) {
+                WscMode = 'disabled';
+                showhide("divWscMode", 0);
+                showhide("divwsctext", 0);
+         }
+
+         if ((WscVer2 == "enabled") && (WscIsEnrSta == '0'))
+            showhide("divWscAddClient_pcb", 0);
+         else
+            showhide("divWscAddClient_pcb", 1);
+
+         showhide( 'divtext', 0 );
+         setSelect(wlWscMode, WscMode );
+         setSelect(wlWscIRMode, WscIRMode);
+         setSelect(wlWscAPMode, WscAPMode );
+      }
+
+      authModeChange(1);
+      wscAPModeChange(1);
+      wscModeChange(1);
+
+      //showhide( 'divtext', 0 );  
+      document.forms[0].mytext.value = 'wlAuthMode='+ mode+' |WscDevPin='+WscDevPin+'|WscStaPin= '+WscStaPin
+      document.forms[0].mytext.value+='|WscMode='+WscMode+'|WscIRMode='+WscIRMode+' |WscAPMode='+WscAPMode;	  
+}
+
+function WscAddClientRadioClick(method) {
+
+   var loc = '';
+   loc += 'wlsecrefresh.wl?wlRefresh=1';
+
+   switch (method) {
+      case 'PBC':
+         showhide('divWscStaPin', 0);
+         showhide("divWscAuthoStaMac", 0);
+         document.forms[0].addEnBtn.disabled = false;
+         document.forms[0].raClientMethod[0].checked = true;
+         loc += '&wlWscCfgMethod=pbc';
+         break;
+
+      case 'STA-PIN':
+         if (WscIsEnrSta == '1') {
+             showhide('divWscStaPin', 0);
+         } else {         
+             showhide('divWscStaPin', 1);
+             if (WscVer2 == "enabled" )
+                 showhide("divWscAuthoStaMac", 1);
+             else
+                showhide("divWscAuthoStaMac", 0);
+         }
+         document.forms[0].addEnBtn.disabled = false;
+         document.forms[0].raClientMethod[1].checked = true;
+         loc += '&wlWscCfgMethod=sta-pin';
+         break;
+
+      case 'AP-PIN':
+         if (WscIsEnrSta == '1') {
+             showhide('divWscStaPin', 1);
+         }
+         else {        
+             showhide('divWscStaPin', 0);
+         }
+
+         showhide("divWscAuthoStaMac", 0);
+         document.forms[0].addEnBtn.disabled = true;
+         document.forms[0].raClientMethod[2].checked = true;
+         loc += '&wlWscCfgMethod=ap-pin';
+         break;
+   }
+
+   if(unitNum==1)
+  	  showhide("divWscAuthoStaMac", 0);
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+
+   //send to server
+   eval(code);
+
+   return;
+}
+
+function btnApply(place) {
+   var swep = getSelect(document.forms[0].wlWep);
+   var swpa = getSelect(document.forms[0].wlWpa);
+   var wscApMode = getSelect(document.forms[0].wlWscAPMode);
+   var authMode = getSelect(document.forms[0].wlAuthMode);
+
+   if ( enblWireless == '0' ) {
+      if ( place == 'wlsecurity.wl' )
+         alert('Cannot apply the change since wireless is currently disabled.');
+      else
+         alert('Cannot set encryption keys since wireless is currently disabled.');
+      return;
+   }
+
+   if ( (authMode == "wpa") ||
+        (authMode == "psk") ||
+        (authMode == "wpa2") ||
+        (authMode == "psk2") ||
+        (authMode == "wpa wpa2") ||
+        (authMode == "psk psk2") ) {
+      if ( swpa == "sms4" ) {
+          alert('Only WAPI/WAPI-PSK supports SMS4!');
+          return;
+      }      
+   }
+   var loc = '';
+
+   switch ( place ) {
+      case 'wlWscAddClient.wl':
+   
+         loc += 'wlsecurity.wl?';
+         if ( wscApMode == "0" )   {  //WSC enabled and AP unconfigured
+//          setSelect(document.forms[0].wlWscAPMode, "1" );
+
+            if (document.forms[0].raClientMethod[0].checked == true) {
+                loc += 'wlWscStaPin=';
+                loc += '&wlWscConfig=client-pbc-reset';
+            }
+            else {
+                loc += 'wlWscStaPin=' + encodeURIComponent(document.forms[0].wlWscStaPin.value);
+                loc += '&wlWscConfig=client-pin-reset';
+//	            loc += '&wsc_proc_status=0';
+//              loc += '&wsc_method=1';
+//              loc += '&wsc_config_command=1';
+            }
+//          setSelect(document.forms[0].wlWscAPMode, "1" );
+            if (WscVer2 == "enabled" ) 
+                loc += '&wlWscAuthoStaMac=';
+            loc += '&wsc_force_restart=n';
+         } else {
+            /* Default check PBC */
+            var PBCSlected = document.forms[0].raClientMethod[0].checked;
+
+            if ((WscVer2 == "enabled") && (WscIsEnrSta == '0')) {
+                /* WSC 2.0 test plan, 4.1.1 step 8 */
+                if (document.forms[0].raClientMethod[1].checked == true) {
+                    if (document.forms[0].wlWscStaPin.value == '')
+                        PBCSlected = true;
+                    else
+                        PBCSlected = false;
+                }
+            }
+
+            if (PBCSlected == true) { // PBC selected
+                  loc += 'wlWscStaPin=';
+                  loc += '&wlWscConfig=client-pbc';
+                  loc += '&wlWscCfgMethod=pbc';
+                  loc += '&wsc_event=a';
+                  loc += '&wsc_force_restart=n';
+//                loc += '&wsc_proc_status=0';
+                  loc += '&wsc_method=2';
+                  loc += '&wsc_config_command=1';
+                  if (WscVer2 == "enabled" ) {  
+                      if ((document.forms[0].wlWscAuthoStaMac.value != '') && (isValidMacAddress(document.forms[0].wlWscAuthoStaMac.value) == false)) 
+                      {
+                          alert('MAC address "' + document.forms[0].wlWscAuthoStaMac.value + '" is invalid. ');
+                          return;
+                      }
+                      loc += '&wlWscAuthoStaMac=' + document.forms[0].wlWscAuthoStaMac.value;
+                  }                  
+            } else if (document.forms[0].raClientMethod[1].checked == true) { //STA PIN selected
+                  var isStaPinInvalid = false;
+                  if (WscVer2 == "enabled" ) {
+                      if ((document.forms[0].wlWscStaPin.value != '') && (document.forms[0].wlWscStaPin.value.length != 8) && (document.forms[0].wlWscStaPin.value.length != 9) && (document.forms[0].wlWscStaPin.value.length != 4))
+                          isStaPinInvalid = true;
+                  } else {
+                      if (document.forms[0].wlWscStaPin.value.length != 8)
+                          isStaPinInvalid = true;
+                  }
+
+                  if (isStaPinInvalid == true) {
+                     alert('Invalid STA PIN!');
+                     return;
+                  } 
+                  if ((WscVer2 == "enabled") && (document.forms[0].wlWscStaPin.value == ''))
+                      loc += 'wlWscStaPin=';
+                  else
+                      loc += 'wlWscStaPin=' + encodeURIComponent(document.forms[0].wlWscStaPin.value);
+                  loc += '&wlWscConfig=client-pin';
+                  loc += '&wlWscCfgMethod=sta-pin';
+                  loc += '&wsc_force_restart=n';
+                  loc += '&wsc_proc_status=0';
+                  loc += '&wsc_method=1';
+                  loc += '&wsc_config_command=1';
+                  if (WscVer2 == "enabled" ) {  
+                      if ((document.forms[0].wlWscAuthoStaMac.value != '') && (isValidMacAddress(document.forms[0].wlWscAuthoStaMac.value) == false)) 
+                      {
+                          alert('MAC address "' + document.forms[0].wlWscAuthoStaMac.value + '" is invalid. ');
+                          return;
+                      }
+                      loc += '&wlWscAuthoStaMac=' + document.forms[0].wlWscAuthoStaMac.value;
+                  }
+            } else { //AP PIN selected
+                  loc += '&wlWscCfgMethod=ap-pin';
+                  loc += '&wsc_force_restart=n';
+            }
+            if (WscIsEnrSta == '1') {
+                loc += '&wlWscApListIdx=' + document.forms[0].wlWscAplist.value;
+            }
+            if (WscIsEnrAp == '1') {
+                loc += '&wsc_force_restart=y';
+            }
+         }
+         loc += '&';
+         break;
+      case 'wlWscConfigAp_getConfig.wl':
+         loc += 'wlsecurity.wl?';
+         loc += 'wlWscDevPin=' + encodeURIComponent(document.forms[0].wlWscDevPin.value);
+
+         loc += '&wlWscConfig=ap-pin';
+
+         loc += '&wsc_proc_status=0';
+         loc += '&wsc_method=1';
+         loc += '&wsc_config_command=1';
+ 
+         loc += '&wlWscStaPin=' + encodeURIComponent(document.forms[0].wlWscStaPin.value);
+         loc += '&wlWscApListIdx=' + document.forms[0].wlWscAplist.value;
+         if (place == 'wlWscConfigAp_getConfig.wl')
+             loc += '&wlWscApPinGetCfg=1';
+         else
+             loc += '&wlWscApPinGetCfg=0';
+         loc += '&wsc_force_restart=n';
+ 
+         loc += '&';
+         break;
+	default:
+          loc += place + '?';
+	   break;  
+   }
+
+   
+   with ( document.forms[0] ) {
+      var authMode = getSelect(wlAuthMode);
+      var value;
+
+      var vwscMode = getSelect(wlWscMode);
+      var vwscIRMode = getSelect(wlWscIRMode);
+      var vwscAPMode  =getSelect(wlWscAPMode);
+      loc += 'wl_wsc_mode='+vwscMode;
+      loc += '&wl_wsc_reg='+vwscIRMode;
+      loc += '&wsc_config_state='+vwscAPMode;
+   
+      loc += '&wlAuthMode=';
+      loc += authMode;
+      if (authMode == 'shared') {
+         loc += '&wlAuth=1';
+      }
+      else {
+         loc += '&wlAuth=0';
+      }
+
+      if (authMode.indexOf("psk")!= -1) {
+         value = wlWpaPsk.value;
+         if ( isValidWPAPskKey(value) == false ) {
+            alert('WPA Passphrase should be between 8 and 63 ASCII characters. Do not begin/end with space or contain continuous spaces');
+            return;
+         }
+         loc += '&wlWpaPsk=' + encodeURIComponent(wlWpaPsk.value);
+      }
+
+      if (authMode.indexOf("wpa")!= -1 || authMode.indexOf("psk")!= -1){
+         //check GTK interval
+         value = parseInt(wlWpaGtkRekey.value);
+         if (  isNaN(value) == true || value < 0 || value > 0xffffffff ) {
+            alert('WPA Group Rekey Interval "' + wlWpaGtkRekey.value + '" should be between 0 and 2147483647.');
+            return;
+         }
+
+         loc += '&wlWpaGtkRekey=' + wlWpaGtkRekey.value;
+
+         //check Reauth interval
+         value = parseInt(wlNetReauth.value);
+         if (  isNaN(value) == true || value < 0 || value > 0xffffffff ) {
+            alert('WPA Network Reauthentication Interval "' + wlNetReauth.value + '" should be between 0 and 2147483647.');
+            return;
+         }
+
+         loc += '&wlNetReauth=' + wlNetReauth.value;
+      }
+
+      if (authMode.indexOf("wpa")!= -1 || authMode == 'radius') {
+         if ( isValidIpAddress(wlRadiusIPAddr.value) == false ) {
+            alert('RADIUS Server IP Address "' + wlRadiusIPAddr.value + '" is invalid IP address.');
+            return;
+         }
+         loc += '&wlRadiusServerIP=' + wlRadiusIPAddr.value;
+         loc += '&wlRadiusPort=' + wlRadiusPort.value;
+         loc += '&wlRadiusKey=' + encodeURIComponent(wlRadiusKey.value);
+      }
+
+      loc += submitSelect(wlWep);
+      loc += submitSelect(wlWpa);
+      loc += submitSelect(wlKeyBit);
+      loc += '&wlPreauth=' + getPreauth(wlPreauth.value);
+
+      if (getSelect(wlWep) == "enabled") {
+         var i, val;
+         var cbit = getSelect(wlKeyBit);
+         var num = parseInt(getSelect(wlKeyIndex))-1;
+         val = wlKeys[num].value;
+         if ( val == '' && !(swep == 'enabled' && authMode == 'radius')) {
+            alert('Cannot choose key that has empty value.');
+            return;
+         }
+         if ( val != '' ) {
+            if ( cbit == '0' ) {
+               if ( isValidKey(val, 13) == false ) {
+                  alert('Key "' + val + '" is invalid. Please enter 13 ASCII characters or 26 hexadecimal digits for a 128-bit WEP encryption key. Do not begin/end with space or contain continuous spaces');
+                  return;
+               }
+            } else {
+               if ( isValidKey(val, 5) == false ) {
+                  alert('Key "' + val + '" is invalid. Please enter 5 ASCII characters or 10 hexadecimal digits for a 64-bit WEP encryption key. Do not begin/end with space or contain continuous spaces');
+                  return;
+               }
+            }
+         }
+         loc += submitSelect(wlKeyIndex);
+         loc += '&wlKey1=' + encodeURIComponent(wlKeys[0].value);
+         loc += '&wlKey2=' + encodeURIComponent(wlKeys[1].value);
+         loc += '&wlKey3=' + encodeURIComponent(wlKeys[2].value);
+         loc += '&wlKey4=' + encodeURIComponent(wlKeys[3].value);
+      }
+
+      // the last one to submit - if changing ssid above variables belong to previous ssid
+      loc += submitSelect(wlSsidIdx);
+
+      mytext.value += loc;
+
+      loc += '&wlSyncNvram=1';
+	  
+      loc += '&sessionKey=' + sessionKey;
+      var code = 'location="' + loc + '"';
+
+      if ((place == 'wlsecurity.wl') && (WscVer2 == "enabled") && ((vwscMode == "enabled") || (vwscMode == "enr_enabled")) && (authMode == "open")) {
+         if (confirmSpecial("Are you sure to configure WPS in Open security?") == false )
+             return;
+      }
+
+      <% /* CONFIG_QTN_SONIQ start */ %>
+      if(unitNum == 0)
+      {
+         if ( (("Master" == rmRole) || ("MASTER" == rmRole.toUpperCase())) &&
+            (parseInt(rmEnable) == 1))
+         {
+            if (((authMode == "open") && (getSelect(wlWep) == "enabled")) || (authMode == "psk psk2"))
+            {
+               <% /* Because Roaming is enabled, the selected Security mode(wep) is not supported. */ %>
+               var strMsg = "Los modos de seguridad WiFi WEP o mixto WPA/WPA2 no son seguros, le recomendamos utilizar WPA2.  Adem&#225s, si cambias los modos de seguridad en 2,4GHz a mixto WPA/WA2 o WEP, la WIFI no tendr&#225 la selecci&#243n autom&#225tica de tu mejor red WiFi disponible (Roaming WiFi). Estos modos de seguridad no son compatibles con la funcionalidad Roaming WiFi."
+                          + "\n\n&#191Est&#225 seguro que desea continuar con el cambio?";
+               if (confirmSpecial(strMsg) != true ) {
+                  return;
+               }
+            }
+         }
+      }
+      <% /* CONFIG_QTN_SONIQ end */ %>
+
+      if((WscVer2 == "enabled") && (authMode == "open") && getSelect(wlWep) == "enabled")
+      {
+         alert('WPS does not support WEP, WPS will disable');
+      }
+      //send to server
+      eval(code);
+   }
+}
+
+var progress = 0;
+
+function isInProgress() {
+   if ( progress == 0 )  {
+      progress = 1;
+      return true;
+   }
+   alert('Upload is in progress. Please wait for a minute.');
+   return false;
+}
+
+function doScan()
+{
+   var code = 'location="wlsecrefresh.wl?wlRefresh=0&wlWpsApScan=1"'; 
+   eval(code);
+}
+
+function checkLength(pwd, len) {
+   if (pwd.value.length > len) {
+      alert("The length exceeds "+len+" characters! Key is truncated!");
+      pwd.value = pwd.value.substr(0, len);
+      pwd.select();
+   }
+}
+// done hiding -->
+   </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Wireless -- Security</b><br>
+            <br>
+            This page allows you to configure security features of the wireless LAN
+            interface.<br>
+            You may setup configuration manually 
+
+            <div id="divwsctext">
+           	       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR <br>through WiFi Protcted Setup(WPS) <br>Note: When both STA PIN and Authorized MAC
+           	       are empty, PBC is used. If Hide Access Point enabled or Mac filter list is empty with "allow" chosen, WPS2 will be disabled <br>
+            </div>
+            
+           <div id="divtext">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                        <td width='180'>&nbsp;</td>
+                        <td>
+                                  <input type='text' name='mytext' size='200' maxlength='400'> &nbsp;&nbsp;
+                        </td>
+                  </tr>
+                  </table>
+             </div>
+
+            <div id="divWscMode">
+             <br><br>
+             <b>WPS Setup</b><br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable <b>WPS</b></td>
+                  <td><select name='wlWscMode' size="1" onChange='wscModeChange(0)'> 
+<script language="javascript">
+<!-- hide
+if (WscIsEnrSta == '0')
+    document.writeln(" <option value=\"enabled\">Enabled</option>");
+else
+    document.writeln(" <option value=\"enr_enabled\">Enabled</option>");
+// done hiding -->
+</script>
+                     <option value="disabled">Disabled</option>    
+                     </select></td>
+            </tr>
+            </table>
+            <br>
+            </div>
+
+            <%ejGetWl(wlScanResult)%>
+
+            <div id="divWscIRMode">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable <b>Build-In Registrar</b></td>
+             
+             <td><select name='wlWscIRMode' size="1" onChange='wscIRModeChange(0)'>
+                     <option value="enabled">Enabled</option>    
+                     <option value="disabled">Disabled</option>
+                     </select></td>
+            </tr>
+            </table>
+            </div>
+
+
+            <div id="divWscAddClient">
+              <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add <b>Client</b> (This feature is available only when WPA-PSK(WPS1), WPA2 PSK or OPEN mode  is configured)<br>
+                 <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                      <td width='180'></td>
+                      <td>
+                          <div id="divWscAddClient_pcb">
+                          <input name='raClientMethod' type='radio' onClick='WscAddClientRadioClick("PBC")'></input>Push-Button
+                          </div>
+                          <input name='raClientMethod' type='radio' onClick='WscAddClientRadioClick("STA-PIN")'></input>Use STA PIN
+                          <input name='raClientMethod' type='radio' onClick='WscAddClientRadioClick("AP-PIN")'></input>Use AP PIN&nbsp;&nbsp;&nbsp;&nbsp;
+                      </td>
+                      <td>
+<script language="javascript">
+<!-- hide
+if (WscIsEnrSta == '0')
+    document.writeln(" &nbsp;&nbsp;<input name='addEnBtn' type='button' onClick='btnApply(\"wlWscAddClient.wl\")' value=' Add Enrollee '>");
+else
+    document.writeln(" &nbsp;&nbsp;<input name='addEnBtn' type='button' onClick='btnApply(\"wlWscAddClient.wl\")' value=' Enroll '>");
+// done hiding -->
+</script>
+
+                      </td>
+                </tr>
+                </table>
+            </div>
+            
+             <div id="divWscStaPin">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                        <td width='180'>&nbsp;</td>
+                        <td>
+                                  <input type='text' name='wlWscStaPin' size='20' maxlength='9'> &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                  <A HREF="javascript:help_window()">Help</A> 
+                        </td>
+			   </tr>
+               </table>
+            </div>
+
+            <div id="divWscAuthoStaMac">
+              <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set <b>Authorized Station MAC</b><br>
+               <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                   <td width='180'></td>             
+                      <td><input type='text' name='wlWscAuthoStaMac' size='20' maxlength='17'> &nbsp;&nbsp;</td>   
+                      <td>
+                         <A HREF="javascript:authoStaMac_window()">Help</A> 
+                      </td>
+               </tr>
+               </table>
+            </div>
+
+
+           <div id="divWscAPMode">
+           <br><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set <b>WPS AP Mode</b></td>
+                  <td><select name='wlWscAPMode' size="1" onChange='wscAPModeChange(0)'> 
+                     <option value="1">Configured</option>
+                     <option value="0">Unconfigured</option>    
+                     </select></td>
+            </tr>
+            </table>
+            </div>
+
+            <div id="divWscConfigAp">
+<script language="javascript">
+<!-- hide
+if (WscIsEnrSta == '0')
+    document.writeln("<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Setup <b>AP</b> (Configure all security settings with an external registar) <br>");
+// done hiding -->
+</script>
+            <table border="0" cellpadding="0" cellspacing="0">
+           </tr>
+            </table>
+            </div>
+
+             <div id="divWscDevPin">
+	            <br>
+                  <table border="0" cellpadding="0" cellspacing="0">
+                   <tr>
+                        <td width='180'> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Device PIN</b></td>
+                        <td>
+                                  <input type='text' name='wlWscDevPin' size='20' maxlength='8'> &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                   <A HREF="javascript:devpin_window()">Help </A>
+                        </td>
+                  </tr>
+                <tr> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+                <tr>
+                   <td width='180'>&nbsp;</td>
+                     <td>
+<script language="javascript">
+<!-- hide
+if (WscIsEnrSta != '0')
+    document.writeln(" <input type='button' onClick='btnApply(\"wlWscConfigAp_getConfig.wl\")' value=' Get Config '>");
+// done hiding -->
+</script>
+
+                     </td>
+                     <td>&nbsp;</td>
+                 </tr>
+                 </table>
+            </div>
+
+
+
+            <br><br> <b>Manual Setup AP</b><br>
+            <br>
+            You can set the network authentication method, selecting data
+            encryption, <br> specify whether a network key is required to authenticate to this
+            wireless network and specify the encryption strength.<br>
+            Click "Apply/Save" when done.<br>
+            <br>
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td> Select SSID: </td>
+                  <td><select name="wlSsidIdx" onChange="btnApply('wlsecrefresh.wl')">
+                  <%ejGetWl(wlSsidList)%>
+                  </select></td>
+               </tr>
+               <tr> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+               <tr>
+                  <td width='180'>Network Authentication:</td>
+                  <td><select name='wlAuthMode' size="1" onChange='authModeChange(0)'>
+                  </select>
+                  </td>
+               </tr>
+            </table>
+            <br>
+            <div id="Preauth">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                      <td width='180'> WPA2 Preauthentication:</td>
+                      <td><select name='wlPreauth' size="1">
+                        <option value="off">Disabled</option>
+                     <option value="on">Enabled</option>    
+                     </select></td>
+                  </tr>
+               </table>
+            </div>
+            <div id="NetReauth">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'> Network Re-auth Interval: </td>
+                     <td><input type='text' name='wlNetReauth' size='20' maxlength='10'></td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wpaPreShareKey">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>WPA/WAP2 passphrase:</td>
+                     <td><input type='password' name='wlWpaPsk' size='20' onchange="checkLength(this,63)" onpaste="checkLength(this,63)" onkeyup="checkLength(this,63)" onmouseup="checkLength(this,63)"></td>
+              <td>&nbsp;&nbsp;</td>
+              <td> <A HREF="javascript:pin_window(document.forms[0].wlWpaPsk.value)">Click here to display</A></td>             
+                  </tr>
+               </table>
+            </div>
+            <div id="wpaGTKRekey">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>WPA Group Rekey Interval:</td>
+                     <td><input type='text' name='wlWpaGtkRekey' size='20' maxlength='10'></td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlRadius">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>RADIUS Server IP Address:</td>
+                     <td><input type='text' name='wlRadiusIPAddr' size='20' maxlength='15'></td>
+                  </tr>
+                  <tr>
+                     <td>RADIUS Port:</td>
+                     <td><input type='text' name='wlRadiusPort' size='20' maxlength='5'></td>
+                  </tr>
+                  <tr>
+                     <td>RADIUS Key:</td>
+                     <td><input type='password' name='wlRadiusKey' size='20' maxlength='80'></td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlWpaD"><table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>WPA/WAP2 Encryption:</td>
+                     <td><select name="wlWpa" onChange='encrypChange()'>
+                        </select>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlWepD"><table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>WEP Encryption:</td>
+                     <td><select name="wlWep" onChange='encrypChange()'>
+                        </select>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div id='keyInfo'>
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>Encryption Strength:</td>
+                     <td><select name='wlKeyBit' size='1'>
+                           <option value="0" selected>128-bit</option>
+                           <option value="1">64-bit</option>
+                        </select></td>
+                  </tr>
+                  <tr>
+                     <td width='180'>Current Network Key:</td>
+                     <td><select name='wlKeyIndex' size='1'></select></td>
+                  </tr>
+                  <tr>
+                     <td>Network Key 1:</td>
+                     <td><input type='text' name='wlKeys' size='30' onchange="checkLength(this,26)" onpaste="checkLength(this,26)" onkeyup="checkLength(this,26)" onmouseup="checkLength(this,26)"></td>
+                  </tr>
+                  <tr>
+                     <td>Network Key 2:</td>
+                     <td><input type='text' name='wlKeys' size='30' onchange="checkLength(this,26)" onpaste="checkLength(this,26)" onkeyup="checkLength(this,26)" onmouseup="checkLength(this,26)"></td>
+                     </tr>
+                  <tr>
+                     <td>Network Key 3:</td>
+                     <td><input type='text' name='wlKeys' size='30' onchange="checkLength(this,26)" onpaste="checkLength(this,26)" onkeyup="checkLength(this,26)" onmouseup="checkLength(this,26)"></td>
+                  </tr>
+                  <tr>
+                     <td>Network Key 4:</td>
+                     <td><input type='text' name='wlKeys' size='30' onchange="checkLength(this,26)" onpaste="checkLength(this,26)" onkeyup="checkLength(this,26)" onmouseup="checkLength(this,26)"></td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp</td><td>Enter 13 ASCII characters or 26 hexadecimal digits for 128-bit encryption keys</td>
+                  </tr><tr>
+                     <td>&nbsp</td><td>Enter 5 ASCII characters or 10 hexadecimal digits for 64-bit encryption keys</td>
+                  </tr>
+
+
+
+               </table>
+            </div>
+            <br><br>
+               <table>
+                  <tr>
+                     <td width='180'>&nbsp;</td>
+                     <td>
+                        <input type='button' onClick='btnApply("wlsecurity.wl")' value='Apply/Save'>
+                     </td>
+                     <td>&nbsp;</td>
+                  </tr>
+               </table>
+         </form>
+      </blockquote>
+      <blockquote>
+      <div id='divCert'>
+         <br><b>WAPI Certificate</b><br>
+         <form method='post' ENCTYPE='multipart/form-data' action='uploadwapicert.cgi' onSubmit='return isInProgress();'>
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180'>Certificate Status:</td>
+                     <td><%ejGetWl(wlWapiApCertStatus)%></td>
+                     <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                     <td width='180'>ASU Certificate File:</td>
+                     <td><input type='file' name='ascertfilename' size='15'></td>
+                  </tr>
+                  <tr>
+                     <td width='180'>User Certificate File:</td>
+                     <td><input type='file' name='apcertfilename' size='15'></td>
+                  </tr>
+                  <tr>
+                     <td width='180'>&nbsp;</td>
+                     <td><input type='submit' value='Install X.509 Certificate'></p></td>
+                     <td>&nbsp;</td>
+                  </tr>
+               </table>
+         </form>
+     </div>
+     </blockquote>
+   </body>
+</html>

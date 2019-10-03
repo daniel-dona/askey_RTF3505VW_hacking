@@ -1,0 +1,27 @@
+#
+# This file contains EID info for the voice and dect related threads.
+#
+# Fields not set here are initialized to zero or NULL.
+# All field values must be on a single line
+#
+
+
+BEGIN
+  eid         = EID_VODSL
+  name        = vodsl
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE|EIF_AUTO_RELAUNCH
+END
+
+BEGIN
+  eid         = EID_DECT
+  name        = dectd
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_DECTDBGD
+  name        = dectdbgd_NEW
+  path        = /bin/dectdbgd
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE
+END
+

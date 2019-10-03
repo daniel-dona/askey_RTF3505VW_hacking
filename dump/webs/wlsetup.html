@@ -1,0 +1,136 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var ssid = '<%ejGetWl(wlSsid)%>';
+var enbl = '<%ejGetWl(wlEnbl)%>';
+
+function hideWlSecInfo(hidden) {
+   var status = 'visible';
+
+   with ( document.forms[0] ) {
+      if ( hidden == 1 ) {
+         status = 'hidden';
+         wlSsid.disabled = 1;
+      } else {
+         wlSsid.disabled = 0;
+      }
+   }
+
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('wlSecInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.wlSecInfo.style.visibility = status;
+   }
+}
+
+function wlSecCbClick(cb) {
+   if ( cb.checked == true ) {
+      hideWlSecInfo(0);
+   } else {
+      hideWlSecInfo(1);
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      if ( enbl == '1' ) {
+         wlEnbl.checked = true;
+         hideWlSecInfo(0);
+      } else {
+         wlEnbl.checked = false;
+         hideWlSecInfo(1);
+      }
+      wlSsid.value = ssid;
+   }
+}
+
+function btnNext() {
+   var loc = 'ntwksum2.wl?';
+
+   with ( document.forms[0] ) {
+      if ( wlEnbl.checked == false ) {
+         loc += 'wlSsid=' + ssid;
+         loc += '&wlEnbl=0';
+      } else {
+         if ( wlSsid.value == '' ) {
+            alert('SSID should not be empty.');
+            return;
+         }
+         var str = new String();
+         str = wlSsid.value;
+         if ( str.length > 32 ) {
+            alert('SSID "' + wlSsid.value + '" should not be longer than 32 characters.');
+            return;
+         }
+
+         loc += 'wlSsid=' + encodeUrl(wlSsid.value);
+         
+         if ( wlEnbl.checked == true )
+            loc += '&wlEnbl=1';
+         else
+            loc += '&wlEnbl=0';
+      }
+   }
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+   var ipExtension = '<%ejGet(pppIpExtension)%>';
+   var loc = 'lancfg.html';
+
+   if ( prtcl == 'Bridge' )
+      loc = 'lancfgbr.html';
+   else if ( (ipExtension == '1') &&
+             ((prtcl == 'PPPoE') || (prtcl == 'PPPoA')) )
+      loc = 'lancfgbr.html';
+   else
+      loc = 'lancfg.html';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Wireless -- Setup</b><br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Enable Wireless</td>
+                  <td valign="middle" align="center" width="30" height="30">
+                     <input type='checkbox' name='wlEnbl' onClick='wlSecCbClick(this)' value="ON"></td>
+               </tr>
+            </table>
+            <div id='wlSecInfo'>
+            <br>
+            Enter the wireless network name (also known as SSID).
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="55">SSID:</td>
+                  <td><input type='text' name='wlSsid' maxlength="32" size="20"></td>
+               </tr>
+            </table>
+            </div>
+            <br>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

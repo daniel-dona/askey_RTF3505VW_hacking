@@ -1,0 +1,29 @@
+body {
+    font-size: x-small;
+    font-family: "tahoma", "sans-serif", "arial", "helvetica";
+}
+td {
+    font-size: x-small;
+    font-family: "tahoma", "sans-serif", "arial", "helvetica";
+}
+td.hd {
+    font-weight: bold;
+    font-size: x-small;
+    font-family: "tahoma", "sans-serif", "arial", "helvetica";
+}
+tr.hide {
+display:none
+}
+input {
+    font-size:x-small;
+    font-family: "tahoma", "sans-serif", "arial", "helvetica";
+}
+.menuLink {
+    font-weight: bold;
+    font-size: x-small;
+    font-family: "tahoma", "sans-serif", "arial", "helvetica";
+    width: 100%;
+    cursor: hand;
+    text-decoration: none;
+    text-align: left;
+}

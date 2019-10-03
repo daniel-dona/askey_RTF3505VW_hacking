@@ -1,0 +1,1010 @@
+<?xml version="1.0"?>
+<xmlMandatorySingleRootNode copyright="Broadcom Corporation, 2013" >
+
+   <country>defaultCountry</country>
+      <description> This is the locale settings for country specified above </description> 
+
+   <toneProfile>
+      <toneName>ToneDial</toneName>
+         <description> Dial Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>350</hertz>
+            <level>-12</level>
+         </frequency>
+		 
+         <frequency instance="1">
+            <hertz>440</hertz>
+            <level>-12</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneStutterdial</toneName>
+      <description>  Stutter dial Tone definitions </description>
+
+      <repetitions>5000</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>750</soundDuration>
+         <silenceDuration>750</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>350</hertz>
+            <level>-13</level>
+         </frequency>
+
+         <frequency instance="1">
+            <hertz>440</hertz>
+            <level>-13</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+    <toneProfile>
+      <toneName>ToneSpecialDial</toneName>
+      <description>  ToneSpecialDial dial Tone definitions </description>
+
+      <repetitions>5000</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>750</soundDuration>
+         <silenceDuration>750</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>350</hertz>
+            <level>-13</level>
+         </frequency>
+
+         <frequency instance="1">
+            <hertz>440</hertz>
+            <level>-13</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+   
+   
+   <toneProfile>
+      <toneName>ToneMessageWaiting</toneName>
+      <description>  Message Waiting Tone definitions </description>
+
+      <repetitions>9</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>100</soundDuration>
+         <silenceDuration>100</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-13</level>
+         </frequency>
+      </tone>
+
+      <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>0</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-13</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneConfirmation</toneName>
+         <description> Confirmation Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>100</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-13</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneRingBack</toneName>
+         <description> Ring back Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>400</soundDuration>
+         <silenceDuration>200</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-18</level>
+         </frequency>
+		 
+		  <frequency instance="1">
+            <hertz>450</hertz>
+            <level>-18</level>
+         </frequency>
+      </tone>
+	  
+	   <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>400</soundDuration>
+         <silenceDuration>2000</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-18</level>
+         </frequency>
+		 
+		  <frequency instance="1">
+            <hertz>450</hertz>
+            <level>-18</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneBusy</toneName>
+         <description> Busy Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>375</soundDuration>
+         <silenceDuration>375</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-18</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneReOrder</toneName>
+         <description> ToneReOrder definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>400</soundDuration>
+         <silenceDuration>350</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-22</level>
+         </frequency>	 
+      </tone> 
+	  
+	   <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>225</soundDuration>
+         <silenceDuration>525</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-22</level>
+         </frequency>	 
+      </tone> 
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneOffHookWarning</toneName>
+         <description> OffHook Warning Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>1</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>100</soundDuration>
+         <silenceDuration>100</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>4</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-6</level>
+         </frequency>
+
+         <frequency instance="1">
+            <hertz>2060</hertz>
+            <level>-6</level>
+         </frequency>
+
+         <frequency instance="2">
+            <hertz>2450</hertz>
+            <level>-6</level>
+         </frequency>
+
+         <frequency instance="3">
+            <hertz>2600</hertz>
+            <level>-6</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   
+    <toneProfile>
+      <toneName>ToneUserDefined1</toneName>
+         <description> ToneUserDefined1 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>5000</repetitions>
+      <tones>4</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>120</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>698</hertz>
+            <level>-19</level>
+         </frequency> 
+       </tone> 
+	   
+	   <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>80</soundDuration>
+         <silenceDuration>40</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>784</hertz>
+            <level>-19</level>
+         </frequency> 
+       </tone> 
+	   
+	   <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>80</soundDuration>
+         <silenceDuration>40</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>622</hertz>
+            <level>-19</level>
+         </frequency> 
+       </tone> 
+	   
+	   	   <tone instance="3">
+         <repetitions>0</repetitions>
+         <soundDuration>120</soundDuration>
+         <silenceDuration>2330</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>932</hertz>
+            <level>-19</level>
+         </frequency> 
+       </tone> 
+   </toneProfile>
+   
+   <toneProfile>
+      <toneName>ToneCongestion</toneName>
+         <description> ToneCongestion definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>3</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>950</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-16</level>
+         </frequency>
+       </tone> 
+	  
+	   <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1750</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+   </toneProfile>
+   
+   
+     <toneProfile>
+      <toneName>ToneCongestion1</toneName>
+         <description> ToneCongestion1 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>3</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>950</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-16</level>
+         </frequency>
+       </tone> 
+	  
+	   <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1750</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+   </toneProfile>
+   
+   
+   <toneProfile>
+      <toneName>ToneUserDefined5</toneName>
+         <description> ToneUserDefined5 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>3</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>950</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-16</level>
+         </frequency>
+       </tone> 
+	  
+	   <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1750</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+   </toneProfile>
+   
+   
+   <toneProfile>
+      <toneName>ToneUserDefined6</toneName>
+         <description> ToneUserDefined6 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>3</tones>
+      <noSteadyTone>false</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>950</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1400</hertz>
+            <level>-16</level>
+         </frequency>
+       </tone> 
+	  
+	   <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>500</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>1750</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone> 
+   </toneProfile>
+ 
+    <toneProfile>
+      <toneName>ToneCallingCard</toneName>
+         <description> ToneCallingCard definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>60</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>941</hertz>
+            <level>-16</level>
+         </frequency>
+		          
+		<frequency instance="1">
+            <hertz>1477</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>   
+	  
+	<tone instance="1">
+         <repetitions>64971</repetitions>
+         <soundDuration>940</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>2</frequencies>
+
+         <frequency instance="0">
+            <hertz>440</hertz>
+            <level>-16</level>
+         </frequency>
+		 
+		 <frequency instance="1">
+            <hertz>350</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>   
+   </toneProfile> 
+   
+   <toneProfile>
+      <toneName>ToneCallWaiting</toneName>
+         <description> Call Waiting Tone (SAS) definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>250</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   <toneProfile>
+      <toneName>ToneCallWaiting1</toneName>
+         <description> Call Waiting #1 (SAS) Tone definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>250</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	   <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+
+   
+   <toneProfile>
+      <toneName>ToneCallWaiting2</toneName>
+         <description> ToneCallWaiting2 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>3</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>100</soundDuration>
+         <silenceDuration>100</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>300</soundDuration>
+         <silenceDuration>100</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	  <tone instance="2">
+         <repetitions>0</repetitions>
+         <soundDuration>300</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+   
+   
+   <toneProfile>
+      <toneName>ToneCallWaiting3</toneName>
+         <description> ToneCallWaiting3 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>1</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>250</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+   
+   
+   <toneProfile>
+      <toneName>ToneCallWaiting4</toneName>
+         <description> ToneCallWaiting4 definitions.  This must be the first item of the ToneProfile </description>
+
+      <repetitions>0</repetitions>
+      <tones>2</tones>
+      <noSteadyTone>true</noSteadyTone> 
+
+      <tone instance="0">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>250</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+	  
+	  <tone instance="1">
+         <repetitions>0</repetitions>
+         <soundDuration>250</soundDuration>
+         <silenceDuration>0</silenceDuration>
+         <modulateTone>false</modulateTone>
+         <modulatePercent>0</modulatePercent>
+         <frequencies>1</frequencies>
+
+         <frequency instance="0">
+            <hertz>400</hertz>
+            <level>-16</level>
+         </frequency>
+      </tone>
+   </toneProfile>
+   
+   
+   
+   <ringProfile>
+      <name>generalRing</name> 
+      <description> Cadence for general ringing with/out caller id, match to EPSIG_RINGING, and EPSIG_CLID_RINGING </description>
+      
+      <longPattern>false</longPattern>
+      
+      <pattern instance="0">0x00000003</pattern>
+      <pattern instance="1">0xCF000000</pattern>
+
+   </ringProfile>
+
+   <ringProfile>
+      <name>splashRing</name> 
+      <description> Cadence for Splash ring.  Match to EPSIG_SLASH </description>
+      
+      <longPattern>false</longPattern>
+         
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x000001F8</pattern>
+   </ringProfile>
+ 
+  <ringProfile>
+      <name>ring0</name> 
+      <description> Cadence for ring0.  Match to EPSIG_RING0 and EPSIG_CLID_RING0 </description>
+      
+      <longPattern>false</longPattern>
+      
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x0F000000</pattern>
+   </ringProfile>
+
+   <ringProfile>
+      <name>ring1</name> 
+      <description> Cadence for ring1.  Match to EPSIG_RING1 and EPSIG_CLID_RING1 </description>
+      
+      <longPattern>false</longPattern>
+      
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x0F000000</pattern>
+   </ringProfile>
+   
+   <ringProfile>
+      <name>ring2</name> 
+      <description> Cadence for ring2.  Match to EPSIG_RING2 and EPSIG_CLID_RING2 </description>
+      
+      <longPattern>true</longPattern>
+         
+      <pattern instance="0">0x003C00F8</pattern>
+      <pattern instance="1">0x3E0F8000</pattern>
+	  <pattern instance="2">0x00000000</pattern>
+      <pattern instance="3">0x00000000</pattern>
+	  <pattern instance="4">0x00000000</pattern>
+      <pattern instance="5">0x00000000</pattern>
+	  <pattern instance="6">0x00000000</pattern>
+	  <pattern instance="7">0x00000000</pattern>
+	  <pattern instance="8">0x00000000</pattern>
+   </ringProfile>   
+
+   <ringProfile>
+      <name>ring3</name> 
+      <description> Cadence for ring3.  Match to EPSIG_RING3 and EPSIG_CLID_RING3 </description>
+      
+      <longPattern>false</longPattern>
+         
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x0000F000</pattern>
+   </ringProfile>   
+
+   <ringProfile>
+      <name>ring4</name> 
+      <description> Cadence for ring4.  Match to EPSIG_RING3 and EPSIG_CLID_RING4 </description>
+      
+      <longPattern>false</longPattern>
+         
+      <pattern instance="0">0xFFFFF000</pattern>
+      <pattern instance="1">0x00000000</pattern>
+   </ringProfile>   
+
+   <ringProfile>
+      <name>ring5</name> 
+      <description> Cadence for ring5.  Match to EPSIG_RING5 and EPSIG_CLID_RING5 </description>
+      
+      <longPattern>false</longPattern>
+         
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x000001F8</pattern>
+   </ringProfile>   
+
+   <ringProfile>
+      <name>ring6</name> 
+      <description> Cadence for ring6.  Match to EPSIG_RING6 and EPSIG_CLID_RING6 </description>
+      
+      <longPattern>false</longPattern>
+      
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x0F000000</pattern>
+   </ringProfile>
+
+   <ringProfile>
+      <name>ring7</name> 
+      <description> Cadence for ring1.  Match to EPSIG_RING7 and EPSIG_CLID_RING7 </description>
+      
+      <longPattern>false</longPattern>
+      
+      <pattern instance="0">0x00000000</pattern>
+      <pattern instance="1">0x0F000000</pattern>
+   </ringProfile>
+
+   <MinHookFlash>300</MinHookFlash>
+   <MaxHookFlash>800</MaxHookFlash>
+   <PlsDlInterdigitTime>100</PlsDlInterdigitTime>
+   <PlsDlMinMakeTime>25</PlsDlMinMakeTime>
+   <PlsDlMaxMakeTime>55</PlsDlMaxMakeTime>
+   <PlsDlMinBreakTime>45</PlsDlMinBreakTime>
+   <PlsDlMaxBreakTime>75</PlsDlMaxBreakTime>
+   <MinConnect>150</MinConnect>
+   <MinDisconnect>1200</MinDisconnect>
+
+   <CIDMode>onhook_LRAS</CIDMode>
+   <CIDFskAfterRing>550</CIDFskAfterRing>
+   <CIDFskAfterDTAS>50</CIDFskAfterDTAS>
+   <CIDFskAfterRPAS>650</CIDFskAfterRPAS>
+   <CIDRingAfterFSK>250</CIDRingAfterFSK>
+   <CIDDTASAfterLR>250</CIDDTASAfterLR>
+   <CIDSigProtocol>FSK</CIDSigProtocol>
+   <CallWtgDelay>5000</CallWtgDelay>
+   <VMWIMode>LRAS</VMWIMode>
+   <VMWIFskAfterDTAS>50</VMWIFskAfterDTAS>
+   <VMWIFskAfterRPAS>650</VMWIFskAfterRPAS>
+   <VMWIDTASAfterLR>250</VMWIDTASAfterLR>
+   <VMWISigProtocol>FSK</VMWISigProtocol>
+   <VMWIMsgFormat>MDMF</VMWIMsgFormat>
+   
+   <DtmfDbLevel>4</DtmfDbLevel>
+   <DtmfPulseTime>100</DtmfPulseTime>
+   
+   <PowerRingFrequency>25</PowerRingFrequency>
+   <RingWaveform>sine</RingWaveform>
+   <HighVoltageRingSupport>false</HighVoltageRingSupport>
+   <RingVoltage>50</RingVoltage>
+   <RingDCOffset>25</RingDCOffset>
+   
+   <PteDetectAdmin>europe</PteDetectAdmin>
+   <PteMinDetectPower>31</PteMinDetectPower>
+   <PveEgressVolume>0</PveEgressVolume>
+   
+   <CIDFskParmsProfile>
+      <CIDFskParmsName>CIDFskParms</CIDFskParmsName> 
+      <description> International CLIDTX parameters for FSK signaling protocol </description>
+      <amplitude>135</amplitude> 
+	  <markFrequency>1200</markFrequency> 
+	  <spaceFrequency>2100</spaceFrequency> 
+	  <startNumSeizes>300</startNumSeizes> 
+	  <startNumMarks>180</startNumMarks> 
+   </CIDFskParmsProfile>   
+   
+   <CIDDtmfParmsProfile>
+      <CIDDtmfParmsName>CIDDtmfParms</CIDDtmfParmsName>
+         <description> CIDDtmfParms definitions.  This must be the first item of the CIDDtmfParmsProfile </description>
+
+      <dbLevel>5</dbLevel>
+      <pulseTime>70</pulseTime>
+      <startCode>DTMFA</startCode> 
+      <endCode>DTMFC</endCode> 
+  
+      <privateCode instance="0">DTMFB</privateCode> 
+	  <privateCode instance="1">DTMF0</privateCode> 
+	  <privateCode instance="2">DTMF1</privateCode> 
+	  <privateCode instance="3">DTMFC</privateCode> 
+	  <privateCode instance="4">DTMFERROR</privateCode> 
+
+	  <unavailCode instance="0">DTMFB</unavailCode>
+	  <unavailCode instance="1">DTMF0</unavailCode>
+	  <unavailCode instance="2">DTMF0</unavailCode>
+	  <unavailCode instance="3">DTMFC</unavailCode>
+	  <unavailCode instance="4">DTMFERROR</unavailCode>
+	  
+      <errorCode   instance="0">DTMFERROR</errorCode>
+
+	  <redirectingCode>DTMFD</redirectingCode>
+      <informationCode>DTMFB</informationCode>
+      <DTMFpauseTimeout>1000</DTMFpauseTimeout> 
+      <DTMFsessionTimeout>3000</DTMFsessionTimeout> 
+      <ringAfterClidTimeout>1000</ringAfterClidTimeout> 
+   </CIDDtmfParmsProfile>
+
+</xmlMandatorySingleRootNode>
+
+
+

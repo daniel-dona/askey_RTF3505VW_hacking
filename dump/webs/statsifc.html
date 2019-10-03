@@ -1,0 +1,80 @@
+<html>
+   <head>
+      <meta http-equiv='Pragma' content='no-cache'>
+      <meta http-equiv="refresh" content="15">
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+          <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function frmLoad() {
+   var updateIfc = '<%ejFncCmd(stsifcupdate)%>';
+}
+
+function resetClick() {
+   var loc = 'statsifcreset.html';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Statistics -- LAN</b><br>
+            <br>
+            <table border="1" cellpadding="2" cellspacing="0">
+               <tr>
+                  <td class='hd' rowspan="3">Interface</td>
+                  <td class='hd' colspan="8"><center>Received</center>
+                  </td>
+                  <td class='hd' colspan="8"><center>Transmitted</center>
+                  </td>
+               </tr>
+               <tr align='center'>                         
+                  <td class='hd' colspan='4'>Total</td>               
+                  <td class='hd' colspan='2'>Multicast</td>               
+                  <td class='hd' colspan='1'>Unicast</td>               
+                  <td class='hd' colspan='1'>Broadcast</td>               
+                  <td class='hd' colspan='4'>Total</td>               
+                  <td class='hd' colspan='2'>Multicast</td>               
+                  <td class='hd' colspan='1'>Unicast</td>               
+                  <td class='hd' colspan='1'>Broadcast</td>               
+               </tr>                      
+               <tr>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Errs</td>
+                  <td class='hd'>Drops</td>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Errs</td>
+                  <td class='hd'>Drops</td>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Pkts</td>
+               </tr>
+               <tr>
+               <%ejGetOther(stsifcget,0,0)%>
+
+<script language="javascript">
+<!-- hide
+// done hiding -->
+</script>
+            </table>
+            <br>
+            <br>
+            <input type='button' onClick='resetClick()' value='Reset Statistics'>
+         </form>
+      </blockquote>
+   </body>
+</html>

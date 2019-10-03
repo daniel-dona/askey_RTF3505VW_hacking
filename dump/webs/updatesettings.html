@@ -1,0 +1,41 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+
+var progress = 0;
+
+function isInProgress() {
+   if ( progress == 0 )  {
+      progress = 1;
+      return true;
+   }
+   alert('Updating settings is in progress and the router will reboot. Please wait for a minute.');
+   return false;
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form method='post' ENCTYPE='multipart/form-data' action='uploadsettings.cgi' onSubmit='return isInProgress();'>
+            <b>Tools -- Update Settings</b><br>
+            <br>
+            Update Broadband Router settings. You may update your router settings using your saved files.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Settings File Name:&nbsp;
+                  </td>
+                  <td><input type='file' name='filename' size='15'></td>
+               </tr>
+            </table>
+            <p align="center"><input type='submit' value='Update Settings'></p>	    
+         </form>  
+      </blockquote>
+   </body>
+</html>

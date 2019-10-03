@@ -1,0 +1,546 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function hideAllElements()
+{
+   showhide("singlerate", 0);
+   showhide("tworate", 0);
+   showhide("partialcnfrm", 0);
+}
+
+function meterChange(OnPageLoad)
+{
+   with ( document.forms[0] ) {
+      hideAllElements();
+      if (metertype.selectedIndex == 1) {   //SingleRateThreeColor
+         showhide("singlerate", 1);
+         showhide("partialcnfrm", 1);
+      }
+      else if (metertype.selectedIndex == 2) {  //TwoRateThreeColor
+         showhide("tworate", 1);
+         showhide("partialcnfrm", 1);
+      }
+   }
+}
+
+function conformChange(OnPageLoad)
+{
+   with ( document.forms[0] ) {
+      greendscp.length = 1;
+      greendscp.selectedIndex = 0;
+      if (conform.options[conform.selectedIndex].value == 'DSCP') {
+         greendscp.length = 22;
+         greendscp.options[1].value  = 0;   
+         greendscp.options[1].text  = "default";
+         greendscp.options[2].value  = 56;  
+         greendscp.options[2].text  = "AF13(001110)";
+         greendscp.options[3].value  = 48;  
+         greendscp.options[3].text  = "AF12(001100)";
+         greendscp.options[4].value  = 40;  
+         greendscp.options[4].text  = "AF11(001010)";
+         greendscp.options[5].value  = 32;  
+         greendscp.options[5].text  = "CS1(001000)";
+         greendscp.options[6].value  = 88;  
+         greendscp.options[6].text  = "AF23(010110)";
+         greendscp.options[7].value  = 80;  
+         greendscp.options[7].text  = "AF22(010100)";
+         greendscp.options[8].value  = 72;  
+         greendscp.options[8].text  = "AF21(010010)";
+         greendscp.options[9].value  = 64;  
+         greendscp.options[9].text  = "CS2(010000)";
+         greendscp.options[10].value = 120; 
+         greendscp.options[10].text = "AF33(011110)";
+         greendscp.options[11].value = 112; 
+         greendscp.options[11].text = "AF32(011100)";
+         greendscp.options[12].value = 104; 
+         greendscp.options[12].text = "AF31(011010)";
+         greendscp.options[13].value = 96;  
+         greendscp.options[13].text = "CS3(011000)";
+         greendscp.options[14].value = 152; 
+         greendscp.options[14].text = "AF43(100110)";
+         greendscp.options[15].value = 144; 
+         greendscp.options[15].text = "AF42(100100)";
+         greendscp.options[16].value = 136; 
+         greendscp.options[16].text = "AF41(100010)";
+         greendscp.options[17].value = 128; 
+         greendscp.options[17].text = "CS4(100000)";
+         greendscp.options[18].value = 184; 
+         greendscp.options[18].text = "EF(101110)";
+         greendscp.options[19].value = 160; 
+         greendscp.options[19].text = "CS5(101000)";
+         greendscp.options[20].value = 192; 
+         greendscp.options[20].text = "CS6(110000)";
+         greendscp.options[21].value = 224; 
+         greendscp.options[21].text = "CS7(111000)";
+      }
+   }
+}
+
+function nonconformChange(OnPageLoad)
+{
+   with ( document.forms[0] ) {
+      reddscp.length = 1;
+      reddscp.selectedIndex = 0;
+      if (partialconform.options[partialconform.selectedIndex].value == 'Drop') {
+         nonconform.selectedIndex = partialconform.selectedIndex;   //Drop
+      }
+      else if (nonconform.options[nonconform.selectedIndex].value == 'DSCP') {
+         reddscp.length = 22;
+         reddscp.options[1].value  = 0;   
+         reddscp.options[1].text  = "default";
+         reddscp.options[2].value  = 56;  
+         reddscp.options[2].text  = "AF13(001110)";
+         reddscp.options[3].value  = 48;  
+         reddscp.options[3].text  = "AF12(001100)";
+         reddscp.options[4].value  = 40;  
+         reddscp.options[4].text  = "AF11(001010)";
+         reddscp.options[5].value  = 32;  
+         reddscp.options[5].text  = "CS1(001000)";
+         reddscp.options[6].value  = 88;  
+         reddscp.options[6].text  = "AF23(010110)";
+         reddscp.options[7].value  = 80;  
+         reddscp.options[7].text  = "AF22(010100)";
+         reddscp.options[8].value  = 72;  
+         reddscp.options[8].text  = "AF21(010010)";
+         reddscp.options[9].value  = 64;  
+         reddscp.options[9].text  = "CS2(010000)";
+         reddscp.options[10].value = 120; 
+         reddscp.options[10].text = "AF33(011110)";
+         reddscp.options[11].value = 112; 
+         reddscp.options[11].text = "AF32(011100)";
+         reddscp.options[12].value = 104; 
+         reddscp.options[12].text = "AF31(011010)";
+         reddscp.options[13].value = 96;  
+         reddscp.options[13].text = "CS3(011000)";
+         reddscp.options[14].value = 152; 
+         reddscp.options[14].text = "AF43(100110)";
+         reddscp.options[15].value = 144; 
+         reddscp.options[15].text = "AF42(100100)";
+         reddscp.options[16].value = 136; 
+         reddscp.options[16].text = "AF41(100010)";
+         reddscp.options[17].value = 128; 
+         reddscp.options[17].text = "CS4(100000)";
+         reddscp.options[18].value = 184; 
+         reddscp.options[18].text = "EF(101110)";
+         reddscp.options[19].value = 160; 
+         reddscp.options[19].text = "CS5(101000)";
+         reddscp.options[20].value = 192; 
+         reddscp.options[20].text = "CS6(110000)";
+         reddscp.options[21].value = 224; 
+         reddscp.options[21].text = "CS7(111000)";
+      }
+   }
+}
+
+function partialConformChange(OnPageLoad)
+{
+   with ( document.forms[0] ) {
+      yellowdscp.length = 1;
+      yellowdscp.selectedIndex = 0;
+      if (partialconform.options[partialconform.selectedIndex].value == 'DSCP') {
+         yellowdscp.length = 22;
+         yellowdscp.options[1].value  = 0;   
+         yellowdscp.options[1].text  = "default";
+         yellowdscp.options[2].value  = 56;  
+         yellowdscp.options[2].text  = "AF13(001110)";
+         yellowdscp.options[3].value  = 48;  
+         yellowdscp.options[3].text  = "AF12(001100)";
+         yellowdscp.options[4].value  = 40;  
+         yellowdscp.options[4].text  = "AF11(001010)";
+         yellowdscp.options[5].value  = 32;  
+         yellowdscp.options[5].text  = "CS1(001000)";
+         yellowdscp.options[6].value  = 88;  
+         yellowdscp.options[6].text  = "AF23(010110)";
+         yellowdscp.options[7].value  = 80;  
+         yellowdscp.options[7].text  = "AF22(010100)";
+         yellowdscp.options[8].value  = 72;  
+         yellowdscp.options[8].text  = "AF21(010010)";
+         yellowdscp.options[9].value  = 64;  
+         yellowdscp.options[9].text  = "CS2(010000)";
+         yellowdscp.options[10].value = 120; 
+         yellowdscp.options[10].text = "AF33(011110)";
+         yellowdscp.options[11].value = 112; 
+         yellowdscp.options[11].text = "AF32(011100)";
+         yellowdscp.options[12].value = 104; 
+         yellowdscp.options[12].text = "AF31(011010)";
+         yellowdscp.options[13].value = 96;  
+         yellowdscp.options[13].text = "CS3(011000)";
+         yellowdscp.options[14].value = 152; 
+         yellowdscp.options[14].text = "AF43(100110)";
+         yellowdscp.options[15].value = 144; 
+         yellowdscp.options[15].text = "AF42(100100)";
+         yellowdscp.options[16].value = 136; 
+         yellowdscp.options[16].text = "AF41(100010)";
+         yellowdscp.options[17].value = 128; 
+         yellowdscp.options[17].text = "CS4(100000)";
+         yellowdscp.options[18].value = 184; 
+         yellowdscp.options[18].text = "EF(101110)";
+         yellowdscp.options[19].value = 160; 
+         yellowdscp.options[19].text = "CS5(101000)";
+         yellowdscp.options[20].value = 192; 
+         yellowdscp.options[20].text = "CS6(110000)";
+         yellowdscp.options[21].value = 224; 
+         yellowdscp.options[21].text = "CS7(111000)";
+      }
+      else if (partialconform.options[partialconform.selectedIndex].value == 'Drop') {
+         nonconform.selectedIndex = partialconform.selectedIndex;   //Drop
+         reddscp.length = 1;
+         reddscp.selectedIndex = 0;
+      }
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      hideAllElements();
+   }
+}
+
+function btnApply() {
+   var loc = 'qospolicer.cmd?action=add';
+
+   with ( document.forms[0] ) {
+
+      //Consistency check
+      if (metertype.selectedIndex == 0) {   //SimpleTokenBucket
+         ebs.value = "";
+         pir.value = "";
+         pbs.value = "";
+         partialconform.selectedIndex = 0;  //not applicable
+      }
+      else if (metertype.selectedIndex == 1) {  //SingleRateThreeColor
+         pir.value = "";
+         pbs.value = "";
+      }
+      else {
+         ebs.value = "";
+      }
+
+      if (partialconform.options[partialconform.selectedIndex].value == 'Drop') {
+         nonconform.selectedIndex = partialconform.selectedIndex;  //must be drop as well
+      }
+
+      //Sanity check
+      if (policername.value == "" ) {
+         alert('Please enter Policer name.');
+         return;
+      }
+      else if ( isValidName(policername.value) == false ) {
+         alert('Please enter valid Policer name: No special characters.');
+         return;
+      }
+      if (policername.value.length > 15) {
+         alert('Maximum Policer name cannot exceed 15 characters.');
+         return;
+      }
+
+      if (cir.value == "") {
+         alert('Please enter Committed Rate.');
+         return;
+      }
+      else {      
+         var rate = parseInt(cir.value);
+         if (isNaN(rate) == true || rate < 1) {
+            msg = 'Committed Rate "' + cir.value + '" is invalid.';
+            alert(msg);
+            return;
+         }
+      }
+
+      if (cbs.value == "") {
+         alert('Please enter Committed Burst Size.');
+         return;
+      }
+      else {      
+         var size = parseInt(cbs.value);
+         if (isNaN(size) == true || size < 1) {
+            msg = 'Committed Burst Size "' + cbs.value + '" is invalid.';
+            alert(msg);
+            return;
+         }
+      }
+
+      if (metertype.selectedIndex == 1) {   //SingleRateThreeColor
+         if (ebs.value == "") {
+            alert('Please enter Excess Burst Size.');
+            return;
+         }
+         else {      
+            var size = parseInt(ebs.value);
+            if (isNaN(size) == true || size < 1) {
+               msg = 'Excess Burst Size "' + ebs.value + '" is invalid.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+      else if (metertype.selectedIndex == 2) {  //TwoRateThreeColor
+         if (pir.value == "") {
+            alert('Please enter Peak Rate.');
+            return;
+         }
+         else {      
+            var rate = parseInt(pir.value);
+            if (isNaN(rate) == true || rate < 1) {
+               msg = 'Peak Rate "' + pir.value + '" is invalid.';
+               alert(msg);
+               return;
+            }
+            if (rate <= parseInt(cir.value)) {
+               msg = 'Peak Rate shall be higher than Committed Rate.';
+               alert(msg);
+               return;
+            }
+         }
+
+         if (pbs.value == "") {
+            alert('Please enter Peak Burst Size.');
+            return;
+         }
+         else {      
+            var size = parseInt(pbs.value);
+            if (isNaN(size) == true || size < 1) {
+               msg = 'Peak Burst Size "' + pbs.value + '" is invalid.';
+               alert(msg);
+               return;
+            }
+            if (size <= parseInt(cbs.value)) {
+               msg = 'Peak Burst Size shall be larger than Committed Burst Size.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+
+      if (conform.options[conform.selectedIndex].value == 'DSCP') {
+         idx = greendscp.selectedIndex;
+         if (greendscp.options[idx].value == "-1") {
+            alert('Please select conforming DSCP value.');
+            return;
+         } 
+      }
+      if (partialconform.options[partialconform.selectedIndex].value == 'DSCP') {
+         idx = yellowdscp.selectedIndex;
+         if (yellowdscp.options[idx].value == "-1") {
+            alert('Please select partial conforming DSCP value.');
+            return;
+         } 
+      }
+      if (nonconform.options[nonconform.selectedIndex].value == 'DSCP') {
+         idx = reddscp.selectedIndex;
+         if (reddscp.options[idx].value == "-1") {
+            alert('Please select nonconforming DSCP value.');
+            return;
+         } 
+      }
+
+      // policername
+      loc += '&policerName=' + encodeUrl(policername.value);
+
+      // policerenbl
+      idx = policerenbl.selectedIndex;
+      loc += '&enable=' + policerenbl.options[idx].value;
+
+      // Metering type
+      idx = metertype.selectedIndex;
+      loc += '&meter=' + metertype.options[idx].value;
+
+      // CIR, CBS
+      loc += '&cir=' + cir.value + '&cbs=' + cbs.value;
+      // EBS
+      if (ebs.value != "") {
+         loc += '&ebs=' + ebs.value;
+      }
+      // PIR, PBS
+      if (pir.value != "") {
+         loc += '&pir=' + pir.value + '&pbs=' + pbs.value;
+      }
+
+      // conforming action
+      idx = conform.selectedIndex;
+      if (conform.options[idx].value == 'DSCP') {
+         idx = greendscp.selectedIndex;
+//         loc += '&greenDscp=' + greendscp.options[idx].value;
+         loc += '&conform=' + greendscp.options[idx].value;
+      }
+      else {
+         loc += '&conform=' + conform.options[idx].value;
+      }
+
+      // nonconforming action
+      idx = nonconform.selectedIndex;
+      if (nonconform.options[idx].value == 'DSCP') {
+         idx = reddscp.selectedIndex;
+//         loc += '&redDscp=' + reddscp.options[idx].value;
+         loc += '&nonconform=' + reddscp.options[idx].value;
+      }
+      else {
+         loc += '&nonconform=' + nonconform.options[idx].value;
+      }
+
+      // partial conforming action
+      idx = partialconform.selectedIndex;
+      if (partialconform.options[idx].value == 'DSCP') {
+         idx = yellowdscp.selectedIndex;
+//         loc += '&yellowDscp=' + yellowdscp.options[idx].value;
+         loc += '&partialconform=' + yellowdscp.options[idx].value;
+      }
+      else {
+         loc += '&partialconform=' + partialconform.options[idx].value;
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body onload="frmLoad()">
+      <blockquote>
+         <form>
+            <b>QoS Policer Configuration</b><br><br>
+            This screen allows you to configure a QoS policer.<br>
+            Click 'Apply/Save' to save the policer.<br>
+            Notes:<br>
+            --For TwoRateThreeColor policer, Peak Rate shall be higher than Committed Rate.<br>
+            --CBS and EBS shall be minimally larger than the size of the largest possible IP packet in the stream.<br>
+            --PBS shall be minimally larger than CBS by the size of the largest possible IP packet in the stream.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="160">Name:</td>
+                  <td><input type='text' size="22" name="policername"></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr>
+                  <td>Enable:</td>
+                  <td><select name='policerenbl' size="1">
+                      <option value="0"> Disable
+                      <option value="1"> Enable
+                  </select></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr> 
+                  <td>Meter Type:</td>
+                  <td><select size="1" name="metertype" onChange="meterChange(0)">
+                     <option value="SimpleTokenBucket"> Simple Token Bucket
+                     <option value="SingleRateThreeColor"> Single Rate Three Color
+                     <option value="TwoRateThreeColor"> Two Rate Three Color
+                  </select></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr>
+                  <td>Committed Rate (kbps): </td>
+                  <td><input type='text' size='4' name='cir'></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr>
+                  <td>Committed Burst Size (bytes): </td>
+                  <td><input type='text' size='4' name='cbs'></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table>
+            <div id='singlerate'><table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="160">Excess Burst Size (bytes): </td>
+                  <td><input type='text' size='4' name='ebs'></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table></div>
+            <div id='tworate'><table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="160">Peak Rate (kbps): </td>
+                  <td><input type='text' size='4' name='pir'></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr>
+                  <td>Peak Burst Size (bytes): </td>
+                  <td><input type='text' size='4' name='pbs'></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table></div>
+            <div><table border="0" cellpadding="0" cellspacing="0">
+               <tr> 
+                  <td width="160">Conforming Action:</td>
+                  <td><select size="1" name="conform" onChange="conformChange(0)">
+                     <option value="Null"> Null
+                     <option value="DSCP"> DSCP Mark
+                  </select></td>
+                  <td><select size="1" name="greendscp">
+                     <option value="-1"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </select></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table>
+            <div id='partialcnfrm'><table border="0" cellpadding="0" cellspacing="0">
+               <tr> 
+                  <td width="160">Partial Conforming Action:</td>
+                  <td><select size="1" name="partialconform" onChange="partialConformChange(0)">
+                     <option value="Null"> Null
+                     <option value="Drop"> Drop
+                     <option value="DSCP"> DSCP Mark
+                  </select></td>
+                  <td><select size="1" name="yellowdscp">
+                     <option value="-1"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </select></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table></div>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr> 
+                  <td width="160">Nonconforming Action:</td>
+                  <td><select size="1" name="nonconform" onChange="nonconformChange(0)">
+                     <option value="Null"> Null
+                     <option value="Drop"> Drop
+                     <option value="DSCP"> DSCP Mark
+                  </select></td>
+                  <td><select size="1" name="reddscp">
+                     <option value="-1"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </select></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center><input type='button' onClick='btnApply()' value='Apply/Save'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

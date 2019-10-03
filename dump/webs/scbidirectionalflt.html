@@ -1,0 +1,739 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	  <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="te_util.js"></script>
+			<script language="javascript" src="te_jquery.min.js"></script>
+            <script language="javascript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+var sessKey = '<%ejGetOther(sessionKey)%>';
+var rawEntryList = '<%ejGetOther(tefFiWa, entryList)%>';
+//var rawEntryList = 'fwFirst|1|4;fwSecond|2|6'; //i.e. example
+var rawInterfaceList = '<%ejGetOther(tefFiWa, interfaceList)%>';
+//var rawInterfaceList = 'all WAN|WAN;all LAN|LAN';
+var ENTRY_NAME_ID_SEPARATOR = '|';
+var ENTRY_SEPARATOR = ';';
+var INTERFACE_NAME_DESC_SEPARATOR = '|';
+var INTERFACE_SEPARATOR = ';';
+var REJECTV4_TYPE=[
+  "icmp-net-unreachable",
+  "icmp-host-unreachable",
+  "icmp-port-unreachable",
+  "icmp-proto-unreachable",
+  "icmp-net-prohibited",
+  "icmp-host-prohibited",
+  "tcp-reset"
+];
+var REJECTV6_TYPE=[
+  "icmpv6-reject-route-to-destination",
+  "icmpv6-no-route-to-destination",
+  "icmpv6-administratively-prohibited",
+  "icmpv6-address-unreachable",
+  "icmpv6-port-unreachable",
+  "icmpv6-source-address-failed",
+  "tcp-reset"
+];
+var ICMPV4_TYPE=[
+  "any",
+  "echo-reply",
+    "destination-unreachable",
+    "network-unreachable",
+    "host-unreachable",
+    "protocol-unreachable",
+    "port-unreachable",
+    "fragmentation-needed",
+    "source-route-failed",
+    "network-unknown",
+    "host-unknown",
+    "network-prohibited",
+    "host-prohibited",
+    "TOS-network-unreachable",
+    "TOS-host-unreachable",
+    "communication-prohibited",
+    "host-precedence-violation",
+    "precedence-cutoff",
+  "source-quench",
+  "redirect",
+    "network-redirect",
+    "host-redirect",
+    "TOS-network-redirect",
+    "TOS-host-redirect",
+  "echo-request",
+  "router-advertisement",
+  "router-solicitation",
+  "time-exceeded",
+    "ttl-zero-during-transit",
+    "ttl-zero-during-reassembly",
+  "parameter-problem",
+    "ip-header-bad",
+    "required-option-missing",
+  "timestamp-request",
+  "timestamp-reply",
+  "address-mask-request",
+  "address-mask-reply"
+];
+var ICMPV6_TYPE=[
+  "destination-unreachable",
+    "no-route-to-destination",
+    "administratively-prohibited",
+    "beyond-scope-of-source-address",
+    "address-unreachable",
+    "port-unreachable",
+    "source-address-failed",
+    "reject-route-to-destination",
+    "error-source-routing-header",
+  "packet-too-big",
+  "time-exceeded",
+    "hop-limit-exceeded",
+    "fragment-reassembly-time-exceeded",
+  "parameter-problem",
+    "erroneous-header-field",
+    "unrecognized-next-header-type",
+    "unrecognized-ipv6-option",
+  "echo-request",
+  "echo-reply",
+  "multicast-listener-query",
+  "multicast-listener-report",
+  "multicast-listener-done",
+  "router-solicitation",
+  "router-advertisement",
+  "neighbor-solicitation",
+  "neighbor-advertisement",
+  "redirect-message",
+  "router-renumbering",
+    "router-renumbering-command",
+    "router-renumbering-result",
+    "sequence-number-reset",
+  "node-information-query",
+  "node-information-response",
+  "inverse-neighbor-discovery-solicitation",
+  "inverse-neighbor-discovery-advertisement",
+  "version2-multicast-listener-report",
+  "certification-path-solicitation",
+  "certification-path-advertisement",
+  "multicast-router-advertisement",
+  "multicast-router-solicitation",
+  "multicast-router-termination",
+];
+  
+function btnApplyRule(myself) {
+  myself.disabled=true;
+  var ver='4';
+  with (document.forms[0])
+  {
+    var fmterr=false;
+    if(entryNameForSelect.value.length==0)
+    {
+      fmterr=true;
+    }
+    else
+    {
+      //preload existing entry
+      var entryList = rawEntryList.split(ENTRY_SEPARATOR);
+      for(var i=0; i<entryList.length; i++ )
+      {
+        var entry=entryList[i].split(ENTRY_NAME_ID_SEPARATOR);
+        if( entryNameForSelect.value==entry[1] )
+        {
+          ver=entry[2];
+          break;
+        }
+      } //end for
+      switch(ver)
+      {
+        case '6':
+          if((ruleSrcaddr.value.length>0 && test_ipv6(ruleSrcaddr.value)==false) ||
+            (ruleDstaddr.value.length>0 && test_ipv6(ruleDstaddr.value)==false) ||
+            (ruleSrcaddr.value.length>0 && ruleSrcmask.value.length>0 && isValidPrefixLength(ruleSrcmask.value)==false) ||
+            (ruleDstaddr.value.length>0 && ruleDstmask.value.length>0 && isValidPrefixLength(ruleDstmask.value)==false) ||
+            (ruleSrcaddr.value.length==0 && ruleSrcmask.value.length>0) ||
+            (ruleDstaddr.value.length==0 && ruleDstmask.value.length>0) )
+          {
+            fmterr=true;
+          }
+          break;
+        case '4':
+        default:
+          if((ruleSrcaddr.value.length>0 && isValidIpAddress(ruleSrcaddr.value)==false) ||
+            (ruleDstaddr.value.length>0 && isValidIpAddress(ruleDstaddr.value)==false) ||
+            (ruleSrcaddr.value.length>0 && ruleSrcmask.value.length>0 && isValidSubnetMask(ruleSrcmask.value)==false) ||
+            (ruleDstaddr.value.length>0 && ruleDstmask.value.length>0 && isValidSubnetMask(ruleDstmask.value)==false) ||
+            (ruleSrcaddr.value.length==0 && ruleSrcmask.value.length>0) ||
+            (ruleDstaddr.value.length==0 && ruleDstmask.value.length>0) )
+          {
+            fmterr=true;
+          }
+          break;
+      } //end switch case
+    }
+    if( fmterr==true )
+    {
+      alert("format error !");
+      return;
+    }
+  }
+
+  var loc = 'scbidirectionalflt.cmd';
+
+  var indexToBeEdited=getCookie('indexToBeEdited');
+  var auxiliaryToBeEdited=getCookie('auxiliaryToBeEdited');
+  if( indexToBeEdited==null || auxiliaryToBeEdited==null )
+  {
+    loc += '?action=add';
+  }
+  else
+  {
+    loc += '?action=modify';
+    var isEntry=indexToBeEdited.indexOf('|')>0?false:true;
+    if( isEntry==false )
+    {
+      var entryId=indexToBeEdited.split('|')[0];
+      var ruleId=indexToBeEdited.split('|')[1];
+      loc += '&id='+ruleId; //i.e. rule id
+    }
+  }
+
+  var previous=document.referrer; //i.e. example 'https://192.168.1.1/scbidirectionalflt.cmd?action=view&escape=true'
+  if( previous.search('escape=true')>0 )
+  {
+    loc+='&escape=true';
+  }
+  loc+='&target=rule';
+  
+  with (document.forms[0])
+  {
+    switch( ver )
+    {
+      case '6':
+        if( ruleSrcaddr.value.length>0 && ruleSrcmask.value.length==0 ) ruleSrcmask.value='128';
+        if( ruleDstaddr.value.length>0 && ruleDstmask.value.length==0 ) ruleDstmask.value='128';
+        break;
+      case '4':
+      default:
+        if( ruleSrcaddr.value.length>0 && ruleSrcmask.value.length==0 ) ruleSrcmask.value='255.255.255.255';
+        if( ruleDstaddr.value.length>0 && ruleDstmask.value.length==0 ) ruleDstmask.value='255.255.255.255';
+        break;
+    } //end switch case
+
+    loc+='&belong='+entryNameForSelect.value; //i.e. entry id
+    loc+='&enabled='+ruleEnabled.value;
+    loc+='&protocol='+ruleProtocol.value;
+    loc+='&specificAction='+ruleSpecificAction.value;
+    if(ruleSpecificAction.value=="Reject")                             loc+='&rejectType='+ruleRejectType.value;
+    if(ruleProtocol.value=="ICMP")                                     loc+='&icmpType='+ruleIcmpType.value;
+    if(ruleSrcaddr.value.length>0) loc+='&srcaddr='+ruleSrcaddr.value;
+    if(ruleSrcmask.value.length>0) loc+='&srcmask='+ruleSrcmask.value;
+    if(ruleProtocol.value!="ICMP" && ruleSrcportstart.value.length>0)  loc+='&srcportstart='+ruleSrcportstart.value;
+    if(ruleProtocol.value!="ICMP" && ruleSrcportend.value.length>0)    loc+='&srcportend='+ruleSrcportend.value;
+    if(ruleDstaddr.value.length>0) loc+='&dstaddr='+ruleDstaddr.value;
+    if(ruleDstmask.value.length>0) loc+='&dstmask='+ruleDstmask.value;
+    if(ruleProtocol.value!="ICMP" && ruleDstportstart.value.length>0)  loc+='&dstportstart='+ruleDstportstart.value;
+    if(ruleProtocol.value!="ICMP" && ruleDstportend.value.length>0)    loc+='&dstportend='+ruleDstportend.value;
+  }
+  
+  loc += '&sessionKey='+sessKey;
+  var code = 'location="' + loc + '"';
+  //alert( code + "\t" + code.length );
+  eval(code);
+}
+
+function btnApplyEntry(myself) {
+  myself.disabled=true;
+  var loc = 'scbidirectionalflt.cmd';
+
+  var indexToBeEdited=getCookie('indexToBeEdited');
+  var auxiliaryToBeEdited=getCookie('auxiliaryToBeEdited');
+  if( indexToBeEdited==null || auxiliaryToBeEdited==null )
+  {
+    loc += '?action=add';
+  }
+  else
+  {
+    loc += '?action=modify';
+    var isEntry=indexToBeEdited.indexOf('|')>0?false:true;
+    if( isEntry==true )
+    {
+      loc += '&id='+indexToBeEdited; //i.e. entry id
+    }
+  }
+
+  var previous=document.referrer; //i.e. example 'https://192.168.1.1/scbidirectionalflt.cmd?action=view&escape=true'
+  if( previous.search('escape=true')>0 )
+  {
+    loc+='&escape=true';
+  }
+  loc+='&target=entry';
+  
+  with (document.forms[0])
+  {
+    if(entryName.value.length>0){
+	  if( isXSS(entryName.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Name");
+		return false;
+	  }else{
+		loc+='&name='+entryName.value;
+	  } 	  
+    }else 
+	  loc+='&name='+'not-assigned';
+    loc+='&interface='+entryInterface.value;
+    loc+='&type='+entryType.value;
+    loc+='&version='+entryVersion.value;
+    loc+='&default='+entryDefaultAction.value;
+  }
+  
+  loc += '&sessionKey='+sessKey;
+  var code = 'location="' + loc + '"';
+  //alert( code + "\t" + code.length );
+  eval(code);
+}
+
+function selChangeEntryName( val )
+{
+  //preload existing entry
+  var entryList = rawEntryList.split(ENTRY_SEPARATOR);
+  for(var i=0; i<entryList.length; i++ )
+  {
+    var entry=entryList[i].split(ENTRY_NAME_ID_SEPARATOR);
+    if( val==entry[1] )
+    {
+      selChangeVersion(entry[2]);
+      break;
+    }
+  } //end for
+}
+
+function selChangeVersion( val )
+{
+  with (document.forms[0])
+  {
+    var icmparr=null;
+    if(val=="4") icmparr=ICMPV4_TYPE;
+    else icmparr=ICMPV6_TYPE;
+    
+    if( icmparr!=null ) document.forms[0].ruleIcmpType=null;
+    for( var i=0; i<icmparr.length; i++ )
+    {
+      document.forms[0].ruleIcmpType[i]=new Option(icmparr[i], icmparr[i]);
+    } //end for
+
+    var rejectarr=null;
+    if(val=="4") rejectarr=REJECTV4_TYPE;
+    else rejectarr=REJECTV6_TYPE;
+    
+    if( rejectarr!=null ) document.forms[0].ruleRejectType=null;
+    for( var i=0; i<rejectarr.length; i++ )
+    {
+      document.forms[0].ruleRejectType[i]=new Option(rejectarr[i], rejectarr[i]);
+    } //end for
+  }
+}
+
+function selChangeSpecificAction( val )
+{
+  with (document.forms[0])
+  {
+    if(val=="Reject")
+    {
+      ruleRejectType.style.display='block';
+    }
+    else
+    {
+      ruleRejectType.style.display='none';
+    }
+  }
+}
+
+function selChangeProtocol( val )
+{
+  with (document.forms[0])
+  {
+    if(val=="ICMP")
+    {
+      ruleIcmpType.style.display='block';
+      ruleSrcportstart.style.display='none';
+      ruleSrcportend.style.display='none';
+      ruleDstportstart.style.display='none';
+      ruleDstportend.style.display='none';
+    }
+    else
+    {
+      ruleIcmpType.style.display='none';
+      ruleSrcportstart.style.display='block';
+      ruleSrcportend.style.display='block';
+      ruleDstportstart.style.display='block';
+      ruleDstportend.style.display='block';
+    }
+  }
+}
+
+function getCookie(name)
+{
+  var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+  if(arr != null) return unescape(arr[2]); return null;
+}
+
+function dumpSiteCookie()
+{
+  alert(document.cookie);
+}
+
+function frmLoad()
+{
+  var previous=document.referrer; //i.e. example 'https://192.168.1.1/scbidirectionalflt.cmd?action=view&escape=true'
+  if( previous.search('escape=true')>0 )
+  {
+    escapeDoor.style.display='block';
+	if(ismobile){
+		$("#escapeDoor").find('img:first').attr('src','te_menu_micon.jpg');
+		$("#escapeDoor").find('img:first').attr('width','22');
+		$("#escapeDoor").find('img:first').attr('height','21');
+		$("#escapeDoor").find('img:last').attr('width','99');
+		$("#escapeDoor").find('img:last').attr('height','28');
+		
+	}
+  }
+  else
+  {
+    escapeDoor.style.display='none';
+  }
+  
+  //preload existing entry
+  var entryList = rawEntryList.split(ENTRY_SEPARATOR);
+  for(var i=0; i<entryList.length; i++ )
+  {
+    var entry=entryList[i].split(ENTRY_NAME_ID_SEPARATOR);
+    document.forms[0].entryNameForSelect[i] = new Option(entry[0], entry[1]);
+  } //end for
+
+  var interfaceList = rawInterfaceList.split(INTERFACE_SEPARATOR);
+  for(var i=0; i<interfaceList.length; i++ )
+  {
+    var intf=interfaceList[i].split(INTERFACE_NAME_DESC_SEPARATOR);
+    document.forms[0].entryInterface[i] = new Option(intf[0], intf[1]);
+  } //end for
+
+  //preload supported ICMP type
+  with (document.forms[0])
+  {
+    selChangeVersion(entryVersion.value);
+
+    if(ruleProtocol.value=="ICMP")
+    {
+      ruleIcmpType.style.display='block';
+      ruleSrcportstart.style.display='none';
+      ruleSrcportend.style.display='none';
+      ruleDstportstart.style.display='none';
+      ruleDstportend.style.display='none';
+    }
+    else
+    {
+      ruleIcmpType.style.display='none';
+      ruleSrcportstart.style.display='block';
+      ruleSrcportend.style.display='block';
+      ruleDstportstart.style.display='block';
+      ruleDstportend.style.display='block';
+    }
+    
+    if(ruleSpecificAction.value=="Reject")
+    {
+      ruleRejectType.style.display='block';
+    }
+    else
+    {
+      ruleRejectType.style.display='none';
+    }
+  }
+
+  //preload supported Rejection type
+  
+  //setup pre-selected item
+  //alert( getCookie('indexToBeEdited')+"\t;\t"+getCookie('auxiliaryToBeEdited') );
+  //1
+  //IPv4WanIn|WAN|IN|4|Drop
+  //1|2
+  //true|TCP|Permit|NA|NA|193.152.37.192|255.255.255.240|0|0|empty|empty|22|22
+  //true|ICMP|Permit|NA|network-unknown|empty|empty|NA|NA|empty|empty|NA|NA
+  var indexToBeEdited=getCookie('indexToBeEdited');
+  var auxiliaryToBeEdited=getCookie('auxiliaryToBeEdited');
+  if( indexToBeEdited==null || auxiliaryToBeEdited==null ) return;
+
+  var isEntry=indexToBeEdited.indexOf('|')>0?false:true;
+  if( isEntry==true )
+  {
+    var aux=auxiliaryToBeEdited.split('|');
+    if(aux.length<5) return; 
+    with (document.forms[0])
+    {
+      entryName.value=aux[0];
+      entryInterface.value=aux[1];
+      entryType.value=aux[2];
+      entryVersion.value=aux[3];
+      selChangeVersion(entryVersion.value);
+      entryDefaultAction.value=aux[4];
+      applyRule.disabled=true;
+      applyEntry.disabled=false;
+    }
+  }
+  else //i.e. rule
+  {
+    var entryId=indexToBeEdited.split('|')[0];
+    var ruleId=indexToBeEdited.split('|')[1];
+    var aux=auxiliaryToBeEdited.split('|');
+    if(aux.length<13) return;
+    with (document.forms[0])
+    {
+      entryNameForSelect.value=entryId;
+      for(var i=0; i<entryList.length; i++ )
+      {
+        var entry=entryList[i].split(ENTRY_NAME_ID_SEPARATOR);
+        if( entryNameForSelect.value==entry[1] )
+        {
+          selChangeVersion(entry[2]);
+          break;
+        }
+      } //end for
+      ruleEnabled.value=aux[0];
+      ruleProtocol.value=aux[1];
+      switch( ruleProtocol.value )
+      {
+        case "ICMP":
+          for( var i=0; i<ruleIcmpType.length; i++ )
+          {
+            if( ruleIcmpType[i].value==aux[4] )
+            {
+              ruleIcmpType[i].selected=true;
+              break;
+            }
+          } //end for
+          ruleIcmpType.style.display='block';
+          ruleSrcportstart.style.display='none';
+          ruleSrcportend.style.display='none';
+          ruleDstportstart.style.display='none';
+          ruleDstportend.style.display='none';
+          break;
+        case "TCP":
+        case "UDP":
+        default:
+          ruleSrcportstart.value=aux[7];
+          ruleSrcportend.value=aux[8];
+          ruleDstportstart.value=aux[11];
+          ruleDstportend.value=aux[12];
+          ruleIcmpType.style.display='none';
+          ruleSrcportstart.style.display='block';
+          ruleSrcportend.style.display='block';
+          ruleDstportstart.style.display='block';
+          ruleDstportend.style.display='block';
+          break;
+      } //end switch case
+      if( aux[5]!='' && aux[5].toLowerCase().indexOf("empty")<0 ) ruleSrcaddr.value=aux[5];
+      if( aux[6]!='' && aux[6].toLowerCase().indexOf("empty")<0 ) ruleSrcmask.value=aux[6];
+      if( aux[9]!='' && aux[9].toLowerCase().indexOf("empty")<0 ) ruleDstaddr.value=aux[9];
+      if( aux[10]!='' && aux[10].toLowerCase().indexOf("empty")<0 ) ruleDstmask.value=aux[10];
+      ruleSpecificAction.value=aux[2];
+      switch( ruleSpecificAction.value )
+      {
+        case "Reject":
+          for( var i=0; i<ruleRejectType.length; i++ )
+          {
+            if( ruleRejectType[i].value==aux[3] )
+            {
+              ruleRejectType[i].selected=true;
+              break;
+            }
+          } //end for
+          ruleRejectType.style.display='block';
+          break;
+        case "Permit":
+        case "Drop":
+        default:
+          ruleRejectType.style.display='none';
+          break;
+      } //end switch case
+      applyRule.disabled=false;
+      applyEntry.disabled=true;
+    }
+  }
+}
+// done hiding -->
+      </script>
+   </head>
+   <body onLoad='frmLoad()' topmargin="0" leftmargin="0">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" id="escapeDoor">
+        <tr>
+          <td style="background-color:rgb(0,92,139)" width="20%" height="80" >
+            &nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html" target="mainFrame" title="Back to Web Client"> <img src="te_menu_icon.jpg" width="220" height="30"> </a>
+          </td>
+          <td style="background-color:rgb(0,92,139)" width="50%" height="80" > </td> 
+          <td style="background-color:rgb(0,92,139)" width="30%" height="80" > <img src="te_logo.jpg" width="195" height="43"> </td>
+        </tr>
+      </table>
+         <form style="padding:15px;">
+            <b>Add/Edit IP Filter -- Bidirectonal</b><br/>
+            <!--<center><input type='button' onClick='dumpSiteCookie()' value='Dump Site Cookie'></center>-->
+
+            <br><u>Add/Edit Filter Entry</u></br>
+            <br/>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Name:</td>
+                  <td><input type='text' maxlength="16" name="entryName"></td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Interface:</td>
+                  <td>
+                    <select name="entryInterface">
+                      <option value="none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Type:</td>
+                  <td>
+                    <select name="entryType">
+                      <option value="In">ingress</option>
+                      <option value="Out">egress</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Version:</td>
+                  <td>
+                    <select name="entryVersion" onchange="selChangeVersion(this.value)">
+                      <option value="4">IPv4</option>
+                      <option value="6">IPv6</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Default Action:</td>
+                  <td>
+                    <select name="entryDefaultAction">
+                      <option value="Drop">Drop</option>
+                      <option value="Permit" selected>Permit</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+            </table>
+            <br/>
+            <center><input type='button' name='applyEntry' onClick='btnApplyEntry(this)' value='Apply/Save'></center>
+
+            <br><u>Add/Edit Filter Rule</u></br>
+            <br/>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Belong:</td>
+                  <td>
+                    <select name="entryNameForSelect" onchange="selChangeEntryName(this.value)">
+                      <option value="none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Enabled:</td>
+                  <td>
+                    <select name="ruleEnabled">
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Protocol:</td>
+                  <td>
+                    <select name="ruleProtocol" onchange="selChangeProtocol(this.value)">
+                      <option value="TCP">TCP</option>
+                      <option value="UDP">UDP</option>
+                      <option value="ICMP">ICMP</option>
+                    </select>
+                  </td>
+               </tr>
+
+               <tr>
+                  <td>Specific Action:</td>
+                  <td>
+                    <select name="ruleSpecificAction" onchange="selChangeSpecificAction(this.value)">
+                      <option value="Permit" >Permit</option>
+                      <option value="Drop">Drop</option>
+                      <option value="Reject">Reject</option>
+                    </select>
+                  </td>
+               </tr>
+
+               <tr>
+                  <td>Rejection Type:</td>
+                  <td>
+                    <select name="ruleRejectType">
+                      <option value="none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                    </select>
+                  </td>
+               </tr>
+
+               <tr>
+                  <td>ICMP Type:</td>
+                  <td>
+                    <select name="ruleIcmpType">
+                      <option value="none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                    </select>
+                  </td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Source IP address:</td>
+                  <td><input type='text' size="22" name="ruleSrcaddr"></td>
+               </tr>
+               <tr>
+                  <td>Source IP mask:</td>
+                  <td><input type='text' size="22" name="ruleSrcmask"></td>
+               </tr>
+               <tr>
+                  <td>Source Port Start:</td>
+                  <td><input type='text' size="22" name="ruleSrcportstart"></td>
+               </tr>
+               <tr>
+                  <td>Source Port End:</td>
+                  <td><input type='text' size="22" name="ruleSrcportend"></td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+
+               <tr>
+                  <td>Destination IP address:</td>
+                  <td><input type='text' size="22" name="ruleDstaddr"></td>
+               </tr>
+               <tr>
+                  <td>Destination IP mask:</td>
+                  <td><input type='text' size="22" name="ruleDstmask"></td>
+               </tr>
+               <tr>
+                  <td>Destination Port Start:</td>
+                  <td><input type='text' size="22" name="ruleDstportstart"></td>
+               </tr>
+               <tr>
+                  <td>Destination Port End:</td>
+                  <td><input type='text' size="22" name="ruleDstportend"></td>
+               </tr>
+               <tr><td colspan="2">&nbsp;</td></tr>
+            </table>
+            <br/>
+            <center><input type='button' name='applyRule' onClick='btnApplyRule(this)' value='Apply/Save'></center>
+         </form>
+   </body>
+</html>

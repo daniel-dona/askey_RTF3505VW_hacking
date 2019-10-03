@@ -1,0 +1,149 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, routePlusOne)%>';
+var interfaces = interfaceInfo.split('|');
+var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+var gtwyIfcs = '<%ejGetOther(sysInfo, gtwyIfcs)%>'; if (gtwyIfcs == '&nbsp') gtwyIfcs = '';
+var intfInfo6 = '<%ejGetOther(wanInterfaceInfo, route6PlusOne)%>';
+var intf6 = intfInfo6.split('|');
+var enblIpVer = '<%ejGet(enblIpVer)%>';
+var gtwy6Ifc = '<%ejGetOther(sysInfo, dfltGw6Ifc)%>'; if (gtwy6Ifc == '&nbsp') gtwy6Ifc = '';
+
+var ipv4SetDefaultGtwy = interfaces[0].split('/');
+var ipv6SetDefaultGtwy = intf6[0].split('/');
+var defaultGL = '<%ejGet(defaultGatewayList)%>';
+var default6GL = '<%ejGet(dfltGw6Ifc)%>';
+
+function btnNext() {
+   var loc = 'ifcdns.cgi?';
+
+   with (document.forms[0]) {
+       var loc;
+       if (chkIpv4DefaultGtwy.checked == true)
+       {
+          loc += 'defaultGatewayList=' + ipv4SetDefaultGtwy[1];
+       }
+       else
+       {
+          loc += 'defaultGatewayList=' + gtwyIfcs;
+       }
+	   
+       if (enblIpVer != '0') 
+       {
+          if (chkIpv6DefaultGtwy.checked == true)
+          {  
+              loc += '&dfltGw6Ifc=' + ipv6SetDefaultGtwy[1];
+          }
+	      else
+          {
+             loc += '&dfltGw6Ifc=' + gtwy6Ifc;
+          }
+       }
+   }
+   
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var loc;
+
+   if ( prtcl == 'PPPoE' || prtcl == 'PPPoA' )
+      loc = 'pppoe.html';
+   else if ( prtcl == 'IPoA' )
+      loc = 'ipoacfg.html';
+   else if ( prtcl == 'MER' )
+      loc = 'natcfg2.html';
+   else
+      loc = 'wansrvc.cmd';
+   
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function hideGw6Info(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('gw6Info').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.gw6Info.style.visibility = status;
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) 
+   {    
+      if(defaultGL == ipv4SetDefaultGtwy[1])
+	     chkIpv4DefaultGtwy.checked = true;
+	  else
+	     chkIpv4DefaultGtwy.checked = false;	
+	   
+      if (enblIpVer != '0')
+	  {
+         hideGw6Info(0);
+         if(default6GL == ipv6SetDefaultGtwy[1])
+	        chkIpv6DefaultGtwy.checked = true;
+	     else
+	        chkIpv6DefaultGtwy.checked = false;			 
+	  }
+      else
+	  {
+         hideGw6Info(1);
+	  }
+   }
+}
+
+// done hiding -->
+</script>
+
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+           <b>Routing -- Default Gateway</b><br><br><br>
+                          Check to enable the WAN interface as system default gateway.
+	        </P>
+			<br>
+            <table border="0">
+               <tr>
+                  <td valign="center" align="middle" colspan="2" width="30" height="30">
+                     <input type='checkbox' name='chkIpv4DefaultGtwy'>
+                  </td>
+                  <td colspan="2">Enable the WAN Interface as default IPv4 gateway</td>
+               </tr>
+            </table>
+               <br>
+
+            <div id='gw6Info'>
+               <table>
+                  <tr>
+                    <td valign="center" align="middle" colspan="2" width="30" height="30">
+                     <input type='checkbox' name='chkIpv6DefaultGtwy'>
+				    </td>
+                    <td colspan="2">Enable the WAN Interface as default IPv6 gateway</td> 
+                  </tr>
+               </table>
+               <br>
+            <br>
+            </div>
+
+
+            <p align="center">
+               <input type='button' onClick='btnBack()' value='Back'><input type='button' onClick='btnNext()' value='Next'>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

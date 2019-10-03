@@ -1,0 +1,187 @@
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+#
+# Common functions used by SHGW shell scripts
+#
+# Date			: 15/Mar/2016
+##############################################################################
+
+. /etc/shgw/shgw.constants
+. /etc/shgw/shgw.errno
+
+#
+# retrieve the data in a epoch format
+fn_time_now_in_epoch() {
+	${ECHO} $(${DATE} +"%s")
+}
+
+#
+# retrieve the data in a human readable format
+fn_time_now() {
+	${ECHO} $(${DATE} +"%F.%H-%M-%S")
+}
+
+# Check if the number is within the IP rante (0,255)
+fn_validate_ip_octet() {
+	local NUM=${1}
+	
+	if [ ${NUM} -lt 0 ] || [ ${NUM} -gt 255 ]; then
+		fn_err_exit ${INVALID_IP_RANGE}
+	fi
+}
+
+# Verify if the IP is a valid IP range
+fn_verify_ip() {
+	local _IPS=${1}
+	
+	local ONE=`${ECHO} ${_IPS} | ${CUT} -d'.' -f1`
+	local TWO=`${ECHO} ${_IPS} | ${CUT} -d'.' -f2`
+	local THREE=`${ECHO} ${_IPS} | ${CUT} -d'.' -f3`
+	local FOUR=`${ECHO} ${_IPS} | ${CUT} -d'.' -f4`
+	
+	if [ -z ${ONE} ] || [ -z ${TWO} ] || [ -z ${THREE} ] || [ -z ${FOUR} ]; then
+		fn_err_exit ${INVALID_GATEWAY_IP}
+	fi
+	
+	fn_validate_ip_octet ${ONE}
+	fn_validate_ip_octet ${TWO}
+	fn_validate_ip_octet ${THREE}
+	fn_validate_ip_octet ${FOUR}
+}
+
+#
+# Retreive the IP address for a given interface
+fn_get_ip_for() {
+	local _IFACE=${1}
+
+	${ECHO} $(${IFCONFIG} ${_IFACE} | ${GREP} "inet addr:" | ${AWK} '{print $2}' | ${CUT} -d':' -f2)
+}
+
+#
+# Retreive the netmask on a given interface
+fn_get_netmask_on() {
+	local _IFACE=${1}
+
+	${ECHO} $(${IFCONFIG} ${_IFACE} | ${GREP} "inet addr:" | ${AWK} '{print $NF}' | ${CUT} -d':' -f2)
+}
+
+#### Output of the below code will have the interface names separated by spaces. Ex. below
+###  br-lan br-lan2 br-lan3
+##
+# Retreive the LAN inteface
+fn_get_lan_ifaces() {
+	local _IFACES=$(${BRCTL} show | ${GREP} "\<br" | ${GREP} -v "bridge" | ${AWK} '{print $1}')
+	local _LAN_IFACES=""
+	local _IFACE=""
+	for _IFACE in ${_IFACES}; do
+		_LAN_IFACES=${_LAN_IFACES}${_IFACE}' '
+	done
+
+	${ECHO} ${_LAN_IFACES}
+}
+
+# Wait until the IP is got
+fn_wait_for_ip_on() {
+	local _wan_iface=${1}
+	
+	while [ -z $(fn_get_ip_for ${_wan_iface}) ];do
+		${SLEEP} 5
+	done
+}
+
+#
+# Wait until gw ip
+fn_wait_for_gw_ip_on() {
+	local _wan_iface=${1}
+	
+	while [ -z $(fn_get_gw_ip_on ${_wan_iface}) ];do
+		${SLEEP} ${WAIT_FOR_GW_IP_SLEEP_TIME}
+	done
+}
+
+#
+# Identify the subnet
+fn_identify_the_subnet_of() {
+	local _ip=${1}
+	#_mask=${2}
+	# FIXME: uitilize the netmask here
+
+	${ECHO} $(${ECHO} ${_ip} | ${CUT} -d'.' -f-3)
+}
+
+#
+# convert into lowercase
+fn_to_lower() {
+	local _in=${1}
+
+	${ECHO} $(${ECHO} ${_in} | ${TR} "[:upper:]" "[:lower:]")
+}
+
+#
+# Retreive the upstream DNS IP
+fn_get_dns_ip() {
+	${ECHO} $(${CAT} ${RESOLV_CONF} | ${GREP} 'nameserver' | ${AWK} '{print $2}')
+}
+
+#
+# Wait until gw ip
+fn_wait_for_dns_ip() {
+	while [ -z $(fn_get_dns_ip) ];do
+		${SLEEP} ${WAIT_FOR_DNS_IP_SLEEP_TIME}
+	done
+}
+
+#
+# Get Next Subnet IP
+__get_next_subnet() {
+	local _ip=${1}
+
+	local ip_octet_1=$(${ECHO} ${_ip} | ${CUT} -d'.' -f1)
+	local ip_octet_2=$(${ECHO} ${_ip} | ${CUT} -d'.' -f2)
+	local ip_octet_3=$(${ECHO} ${_ip} | ${CUT} -d'.' -f3)
+	local ip_octet_4=$(${ECHO} ${_ip} | ${CUT} -d'.' -f4)
+
+	${ECHO} ${ip_octet_1}.${ip_octet_2}.$(((ip_octet_3+1)%255)).${ip_octet_4}
+}
+
+fn_retry_query_upto_five_times() {
+        local _cmd=$1
+        local _db=$2
+        local _ecode=$3
+        local _sleep_time=$4
+        QUERY_OUTPUT=""
+        COUNT=1
+        while [ $COUNT -lt $SQL_FAILURE_RETRY_COUNT ]; do
+         QUERY_OUTPUT=$(${ECHO} ${_cmd} | ${SQLITE} ${_db})
+                if [ $? -eq 0 ]; then
+                        break
+                fi
+                sleep ${_sleep_time}
+                COUNT=$((${COUNT} + 1))
+        done
+        if [ $COUNT -eq $SQL_FAILURE_RETRY_COUNT ]; then
+                fn_err_exit $_ecode
+        fi
+}

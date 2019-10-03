@@ -1,0 +1,59 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function btnApply() {
+   var loc = 'wlmacflt.cmd?action=add';
+   var enbl = '<%ejGetWl(wlEnbl_wl0v0)%>';
+
+   if ( enbl == '0' ) {
+      alert('Cannot apply the change since wireless is currently disabled.');
+      return;
+   }
+   
+   with ( document.forms[0] ) {
+      if ( isValidMacAddress(wlFltMacAddr.value) == false ) {
+         msg = 'MAC address "' + wlFltMacAddr.value + '" is invalid MAC address.';
+         alert(msg);
+         return;
+      }
+
+      loc += '&wlFltMacAddr=' + wlFltMacAddr.value;
+   }
+
+   loc += '&wlSyncNvram=1';
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form onSubmit='return false'>
+            <b>Wireless -- MAC Filter</b>
+            <br>
+            <br>
+            Enter the MAC address and click "Apply/Save" to add the MAC address to the wireless 
+            MAC address filters.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="100">MAC Address:</td>
+                  <td><input type='text' name='wlFltMacAddr'></td>
+               </tr>
+            </table>
+            <br>
+            <center><input type='button' onClick='btnApply()' value='Apply/Save'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

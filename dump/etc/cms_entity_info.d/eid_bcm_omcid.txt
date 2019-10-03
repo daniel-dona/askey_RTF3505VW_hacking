@@ -1,0 +1,9 @@
+# To start OMCI in OLT Mode, copy this file to eid_bcm_omcid.txt.custom and replace the
+# runArgs statement with the following line.
+# runArgs = "-v 0 startolt"
+BEGIN
+  eid         = EID_OMCID
+  name        = omcid
+  runArgs     = "-v 0 start"
+  flags = EIF_LAUNCH_ON_BOOT|EIF_MDM|EIF_MESSAGING_CAPABLE
+END

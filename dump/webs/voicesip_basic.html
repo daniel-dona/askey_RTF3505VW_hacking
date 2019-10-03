@@ -1,0 +1,1133 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicesip_basic.html
+  Author:
+  Creation Date: 2008
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+   
+      <style type="text/css">
+      ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
+      ul#tabs li { display: inline; }
+      ul#tabs li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }
+      ul#tabs li a:hover { background-color: #f1f0ee; }
+      ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }
+      div.tabContent { border: 1px solid #c9c3ba; padding: 0.5em; background-color: #f1f0ee; }
+      div.tabContent.hide { display: none; }
+      </style>
+      
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+      <script language="javascript" src="util.js"></script>
+      <script language="javascript" src="te_util.js"></script>
+<script language="javascript">
+
+//var maxLines = 2;
+/*
+if ( maxLines.search("ejGetVoice") >= 0 ) {
+   maxLines = 2; // if not provided by provisioning, hard-code maxLines
+}
+*/
+
+var flexibleAssignment = '<%ejGetVoice(flexTerms)%>';
+
+var maxLines = new Array();
+var maxSp = '<%ejGetVoice(maxSp)%>';
+
+var voiceRunning = '<%ejGetVoice(voiceStatus)%>';
+var maxPrefCodecs = '<%ejGetVoice(maxPrefCodecs)%>';
+var ifn = '<%ejGetVoice(ifName)%>';
+var ip = '<%ejGetVoice(ipAddrFamily)%>';
+//maxPrefCodecs = 3; // for testing
+
+for (var i = 0; i < maxSp; i++) {
+   eval( "var pa" + i + " \= \"\" " );
+   eval( "var pp" + i + " \= \"\" " );
+   eval( "var oa" + i + " \= \"\" " );
+   eval( "var op" + i + " \= \"\" " );
+   eval( "var ra" + i + " \= \"\" " );
+   eval( "var rp" + i + " \= \"\" " );
+   eval( "var de" + i + " \= \"\" " );
+   eval( "var sl" + i + " \= \"\" " );
+   eval( "var ml" + i + " \= \"\" " );
+   eval( "var dm" + i + " \= \"\" " );
+   
+   var tmpml = '<%ejGetVoice(maxLines)%>';
+   eval(tmpml);
+   
+   eval("maxLines[" + i + "] = ml" + i);
+   
+   for (var m = 0; m < maxLines[i]; m++) {
+      eval( "var vp" + i + "_" + m + " \= \"\" " );
+      eval( "var ex" + i + "_" + m + " \= \"\" " );
+      eval( "var dn" + i + "_" + m + " \= \"\" " );
+      eval( "var an" + i + "_" + m + " \= \"\" " );
+      eval( "var pw" + i + "_" + m + " \= \"\" " );
+      eval( "var le" + i + "_" + m + " \= \"\" " );
+      eval( "var cl" + i + "_" + m + " \= \"\" " );
+      eval( "var pe" + i + "_" + m + " \= \"\" " );
+/*++ dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */      
+/* add by mel chen@20111208 dsiaply servie status in web */
+/* RTF_DEF */
+      eval( "var ss" + i + "_" + m + " \= \"\" " );      
+/*-- dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+      if( flexibleAssignment == '1' ) {
+         eval( "var hs" + i + "_" + m + " \= \"\" " );
+      }
+      
+   }
+   if( flexibleAssignment == '1' ) {
+      eval( "var pfxoe" + i + "_" + m + " \= \"\" " );
+   }
+
+}
+
+var tmppa = '<%ejGetVoice(proxyAddr)%>';
+var tmppp = '<%ejGetVoice(proxyPort)%>'; 
+var tmpoa = '<%ejGetVoice(obProxyAddr)%>';
+var tmpop = '<%ejGetVoice(obProxyPort)%>';
+var tmpra = '<%ejGetVoice(regAddr)%>';
+var tmprp = '<%ejGetVoice(regPort)%>';
+var tmpde = '<%ejGetVoice(domainName)%>';
+var tmpsl = '<%ejGetVoice(localeName)%>';
+var tmpdm = '<%ejGetVoice(dialPlan)%>';
+
+eval(tmppa);
+eval(tmppp);
+eval(tmpoa);
+eval(tmpop);
+eval(tmpra);
+eval(tmprp);
+eval(tmpde);
+eval(tmpsl);
+eval(tmpdm);
+
+var la  = '<%ejGetVoice(sipLogAddr)%>';
+var lp  = '<%ejGetVoice(sipLogPort)%>';
+var locList = '<%ejGetVoice(localeList)%>';
+var suppCodecList = '<%ejGetVoice(suppCodecList)%>';
+//suppCodecList = "abc, def, ghi, jkl, mno"; // for testing
+
+
+var ifList  = '<%ejGetVoice(ifList)%>';
+var ipFamilyList  = '<%ejGetVoice(ipFamilyList)%>';
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+if( flexibleAssignment == '1' ) {
+   //Get the number of FXS, FXO, and DECT handsets being used
+   var numFxs = '<%ejGetVoice(numFxs)%>';
+   var numFxo = '<%ejGetVoice(numFxo)%>';
+   var dectCurHsetVal='<%ejGetVoice(dectCurHset)%>';
+}
+
+/* Get all the per-line items from provisioning (through the C code).
+** The provisioning will provide javascript variables
+** with initialized values if the values are available. */
+var tmpdn = '<%ejGetVoice(dispName)%>';
+var tmpan = '<%ejGetVoice(authName)%>';
+var tmppw = '<%ejGetVoice(password)%>';
+var tmpvp  = '<%ejGetVoice(voicePtime)%>';
+var tmple  = '<%ejGetVoice(lineEnabled)%>';
+var tmpcl  = '<%ejGetVoice(codecList)%>';
+var tmppe  = '<%ejGetVoice(physEndpt)%>';
+/*++ dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+/* add by mel chen@20111208 dsiaply servie status in web */
+/* RTF_DEF */
+var tmpss = '<%ejGetVoice(serviceStatus)%>';
+/*-- dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+if( flexibleAssignment == '1' ) {
+   var tmphs  = '<%ejGetVoice(dectHsList)%>';
+   var tmppfxoe = '<%ejGetVoice(physFxoEndpt)%>';
+}
+
+// Ignore warning when page opened directly with browser
+/*if ( tmpex.search("ejGetVoice") < 0 ) {
+   eval( tmpex );
+}*/
+if ( tmpdn.search("ejGetVoice") < 0 ) {
+   eval( tmpdn );
+}
+if ( tmpan.search("ejGetVoice") < 0 ) {
+   eval( tmpan );
+}
+if ( tmppw.search("ejGetVoice") < 0 ) {
+   eval( tmppw );
+}
+if ( tmppw.search("ejGetVoice") < 0 ) {
+   eval( tmpvp );
+}
+if ( tmppw.search("ejGetVoice") < 0 ) {
+   eval( tmple );
+}
+if ( tmppw.search("ejGetVoice") < 0 ) {
+   eval( tmpcl );
+}
+if ( tmppe.search("ejGetVoice") < 0 ) {
+   eval( tmppe );
+}
+/*++ dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+/* add by mel chen@20111208 dsiaply servie status in web */
+/* RTF_DEF */
+if ( tmpss.search("ejGetVoice") < 0 ) {
+   eval( tmpss );}
+/*-- dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+if( flexibleAssignment == '1' ) {
+   if ( tmphs.search("ejGetVoice") < 0 ) {
+      eval( tmphs );
+   }
+   if ( tmppfxoe.search("ejGetVoice") < 0 ) {
+      eval( tmppfxoe );
+   }
+}
+
+function printInterfaceListBox(){
+   var tokInterfaceList = ifList.split(" ");
+
+   for(i = 0; i < tokInterfaceList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokInterfaceList[i] + "\" selected>");  
+      document.writeln(tokInterfaceList[i]);
+   }
+}
+
+function printIpFamilyListBox(){
+   var tokIpFamilyList = ipFamilyList.split(" ");
+
+   for(i = 0; i < tokIpFamilyList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokIpFamilyList[i] + "\" selected>");  
+      document.writeln(tokIpFamilyList[i]);
+   }
+}
+
+function printLocaleListBox(){
+   var tokLocCodeList = locList.split(",");
+
+   for(i = 0; i < tokLocCodeList.length; i++)
+   {
+      var tokCodeNameList = tokLocCodeList[i].split(" - ");
+      document.writeln("<option value=\"" + tokCodeNameList[0] + "\" selected>");
+      document.writeln(tokCodeNameList[0] + " - " + tokCodeNameList[1]);
+   }
+}
+
+function btnStartSip() {
+   var loc = 'voicesipstart.cmd?';
+
+   loc += addParamsToQuery( loc, "basic" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnStopSip() {
+   var loc = 'voicesipstop.cmd?';
+
+   loc += addParamsToQuery( loc, "basic" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+      
+   eval(code);
+}
+
+function btnDefaultSip() {
+   var loc = 'voicesipsetdefault.cmd?';
+
+   loc += addParamsToQuery( loc, "basic" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   
+   eval(code);
+}
+
+function btnApplySip() {
+   document.getElementById('ApplyButton0').disabled=true;
+   var loc = 'voicesipapply.cmd?';
+
+   loc += addParamsToQuery( loc, "basic" );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// Adds parameters to the query passed to the C code
+function addParamsToQuery( loc_init, current_view) {
+   var loc = loc_init;
+
+   with ( document.forms[0] ) {
+      loc += 'currentview=' + current_view;
+      eval( "loc += \'&ifName=\' + ifName.value.replace(/[\'\" ]/g,\'\')" );
+	  eval( "loc += \'&ipAddrFamily=\' + ipAddrFamily.value.replace(/[\'\" ]/g,\'\')" );
+      for (var sp = 0; sp < maxSp; sp++) {
+	     if ( selectedTab == -1 )
+		 {
+		    selectedTab = 0;
+		 }
+         var temp = eval( "enblProxy" + sp + ".checked == true" );
+         if ( temp ) {
+           temp = eval( "isValidIpAddress(proxyAddr" + sp + ".value) == false" );
+           if ( temp ) {
+           }
+         }
+         else {
+           if ( ipAddrFamily.value.localeCompare('IPv4') == 0 )
+           {
+              eval( "proxyAddr" + sp + ".value = '0.0.0.0'" );
+           }
+           else
+           {
+              eval( "proxyAddr" + sp + ".value = '::/128'" );
+           }
+           eval( "proxyPort" + sp + ".value = '0'" );
+         }
+         
+         temp = eval( "enblOutbound" + sp + ".checked == true" );
+         if ( temp ) {
+           temp = eval( "isValidIpAddress(obProxyAddr" + sp + ".value) == false" );
+           if ( temp ) {
+           }
+         }
+         else {
+           if ( ipAddrFamily.value.localeCompare('IPv4') == 0 )
+           {
+              eval( "obProxyAddr" + sp + ".value = '0.0.0.0'" );
+           }
+           else
+           {
+              eval( "obProxyAddr" + sp + ".value = '::/128'" );
+           }
+           eval( "obProxyPort" + sp + ".value = '0'" );
+         }
+
+         temp = eval( "enblReg" + sp + ".checked == true" );
+         if ( temp ) {
+           temp = eval( "isValidIpAddress(regAddr" + sp + ".value) == false" );
+           if ( temp ) {
+           }
+         }
+         else {
+           if ( ipAddrFamily.value.localeCompare('IPv4') == 0 )
+           {
+              eval( "regAddr" + sp + ".value = '0.0.0.0'" );
+           }
+           else
+           {
+              eval( "regAddr" + sp + ".value = '::/128'" );
+           }
+           eval( "regPort" + sp + ".value = '0'" );
+         }
+
+		 temp = eval( "isXSS(domainName" + sp + ".value) == false" );
+		 if(temp){
+			eval( "loc += \'&domainName" + sp + "=\' + domainName" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+		 }
+		 else{
+			eval('cross="!!Scripting Cross-site (Persistent) - Persistent XSS on SIP domain name*",alert(cross);');
+			eval("false");
+		 }     
+         temp = eval( "isXSS(proxyAddr" + sp + ".value) == false" );
+         if ( temp ) {
+		    eval( "loc += \'&proxyAddr" + sp + "=\' + proxyAddr" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         }
+		 else{
+		    eval('cross="!!Scripting Cross-site (Persistent) - Persistent XSS on SIP Proxy",alert(cross);');
+			eval("false");			
+         }
+         eval( "loc += \'&proxyPort" + sp + "=\' + proxyPort" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&obProxyAddr" + sp + "=\' + obProxyAddr" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&obProxyPort" + sp + "=\' + obProxyPort" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         temp = eval( "isXSS(regAddr" + sp + ".value) == false" );
+         if ( temp ) {
+		    eval( "loc += \'&regAddr" + sp + "=\' + regAddr" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         }
+		 else{
+		    eval('cross="!!Scripting Cross-site (Persistent) - Persistent XSS on SIP Registrar",alert(cross);');
+			eval("false");			
+         }	 
+         eval( "loc += \'&regPort" + sp + "=\' + regPort" + sp + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&localeName" + sp + "=\' + localeName" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         eval( "loc += \'&dialPlan" + sp + "=\' + encodeUrl(dialPlan" + sp + ".value.replace(/[\'\" ]/g,\'\'))" );
+
+         for (var i = 0; i < maxLines[sp]; i++) {
+            // eval( "loc += \'&extension" + sp + "_" + i + "=\' + encodeUrl(extension" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\'))" );
+			temp = eval( "isXSS(dispName" + sp +  "_" + i + ".value) == false" );
+			if(temp){
+				eval( "loc += \'&dispName"  + sp + "_" + i + "=\' + encodeUrl(dispName"  + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\'))" );
+			}
+			else{
+				eval('cross="!!Scripting Cross-site (Persistent) - Persistent XSS on Display name",alert(cross);');
+				eval("false");
+			}   
+            temp = eval( "isXSS(authName" + sp + "_" + i + ".value) == false" );
+			if(temp){
+				eval( "loc += \'&authName"  + sp + "_" + i + "=\' + encodeUrl(authName"  + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\'))" );
+			}
+			else{
+				eval('cross="!!Scripting Cross-site (Persistent) - Persistent XSS on Authentication name",alert(cross);');
+				eval("false");
+			} 
+            eval( "loc += \'&password"  + sp + "_" + i + "=\' + encodeUrl(password"  + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\'))" );
+            eval( "loc += \'&voicePtime"+ sp + "_" + i + "=\' + voicePtime"         + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')"  );
+            if ( flexibleAssignment == '0' ) {
+               eval( "loc += \'&physEndpt" + sp + "_" + i + "=\' + physEndpt"       + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')"  );
+            }
+            
+            var test = eval("lineEnabled" + sp + "_" + i + ".checked == true");
+            if ( test ){
+               loc+= "&lineEnabled" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&lineEnabled" + sp + "_" + i + "=off";
+            }
+
+            //Handle codec list
+            var codecListId = "codecList" + sp + "_" + i;
+            var prefCodecList="";
+            for (var k = 0; k < maxPrefCodecs; k++) {
+               l = k + 1;
+               if ( l == 1 ){
+                  prefCodecList += eval( codecListId + "_" + l + ".value" );
+               } else {
+                  prefCodecList += "," + eval( codecListId + "_" + l + ".value" );
+               }
+            }
+            loc += "&" + codecListId + "=" + prefCodecList;
+            
+            if( flexibleAssignment == '1' ) {               
+               if( i < maxLines[sp] - numFxo ) {
+                  loc+= "&physEndpt" + sp + "_" + i + "=";
+                  var multiEndpts = false;
+                  for (var k = 0; k < numFxs; k++) {
+                     var test = eval("termFxs" + sp + "_" + k + "_" + i + ".checked == true");
+                     if ( test ) {
+                        if ( !multiEndpts ) {
+                           loc += k;
+                           multiEndpts = true;
+                        }
+                        else {
+                           loc+= "," + k;
+                        }
+                     }
+                  }
+   
+                  if (dectCurHsetVal > 0) {
+                     loc+= "&dectHsList" + sp + "_" + i + "=";
+                     var multiDectHs = false;
+                     for (var k = 1; k <= dectCurHsetVal; k++) {
+                        var test = eval("termDect" + sp + "_" + k + "_" + i + ".checked == true");
+                        if ( test ) {
+                           if ( !multiDectHs ) {
+                              loc += k;
+                              multiDectHs = true;
+                           }
+                           else {
+                              loc+= "," + k;
+                           }
+                        }
+                     }
+                  }
+               } else {
+                  loc+= "&physFxoEndpt" + sp + "_" + i + "=";
+                  var test = eval("termFxo" + sp + "_" + i + ".checked == true");
+                  if ( test ) {
+                     loc+= "0";
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   return loc;
+}
+
+function frmLoad(current_view) {
+
+   init();										
+   for (var i = 0; i < maxSp; i++) {
+      generatePerLineTable(i)
+   }
+   
+   with ( document.forms[0] ) {
+         
+      for (var i = -1; i < maxSp; i++) {
+         enableButtons(i);
+      }
+         
+      /* Initialize global parameters */
+      eval("ifName.value = ifn");
+      eval("ipAddrFamily.value = ip");
+        
+      for (var i = 0; i < maxSp; i++) {
+         eval("proxyAddr" + i + ".value = pa"+i);
+         eval("proxyPort" + i + ".value = pp"+i);
+         eval("obProxyAddr" + i + ".value = oa"+i);
+         eval("obProxyPort" + i + ".value = op"+i);
+         eval("regAddr" + i + ".value = ra"+i);
+         eval("regPort" + i + ".value = rp"+i);
+         eval("dialPlan" + i + ".value = dm" + i );
+
+         if ('192.168.1.10' != '0.0.0.0') {
+            eval("enblProxy" + i + ".checked = true");
+            eval("hideProxyInfo(0, " + i + ")");
+         } else {
+            eval("enblProxy" + i + ".checked = false");
+            eval("hideProxyInfo(1, " + i + ")");
+         }
+
+         if ('192.168.1.10' != '0.0.0.0') {
+            eval("enblOutbound" + i + ".checked = true");
+            eval("hideOutboundInfo(0, " + i + ")");
+         } else {
+            eval("enblOutbound" + i + ".checked = false");
+            eval("hideOutboundInfo(1, " + i + ")");
+         }
+
+         if ('192.168.1.10' != '0.0.0.0') {
+            eval("enblReg" + i + ".checked = true");
+            eval("hideRegInfo(0, " + i + ")");
+         } else {
+            eval("enblReg" + i + ".checked = false");
+            eval("hideRegInfo(1, " + i + ")");
+         }
+
+         eval("domainName" + i + ".value = de"+i);
+         eval("localeName" + i + ".value = sl"+i);
+
+         for (var j = 0; j < maxLines[i]; j++) {
+
+            eval("voicePtime" + i + "_" + j + ".value=vp"+ i + "_" + j);
+            // eval("extension" + i + "_" + j + ".value=ex"+ i + "_" + j);
+            eval("dispName" + i + "_" + j + ".value=dn"+ i + "_" + j);
+            eval("authName" + i + "_" + j + ".value=an"+ i + "_" + j);
+            if( flexibleAssignment == '0' ) {
+               eval("physEndpt" + i + "_" + j + ".value=pe"+ i + "_" + j);
+            }
+            eval("password" + i + "_" + j + ".value=pw"+ i + "_" + j);
+
+            //Handle line enable checkboxes
+            if ( eval("le" + i + "_" + j + "== 1") ){
+               eval("lineEnabled" + i + "_" + j + ".checked = true");
+            } else {
+               eval("lineEnabled" + i + "_" + j + ".checked = false");
+            }
+
+            //Handle codec list
+            var codecListId = "codecList" + i + "_" + j;
+            temp = eval( "cl" + i + "_" + j + ".split(',')" );
+
+            for (var m = 0; m < maxPrefCodecs; m++)
+            {
+               n = m + 1;
+               if ( m < temp.length )
+               {
+                  eval(codecListId + "_" + n + ".value = temp[" + m + "]" );
+               }
+               else
+               {
+                  eval(codecListId + "_ " + n + ".value = \"\" " );
+               }
+            }
+
+            if( flexibleAssignment == '1' ) {     
+               if( j < maxLines[i] - numFxo ) {
+                  //Handle FXS assigned checkboxes
+                  var numTokens = 0;
+                  if (eval("pe" + i + "_" + j).length != 0) {
+                     var splitFxs = eval("pe" + i + "_" + j).split(",");
+                     numTokens = splitFxs.length;
+                  }
+                  for (var k = 0; k < numFxs; k++) {
+                     for (var l = 0; l < numTokens; l++) {
+                        if ( eval(splitFxs[l] + " == " + k ) ) {
+                           eval("termFxs" + i + "_" + k + "_" + j + ".checked = true");
+                           break;
+                        } else {
+                           eval("termFxs" + i + "_" + k + "_" + j + ".checked = false");
+                        }
+                     }
+                  }
+   
+                  //Handle DECT assigned checkboxes
+                  if(dectCurHsetVal > 0) {
+                     var numTokens = 0;
+                     if (eval("hs" + i + "_" + j).length != 0) {
+                        var splitDect = eval("hs" + i + "_" + j).split(",");
+                        numTokens = splitDect.length;
+                     }
+                     for (var k = 1; k <= dectCurHsetVal; k++) {
+                        for (var l = 0; l < numTokens; l++) {
+                           if ( eval(splitDect[l] + " == " + k ) ) {
+                              eval("termDect" + i + "_" + k + "_" + j + ".checked = true");
+                              break;
+                           } else {
+                              eval("termDect" + i + "_" + k + "_" + j + ".checked = false");
+                           }
+                        }
+                     }
+                  }
+               } else {
+                  //Handle FXO assigned checkbox
+                  if ( tmppfxoe.length != 0 ) {
+                     if ( eval("pfxoe" + i + "_" + j + " == 0" ) ) {
+                        eval("termFxo" + i + "_" + j + ".checked = true");
+                     } else {
+                        eval("termFxo" + i + "_" + j + ".checked = false");
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+function hideProxyInfo(hide, index) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById) {  // DOM3 = IE5, NS6
+      var idName = "proxyInfo" + index;
+      document.getElementById( idName ).style.visibility = status;
+   }
+   else {
+      if (document.layers == false) // IE4
+         eval("document.all.proxyInfo" + index + ".style.visibility = status");
+   }
+}
+function ProxyCbClick(cb, index) {
+   if ( cb.checked == true )
+      hideProxyInfo(0, index);
+   else
+      hideProxyInfo(1, index);
+}
+function hideOutboundInfo(hide, index) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById) {  // DOM3 = IE5, NS6
+      var idName = "outboundInfo" + index;
+      document.getElementById( idName ).style.visibility = status;
+   }
+   else {
+      if (document.layers == false) // IE4
+         eval("document.all.outboundInfo" + index + ".style.visibility = status");
+   }
+}
+function OutboundCbClick(cb, index) {
+   if ( cb.checked == true )
+      hideOutboundInfo(0, index);
+   else
+      hideOutboundInfo(1, index);
+}
+function hideRegInfo(hide, index) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById) {  // DOM3 = IE5, NS6
+      var idName = "regInfo" + index;
+      document.getElementById( idName ).style.visibility = status;
+   }
+   else {
+      if (document.layers == false) // IE4
+         eval("document.all.regInfo" + index + ".style.visibility = status");
+   }
+}
+function RegCbClick(cb, index) {
+   if ( cb.checked == true )
+      hideRegInfo(0, index);
+   else
+      hideRegInfo(1, index);
+}
+
+function cfCheckboxGetIdx(cb) {
+  var i = parseInt( cb.id, 10 );
+  return i;
+}
+
+
+function generatePerLineTable(index) {
+   // Generate the table
+   if (document.body.innerHTML) {
+      var idName = "perLineTablePlaceholder" + index;
+      var tableHtmlOutput = "<table id='perLineTable" + index + "' border='1'><tbody id='perLineTbody" + index + "'>";
+
+      // Line row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>SIP Account <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = line;
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Account line enabled row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Account Enabled <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'lineEnabled" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      /*++ dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */      
+	  /* add by mel chen@20111208 dsiaply servie status in web */      // VoIP service status row    
+	  /* RTF_DEF */
+	  tableHtmlOutput += "<tr>";      
+	  tableHtmlOutput += "<td class='hd'>Service Status <\/td>"      
+      for (var line = 0; line < maxLines[index]; line++) {         
+         var data = eval("ss" + index + "_" + line);         
+         tableHtmlOutput += "<td align=center>" + data + "</td>";      
+      }      
+      tableHtmlOutput += "</tr>";      
+      /*-- dirk 20140721 Job #3753: [ASKEY][VOIP] Add service status for each line */
+
+	  // Extension row
+      /*
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Extension <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=20 name=\'extension" + index + "_" + line + "\'>";
+         //var data = "<input type='text' size=20 maxlength=20 name=\'extension" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";*/
+
+      // Display name row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Display name <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=20 name=\'dispName" + index + "_" + line + "\'>";
+         //var data = "<input type='text' size=20 maxlength=20 name=\'dispName" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Authentication name row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Auth username(TEL) <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='text' size=20 maxlength=20 name=\'authName" + index + "_" + line + "\'>";
+         //var data = "<input type='text' size=20 maxlength=20 name=\'authName" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Password row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Auth password <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         //var data = "<input type='text' size=20 maxlength=20 name=\'password" + line + "\'>";
+         var data = "<input type='text' size=20 maxlength=20 name=\'password" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+      
+      // Physical terminal assignment row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Physical Terminal</br>Assignment <\/td>"
+      if( flexibleAssignment == '1' ) {
+         for (var line = 0; line < maxLines[index]; line++) {
+            var data = "";            
+            if( line < maxLines[index] - numFxo ) {
+               //Create an inner-table to align checkboxes and text correctly.
+               data += "<table border='0'>";
+               for (var curFxs = 0; curFxs < numFxs; curFxs++) {
+                  data += "<tr><td><input type='checkbox' size=10 name=\'termFxs" + index + "_" + curFxs + "_" + line + "\'></td><td> FXS " + curFxs + "</td></tr>";
+               }
+               for (var curDect = 1; curDect <= dectCurHsetVal; curDect++) {
+                  data += "<tr><td><input type='checkbox' size=10 name=\'termDect" + index + "_" + curDect + "_" + line + "\'></td><td> DECT " + curDect + "</td></tr>";
+               }
+               data += "</table>";
+               tableHtmlOutput += "<td align='center'>" + data + "</td>";
+            } else {
+               data = "<input type='checkbox' disabled='disabled' size=10 name=\'termFxo" + index + "_" + line + "\'> FXO";
+               tableHtmlOutput += "<td align=center>" + data + "</td>";
+            }                        
+         }         
+      } else {
+         for (var line = 0; line < maxLines[index]; line++) {
+            var data = "<input type='text' size=20 maxlength=20 name=\'physEndpt" +index + "_" + line + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Ptime row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Preferred ptime <\/td>"
+      var selectOptions = Array();
+      for ( var i = 0; i <= 2; i++ ) {
+         var ptime = (i+1)*10;
+         selectOptions[i] = "<option value=" + ptime + " selected>" + ptime;
+      }
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<select name='voicePtime" + index + "_" + line + "'>" + selectOptions.join("") + "<\/select>";
+         //var data = "<select name='voicePtime" + line + "'>" + selectOptions.join("") + "<\/select>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Codec rows
+      var tokenizedList = suppCodecList.split(",");
+      var selectOptions = Array();
+      for ( var i = 0; i < tokenizedList.length; i++ ) {
+         selectOptions[i] = "<option value=" + tokenizedList[i] + " selected>" + tokenizedList[i];
+      }
+      for (var i = 1; i <= maxPrefCodecs; i++) {
+         tableHtmlOutput += "<tr>";
+         tableHtmlOutput += "<td class='hd'>Preferred codec " + i + " <\/td>"
+         for (var line = 0; line < maxLines[index]; line++) {
+            var data = "<select name='codecList" + index + "_" + line + "_" + i + "'>" + selectOptions.join("") + "<\/select>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+         tableHtmlOutput += "</tr>";
+      }
+
+      //End of table
+      tableHtmlOutput += "</tbody></table>";
+
+      document.getElementById( idName ).innerHTML = tableHtmlOutput;
+   } else {
+      alert("Cannot create per line table in this browser.");
+   }
+}
+
+
+function enableButtons(index){
+   var buttonStart = document.getElementById( "StartButton" + index );
+   var buttonStop = document.getElementById( "StopButton" + index );
+   var buttonApply = document.getElementById( "ApplyButton" + index );
+   var buttonDefault = document.getElementById( "DefaultButton" + index );
+
+   if ( voiceRunning == 1 ) {
+      buttonStart.disabled = true;
+      buttonStop.disabled = false;
+      buttonApply.disabled = false;
+      buttonDefault.disabled = false;
+   } else {
+      buttonStart.disabled = false;
+      buttonStop.disabled = true;
+      buttonApply.disabled = false;
+      buttonDefault.disabled = false;
+   }
+}
+
+var tabLinks = new Array();
+var contentDivs = new Array();
+var selectedTab;
+
+function init() {
+
+  // Grab the tab links and content divs from the page
+  var tabListItems = document.getElementById('tabs').childNodes;
+  for ( var i = 0; i < tabListItems.length; i++ ) {
+    if ( tabListItems[i].nodeName == "LI" ) {
+      var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+      var id = getHash( tabLink.getAttribute('href') );
+      tabLinks[id] = tabLink;
+      contentDivs[id] = document.getElementById( id );
+    }
+  }
+
+  // Assign onclick events to the tab links, and
+  // highlight the first tab
+  var i = 0;
+  selectedTab = 0;
+
+  for ( var id in tabLinks ) {
+    tabLinks[id].onclick = showTab;
+    tabLinks[id].onfocus = function() { this.blur() };
+    if ( i == 0 ) tabLinks[id].className = 'selected';
+    i++;
+  }
+
+  // Hide all content divs except the first
+  var i = 0;
+  
+  for ( var id in contentDivs ) {
+    if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
+    i++;
+  }
+}
+
+
+function showTab() {
+  var selectedId = getHash( this.getAttribute('href') );
+
+  // Highlight the selected tab, and dim all others.
+  // Also show the selected content div, and hide all others.
+  for ( var id in contentDivs ) {
+    if ( id == selectedId ) {
+      selectedTab = selectedId;
+      tabLinks[id].className = 'selected';
+      contentDivs[id].className = 'tabContent';
+    } else {
+      tabLinks[id].className = '';
+      contentDivs[id].className = 'tabContent hide';
+    }
+  }
+
+  // Stop the browser following the link
+  return false;
+}
+
+function getFirstChildWithTagName( element, tagName ) {
+  for ( var i = 0; i < element.childNodes.length; i++ ) {
+    if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+  }
+}
+
+function getHash( url ) {
+  var hashPos = url.lastIndexOf ( '#' );
+  return url.substring( hashPos + 1 );
+}
+
+function createTabs() {
+  document.writeln("<ul id='tabs'>");
+  document.writeln("<li><a href='#" + -1 + "'>Global parameters</a></li>");
+
+  for ( var i = 0; i < maxSp; i++ ) {
+     document.writeln("<li><a href='#" + i + "'>Service Provider " + i + "</a></li>");
+  } 
+}
+
+function createGlobal() {
+   document.writeln("<div class='tabContent' id='" + -1 + "'>");
+   document.writeln("<div>");
+   document.writeln("   <b>Global parameters</b><br>");
+   document.writeln("   <br>");
+   document.writeln("   <table border='0' cellpadding='0' cellspacing='0'>");
+   document.writeln("      <tr>");
+   document.writeln("         <td class='txt' width='150'>Bound Interface Name:</td>");
+   document.writeln("         <td><select name='ifName' size='1'>");
+                               printInterfaceListBox()
+   document.writeln("         </select></td>");
+   document.writeln("      </tr>");
+   document.writeln("   </table>");
+
+   document.writeln("   <table border='0' cellpadding='0' cellspacing='0'>");
+   document.writeln("      <tr>");
+   document.writeln("         <td class='txt' width='150'>IP Address Family:</td>");
+   document.writeln("         <td><select name='ipAddrFamily' size='1'>");
+                               printIpFamilyListBox()
+   document.writeln("         </select></td>");
+   document.writeln("      </tr>");
+   document.writeln("   </table>");
+   document.writeln("   <br>");
+
+   document.writeln("<td class='txt' width='450'><b>NOTE: Interface and address family changes require the SIP client to be stopped and then started to take effect</b></td>");
+
+   document.writeln("   <br>");
+   document.writeln("   <br>");
+   document.writeln("   <center>");
+   document.writeln("       <input type='button' onClick='btnStartSip()' value='Start SIP client' id='StartButton" + -1 + "' disabled=true>");
+   document.writeln("       <br>");
+   document.writeln("       <br>");
+   document.writeln("       <input type='button' onClick='btnStopSip()' value='Stop SIP client' id='StopButton" + -1 + "' disabled=true>");
+   document.writeln("       <br>");
+   document.writeln("       <br>");
+   document.writeln("       <input type='button' onClick='btnDefaultSip()' value='Restore default setting' id='DefaultButton" + -1 + "' disabled=true>");
+   document.writeln("       <br>");
+   document.writeln("       <br>");
+   document.writeln("       <input type='button' onClick='btnApplySip()' value='Apply' id='ApplyButton" + -1 + "' disabled=true>");
+   document.writeln("       <br>");
+   document.writeln("    </center>");
+   document.writeln("    <br>");
+   document.writeln("</div>");
+   document.writeln("</div>");
+}
+
+function createContent() {
+
+  for ( var index = 0; index < maxSp; index++ ) {
+    document.writeln("<div class='tabContent' id='" + index + "'>");
+    document.writeln("   <div> ");
+    document.writeln("   <b>Voice -- SIP configuration</b><br>");
+    document.writeln("   <br>");
+    document.writeln("            Enter the SIP parameters and click Start/Stop to save the parameters");
+    document.writeln("            and start/stop the voice application.<br>");
+    document.writeln("   <br>");
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' width='150'>Locale selection*:</td>");
+    document.writeln("         <td><select name='localeName" + index + "' size='1'>");
+                                printLocaleListBox()
+    document.writeln("         </select></td>");
+    document.writeln("         <td class='txt' width='450'><b>&nbsp&nbsp(Note: Requires the SIP client to be stopped and then started to take affect)</b></td>");
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <table border='0' cellpadding='0' cellspacing='0'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' width='150'>SIP domain name*:</td>");  
+    document.writeln("         <td><input type='text' name='domainName" + index + "'></td>");
+    document.writeln("      </tr>");
+    document.writeln("   </table>");
+    document.writeln("   <br>");
+    document.writeln("   <div id='dialPlan" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("      <tr>");
+    document.writeln("         <td class='txt' width='150'>Voip Dialpan Setting:</td>");
+    document.writeln("         <td><input type='text' name='dialPlan" + index + "'></td>");
+    document.writeln("      </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'><input type='checkbox' name='enblProxy" + index + "' onClick='ProxyCbClick(this," + index + ")' ID='Checkbox" + index + "_1'></td>");
+    document.writeln("   <td class='txt' colspan='2'>");
+    document.writeln("   Use SIP Proxy.");
+    document.writeln("   <br>");
+    document.writeln("   <div id='proxyInfo" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>SIP Proxy:</td>");
+    document.writeln("            <td><input type='text' name='proxyAddr" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt'>SIP Proxy port:</td>");
+    document.writeln("            <td><input type='text' name='proxyPort" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>");    
+    document.writeln("   <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'><input type='checkbox' name='enblOutbound" + index + "' onClick='OutboundCbClick(this," + index + ")' ID='Checkbox" + index + "_2'></td>");
+    document.writeln("   <td class='txt' colspan='2'>");
+    document.writeln("   Use SIP Outbound Proxy.");
+    document.writeln("   <br>");
+    document.writeln("   <div id='outboundInfo" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' width='150'>SIP Outbound Proxy:</td>");
+    document.writeln("            <td><input type='text' name='obProxyAddr" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt' >SIP Outbound Proxy port:</td>");
+    document.writeln("            <td><input type='text' name='obProxyPort" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>");
+    document.writeln("   <td class='txt' valign='middle' align='center' colspan='2' width='30' height='30'><input type='checkbox' name='enblReg" + index + "' onClick='RegCbClick(this, " + index + ")' ID='Checkbox" + index + "_3'></td>");
+    document.writeln("   <td class='txt' colspan='2'>");
+    document.writeln("   Use SIP Registrar.");
+    document.writeln("   <br>");
+    document.writeln("   <div id='regInfo" + index + "'>");
+    document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "'>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt'  width='150'>SIP Registrar:</td>");
+    document.writeln("            <td><input type='text' name='regAddr" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("         <tr>");
+    document.writeln("            <td class='txt'>SIP Registrar port:</td>");
+    document.writeln("            <td><input type='text' name='regPort" + index + "'></td>");
+    document.writeln("         </tr>");
+    document.writeln("      </table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>");
+    document.writeln("   <div class='tableWrapper' id='perLineTablePlaceholder" + index + "'>");
+    document.writeln("   <table></table>");
+    document.writeln("   </div>");
+    document.writeln("   <br>");
+    document.writeln("   <center>");
+    document.writeln("       <input type='button' onClick='btnStartSip()' value='Start SIP client' id='StartButton" + index + "' disabled=true>");
+    document.writeln("       <br>");
+    document.writeln("       <br>");
+    document.writeln("       <input type='button' onClick='btnStopSip()' value='Stop SIP client' id='StopButton" + index + "' disabled=true>");
+    document.writeln("       <br>");
+    document.writeln("       <br>");
+    document.writeln("       <input type='button' onClick='btnDefaultSip()' value='Restore default setting' id='DefaultButton" + index + "' disabled=true>");
+    document.writeln("       <br>");
+    document.writeln("       <br>");
+    document.writeln("       <input type='button' onClick='btnApplySip()' value='Apply' id='ApplyButton" + index + "' disabled=true>");
+    document.writeln("       <br>");
+    document.writeln("    </center>");
+    document.writeln("    <br>");
+    document.writeln("    * Changing this parameter for one service provider affects all other service providers.");
+    document.writeln("   </div> ");
+    document.writeln("</div>");
+  }
+}
+
+</script>
+</head>
+
+<body onLoad="frmLoad('basic')">
+   <blockquote>
+      <form> 
+      <script TYPE="text/javascript">
+        createTabs();
+        createGlobal();
+        createContent();
+     </script>     
+     
+      </form>
+   </blockquote>
+</body>
+</html>

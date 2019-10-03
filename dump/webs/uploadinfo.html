@@ -1,0 +1,70 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+var msg = new Array();
+msg[0] = 'Uploading is in progress. The Broadband Router will reboot upon completion. This process will take about 2 minutes.';
+msg[1] = 'Image uploading failed. The system is out of memory. The Broadband Router is rebooting.';
+msg[2] = 'Image uploading failed. No image file was selected.';
+msg[3] = 'Image uploading failed. The selected file contains an illegal image.';
+msg[4] = 'Fatal error during image uploading.';
+
+var idxStr = '<%ejGetOther(sysInfo, upldSts)%>';
+
+function getMsgIndex() {
+   var idxNum = parseInt(idxStr);
+   if ( isNaN(idxNum) || idxNum < 0 || idxNum > 4 )
+      idxNum = 4;
+
+   return idxNum;
+}
+
+function reboot() {
+   var enblPopWin = '<%ejGet(enblPopWin)%>';
+   var loc = 'main.html';
+   var code = 'window.top.location="' + loc + '"';
+
+   if ( enblPopWin == '1' ) {
+      loc = 'index.html';
+      code = 'location="' + loc + '"';
+   }
+
+   eval(code);
+}
+
+function frmLoad() {
+   // only reboot if upload progress is successful
+   if ( getMsgIndex() == 0 )
+      setTimeout('reboot()', 80000);
+}
+
+function btnBack() {
+   var code = 'location="' + 'upload.html' + '"';
+
+   if (<%ejGet(glbUploadMode)%> == 2)
+      code = 'location="' + 'updatesettings.html' + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote> <b>Broadband Router Update</b><br>
+         <br>
+         <script language="javascript">
+<!-- hide
+document.write(msg[getMsgIndex()]);
+// done hiding -->
+</script>
+         <br>
+         <br>
+         <center>
+            <input type='button' onClick='btnBack()' value='Back'>
+         </center>
+      </blockquote>
+   </body>
+</html>

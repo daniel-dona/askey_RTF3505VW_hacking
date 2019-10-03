@@ -1,0 +1,45 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+function btnBack() {
+   var loc = 'ethwan.cmd';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnReset() {
+   var loc = 'rebootinfo.cgi?';
+
+   loc += 'sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+
+<body>
+<blockquote>
+<b>ETH WAN Interface Configuration Error</b><br><br>
+Please double check your configuration information and
+<br><br>
+Click on "Back" button to give it an another try.
+<br><br>
+Or
+<br><br>
+Click on "Reboot Router" button to reboot the Broadband Router and try it again.
+<br><br><br>
+<center>
+<input type='button' onClick='btnBack()' value='Back'>
+<input type='button' onClick='btnReset()' value='Reboot Router'>
+</center>
+</blockquote>
+</body>
+</html>

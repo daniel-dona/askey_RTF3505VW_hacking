@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var gatewayIPaddress='<%ejGet(ethIpAddress)%>';
+var gatewayNetmask='<%ejGet(ethSubnetMask)%>';
+var lan2IpAddress = '<%ejGet(lan2IpAddress)%>';
+var lan2SubnetMask = '<%ejGet(lan2SubnetMask)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+//var portMappingData = [['aa','0','bb','cc','dd','on'],['aa','1','bb','cc','dd','off'],['aa','0','ee','cc','dd','on'],['aa','2','ff','cc','dd','on']];
+					  //portMappingData[0][0]=portName,portMappingData[0][1]=portProtocol,portMappingData[0][2]=wanPortRange,portMappingData[0][3]=lanPortRange,portMappingData[0][4]=portIPAddress,portMappingData[0][5]=portActive
+var pppPortMappingList=[]; //i.e. example '[['8051','hello','TCP','192.168.1.2','2000','2001','1000','T','ppp0.1'],['8052','world','UDP','192.168.1.3','2000','2001','1000','T','ppp0.1']]';
+var pppPortMappingRemain=null;
+var pppPortMappingDelete=[];
+var pppPortMappingIntf='<%ejGetOther(tefPppIntf)%>'; //i.e. example '3,ppp0.1;5,ppp1.2'
+var curpage = 1;
+
+$(window).load( function(){
+  var intf=getInterface(pppPortMappingIntf);
+  if( !(intf.length>0 && intf[0].length>=2 && intf[0][1].length>0 ) )
+  {
+    //there is no available interface name
+  }
+  retrieveIdentifier();
+});
+
+$(function() //i.e. .ready
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	//showtable();
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value='+htmlDecode("A&ntilde;adir")+']').on('click',function(){
+		if($('[name=portName],[name=MportName]').val().length == 0){
+			alertSpecial("nombre del puerto no puede estar vac&iacute;o");
+			return false;
+		}	
+		if(ismobile){
+			if(!checkIP(document.getElementsByName("MIPAddress")[0]))
+				return false;
+			if( $('[name=MIPAddress]').val() == gatewayIPaddress || $('[name=MIPAddress]').val() == lan2IpAddress ){
+				alertSpecial("Esta IP pertenece al router. Por favor, introduzca una IP v&aacute;lida para la LAN");
+				return false;
+			}
+			if(gatewayNetmask!='' && (!checknotequalsubnet($('[name=MIPAddress]').val(),gatewayIPaddress,gatewayNetmask) && !checknotequalsubnet($('[name=MIPAddress]').val(),lan2IpAddress,lan2SubnetMask))) {
+        alertSpecial("lan y la direcci&oacute;n IP deben estar en la misma subred");
+				return false;
+      }
+			if ( $('[name=MwanPortRange]').val() == '' ) {
+			    alertSpecial("rango de puertos WAN no puede estar vac&iacute;o");
+			    return false;
+		    }
+			if(($('[name=MwanPortRange]').val().match(/:/g)||[]).length > 1){ //check format
+				alertSpecial("la entrada de formato de rango de puertos debe ser xxx: xxx");
+			    return false;
+			}
+			if(!checkwanport($('[name=MwanPortRange]').val()))
+				return false;
+			if ( $('[name=MlanPortRange]').val() == '' ) {
+			    alertSpecial("rango de puertos LAN no puede estar vac&iacute;o");
+			    return false;
+		    }
+			if(($('[name=MlanPortRange]').val().match(/:/g)||[]).length > 1){ //check format
+				alertSpecial("la entrada de formato de rango de puertos debe ser xxx: xxx");
+			    return false;
+			}
+			if(!checklanport($('[name=MlanPortRange]').val()))
+				return false;
+		}else
+		{
+			if(!checkIP(document.getElementsByName("IPAddress")[0]))
+				return false;
+			if( $('[name=IPAddress]').val() == gatewayIPaddress || $('[name=IPAddress]').val() == lan2IpAddress ){
+				alertSpecial("Esta IP pertenece al router. Por favor, introduzca una IP v&aacute;lida para la LAN");
+				return false;
+			}
+			if(gatewayNetmask!='' && (!checknotequalsubnet($('[name=IPAddress]').val(),gatewayIPaddress,gatewayNetmask) && !checknotequalsubnet($('[name=IPAddress]').val(),lan2IpAddress,lan2SubnetMask))) {
+        alertSpecial("lan y la direcci&oacute;n IP deben estar en la misma subred");
+				return false;
+      }
+			if ( $('[name=wanPortRange]').val() == '' ) {
+			    alertSpecial("rango de puertos WAN no puede estar vac&iacute;o");
+			    return false;
+		    }
+			if(($('[name=wanPortRange]').val().match(/:/g)||[]).length > 1){ //check format
+				alertSpecial("la entrada de formato de rango de puertos debe ser xxx: xxx");
+			    return false;
+			}			
+			if(!checkwanport($('[name=wanPortRange]').val()))
+				return false;
+			if ( $('[name=lanPortRange]').val() == '' ) {
+			    msg = 'rango de puertos LAN no puede estar vac&iacute;o';
+			    alertSpecial(msg);
+			    return false;
+			}
+			if(($('[name=lanPortRange]').val().match(/:/g)||[]).length > 1){ //check format
+				alertSpecial("la entrada de formato de rango de puertos debe ser xxx: xxx");
+			    return false;
+			}	    
+			if(!checklanport($('[name=lanPortRange]').val()))
+				return false;
+			//checkequalsubnet($('[name=IPAddress]').val(),gatewayIPaddress,gatewayNetmask);
+		}
+		var dat=[];
+    //['8051','hello','TCP','192.168.1.2','2000','2001','1000','T','ppp0.1']
+    dat[0]=encodeUrl($('[name=portName],[name=MportName]').val());
+    dat[1]=((($('[name=Protocol],[name=MProtocol]').val())=='0')?('TCP'):((($('[name=Protocol],[name=MProtocol]').val())=='1')?('UDP'):('BOTH')));
+    dat[2]=($('[name=IPAddress],[name=MIPAddress]').val());
+    var wanrange=($('[name=wanPortRange],[name=MwanPortRange]').val());
+    dat[3]=(wanrange.indexOf(':')>0)?(wanrange.split(':')[0]):(wanrange);
+    dat[4]=(wanrange.indexOf(':')>0)?(wanrange.split(':')[1]):('0');
+    dat[5]=($('[name=lanPortRange],[name=MlanPortRange]').val());
+    dat[6]='T';
+		if(pppPortMappingIntf==''){
+			alertSpecial('interfaz PPPoE no se encuentra');
+			return false;
+		}
+    var intf=getInterface(pppPortMappingIntf);
+    if(intf.length>0 && intf[0].length>=2 && intf[0][1].length>0 ) dat[7]=intf[0][1];
+
+    if(true==isDuplicate(dat[7], dat[0])) {
+      alertSpecial('No es posible establecer el mismo nombre para diferentes reglas de puertos');
+      return false;
+    }
+    var ovl=isOverlapped( dat[7], dat[2], dat[1], parseInt(dat[3]), parseInt(dat[4]), parseInt(dat[5]) );
+    if(true==ovl.state){
+      if(ovl.different==true) alertSpecial('Regla incorrecta. No es posible establecer el mismo rango externo (WAN) para distintas direcciones IPs');
+      else alertSpecial('rango de puertos se solapa');
+      return false;
+    }
+    addIndividual(dat);		
+		//var loc = 'te_puertos.cmd?action=Add&portName='+$('[name=portName],[name=MportName]').val();
+		//loc += '&portIPAddress='+$('[name=IPAddress],[name=MIPAddress]').val();		
+		//loc += '&portProtocol='+$('[name=Protocol],[name=MProtocol]').val();
+		//loc += '&wanPortRange='+$('[name=wanPortRange],[name=MwanPortRange]').val();
+		//loc += '&lanPortRange='+$('[name=lanPortRange],[name=MlanPortRange]').val();
+		//loc += '&portActive=off';
+		//loc += '&sessionKey='+sessionKey;
+		//var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		window.location = window.location;
+		//eval(code);		
+	});
+});
+
+function isDuplicate(intf, name)
+{
+	var found=false;
+  var chk=[pppPortMappingList];
+  for( var i=0; i<chk.length; i++)
+  {
+    var existing=chk[i];
+  	for( var j=0; j<existing.length; j++ )
+  	{
+  		if( existing[j][8]==intf && existing[j][1]==name )
+  		{
+  			found=true;
+
+  			break;
+  		}
+  	} //end for
+  } //end for
+	return found;
+}
+
+function isOverlapped(intf, vrtsrv, prot, eps, epe, ips)
+{
+  //alert(intf+"\t"+vrtsrv+"\t"+prot+"\t"+eps+"\t"+epe+"\t"+ips);
+	var oeps=eps;
+	var oepe=(epe==0)?(oeps):(epe);
+	var oips=ips;
+	var oipe=(oepe>=oeps)?(oepe-oeps+oips):(oips);
+	var found=false;
+	var overlapped=false;
+  var different=false;
+
+  var prevent=[
+    //['', '', 'TCP', '', '22', '22', '22', '', intf],
+    //['', '', 'TCP', '', '443', '443', '443', '', intf],
+    ['', '', 'TCP', '', '7547', '7547', '7547', '', intf]
+  ];
+  var chk=[prevent, pppPortMappingList];
+  for( var i=0; i<chk.length; i++)
+  {
+    var existing=chk[i];
+  	for( var j=0; j<existing.length; j++ )
+  	{
+  		if( existing[j][8]==intf )
+  		{
+  			found=true;
+
+        var needCheck=false;
+        needCheck=(existing[j][2]==prot)?(true):((existing[j][2]=='BOTH'||prot=='BOTH')?true:false);
+        if(needCheck==false)
+        {
+          continue;
+        }
+  
+  			var ceps=parseInt(existing[j][4]);
+  			var cepe=(parseInt(existing[j][5])==0)?(ceps):(parseInt(existing[j][5]));
+  			var cips=parseInt(existing[j][6]);
+  			var cipe=(cepe>=ceps)?(cepe-ceps+cips):(cips);
+  			//alert("ORG:\t"+oeps+" "+oepe+" "+oips+" "+oipe+"\n"+"CMP:\t"+ceps+" "+cepe+" "+cips+" "+cipe+" "+"["+j+"]"+"\t"+intf);
+  			if( (oeps<=ceps && oepe>=cepe) || (oeps>=ceps && oeps<=cepe) || (oepe<=cepe && oepe>=ceps) )
+  			{
+  				overlapped=true;
+          different=(existing[j][3]==vrtsrv)?false:true;
+  				break;
+  			}
+  		}
+  	} //end for
+  } //end for
+  var ret ={state:(found==true&&overlapped==true)?true:false, different:(different)};
+	return ret;
+}
+
+function getInterface( raw )
+{
+  var intf=[];
+  var outer=raw.split(";");
+  for(var i=0; i<outer.length; i++ )
+  {
+    intf[i]=[];
+    var inner=outer[i];
+    inner=inner.split(',');
+    for( var j=0; j<inner.length; j++ )
+    {
+      intf[i][j]=inner[j];
+    } //end for
+  } //end for
+  return intf;
+}
+
+function convertPppPortMapping( pm )
+{
+  //return [['aa','0','bb','cc','dd','on','8051'],['aa','1','bb','cc','dd','off','8086'],['aa','0','ee','cc','dd','on','8087'],['aa','2','ff','cc','dd','on','8088']];
+  var outer=[];
+  for( var i=0; i<pm.length; i++ )
+  {
+    //pm[i][8] might be checked.
+    var inner=[];
+    inner[0]=pm[i][1];
+    inner[1]=((pm[i][2]=='TCP')?('0'):((pm[i][2]=='UDP')?('1'):('2')));
+    inner[2]=pm[i][4]+((pm[i][5]=='0')?(""):(":"+pm[i][5]));
+    inner[3]=pm[i][6];
+    inner[4]=pm[i][3];
+    inner[5]=((pm[i][7]=='T')?('on'):('off'));
+    inner[6]=pm[i][0];
+    var idx=outer.length;
+    outer[idx]=inner;
+  } //end for
+  return outer;
+}
+
+// for display internal port range only
+function convertPppPortMapping1( pm )
+{
+  var outer=[];
+  for( var i=0; i<pm.length; i++ )
+  {
+    //pm[i][8] might be checked.
+    var inner=[];
+    inner[0]=pm[i][1];
+    inner[1]=((pm[i][2]=='TCP')?('0'):((pm[i][2]=='UDP')?('1'):('2')));
+    inner[2]=pm[i][4]+((pm[i][5]=='0')?(""):(":"+pm[i][5]));
+    inner[3]=pm[i][6]+((pm[i][5]=='0')?(""):(":"+(parseInt(pm[i][6])+parseInt(pm[i][5])-parseInt(pm[i][4]))).toString());
+    inner[4]=pm[i][3];
+    inner[5]=((pm[i][7]=='T')?('on'):('off'));
+    inner[6]=pm[i][0];
+    var idx=outer.length;
+    outer[idx]=inner;
+  } //end for
+  return outer;
+}
+
+function inversePppPortMapping( dat, raw )
+{
+  var inversed=[];
+  $.each( dat, function(idxouter, valouter){
+    var metadata=valouter[(valouter.length-1)];
+    if(metadata==false)
+    {
+      var id=valouter[6];
+      var en=valouter[5]=='on'?'T':'F';
+      var addr=valouter[4];
+      var pi=valouter[3];
+      var pe=valouter[2];
+      var pestart=(pe.indexOf(':')>0)?(pe.split(':')[0]):(pe);
+      var perange=(pe.indexOf(':')>0)?(pe.split(':')[1]):('0');
+      var prot=((valouter[1]=='0')?('TCP'):((valouter[1]=='1')?('UDP'):('BOTH')));
+      var desc=valouter[0];
+      $.each( raw, function( idxinner, valinner ){
+        if( valinner[0]==id ) {
+          var mutated=valinner;
+          mutated[1]=desc;
+          mutated[2]=prot;
+          mutated[3]=addr;
+          mutated[4]=pestart;
+          mutated[5]=perange;
+          mutated[6]=pi;
+          mutated[7]=en;
+          inversed.push(mutated);
+        }
+      } ); //end of raw
+    }
+  } ); //end of dat
+  return inversed;
+}
+
+function setPppPortMapping(op, dat)
+{
+  var ret=null;
+  switch( op )
+  {
+    case "create":
+      pppPortMappingRemain=dat; //i.e. dat is array of converted data
+      break;
+    case "delete":
+      pppPortMappingDelete.push( pppPortMappingRemain[dat] ); //i.e. dat is index for removal
+      pppPortMappingRemain.splice(dat, 1);
+      break;
+    case "differentiate":
+      $.each( dat, function(indexouter, valueouter){ //i.e. dat is array of modified data
+        var same=valueouter.every(function(valueinner, indexinner){
+          return pppPortMappingRemain[indexouter][indexinner]==valueinner;
+        });
+        if( same==false ) pppPortMappingRemain[indexouter]=dat[indexouter];
+        var idx=pppPortMappingRemain[indexouter].length; //index for append
+        pppPortMappingRemain[indexouter][idx]=same;
+      });
+      ret=pppPortMappingRemain;
+      break;
+    default:
+      break;
+  } //end switch case
+  return ret;
+}
+
+function retrieveIdentifier()
+{
+  var loc = 'te_ppp_pm.cmd?action=retrieve';
+  loc += '&type=identifier';
+  loc += '&sessionKey='+sessionKey;
+  //alertSpecial(loc);
+  //alertSpecial(cnt+"\t"+sessionKey);
+  $.get(loc, function(result){
+    //alertSpecial(result);
+    var rsp=parseRetrieveIdentifierReply( result );
+    for( var i=0; i<rsp['inst'].length; i++ )
+    {
+      if(rsp['inst'][i]!==undefined && rsp['inst'][i]!='') retrieveInstance( rsp['inst'][i] );
+    } //end for
+	if(ismobile){
+	    var portMappingData=convertPppPortMapping(pppPortMappingList);
+	    if(portMappingData.length>0){
+		    $('.page').show();
+			$('#showpage').append("<input type='button' id='prev' class='hand' style='float:left;font-size:28px;font-weight:bold;' value='<' onclick='prevdata();'>");
+			$('#prev').after("<span id='pageno' style='font-size:28px;font-weight:bold;'>"+curpage+"/"+rsp['inst'].length+"</span>");
+			$('#pageno').after("<input type='button' id='next' class='hand' style='float:right;font-size:28px;font-weight:bold;' value='>' onclick='nextdata();'>");
+			$('[value="<"],[value=">"]').css('width','auto');
+			showpage();
+		}
+		else
+			$('.page').hide();
+		
+	}
+	else
+		showtable();
+    setPppPortMapping("create", convertPppPortMapping(pppPortMappingList));
+  });
+  //var code = 'location="' + loc + '"';
+  //alertSpecial(code);
+  //location.reload();
+  //eval(code);		
+}
+
+function parseRetrieveIdentifierReply(reply)
+{
+  var response=[];
+  var outer=reply.split('&');
+  for( var i=0; i<outer.length; i++ )
+  {
+    var inner=outer[i].split('=');
+    switch( inner[0] )
+    {
+      case 'sessionKey':
+        sessionKey=inner[1];
+        response['sessionKey']=sessionKey;
+        break;
+      case 'inst':
+        response['inst']=inner[1].split(',');
+        break;
+      default:
+        break;
+    } //end for
+  } //end for
+  return response;
+}
+
+function retrieveInstance( id )
+{
+  var loc = 'te_ppp_pm.cmd?action=retrieve';
+  loc += '&type=instance';
+  loc += '&id='+id;
+  loc += '&sessionKey='+sessionKey;
+  //alertSpecial(loc);
+  $.ajax({type:"GET", url:loc, async:false, success: function(result){
+    var rsp=parseRetrieveInstanceReply( result );
+    var idx=pppPortMappingList.length;
+    pppPortMappingList[idx]=rsp['inst'];
+  }});
+}
+
+function parseRetrieveInstanceReply(reply)
+{
+  var response=[];
+  var outer=reply.split('&');
+  for( var i=0; i<outer.length; i++ )
+  {
+    var inner=outer[i].split('=');
+    switch( inner[0] )
+    {
+      case 'sessionKey':
+        sessionKey=inner[1];
+        response['sessionKey']=sessionKey;
+        break;
+      case 'inst':
+        response['inst']=inner[1].split(',');
+        break;
+      default:
+        break;
+    } //end for
+  } //end for
+  return response;
+}
+
+function addIndividual( dat )
+{
+  var loc = 'te_ppp_pm.cmd?action=create';
+  loc += '&inst='+dat.join(',');
+  loc += '&sessionKey='+sessionKey;
+  $.ajax({type:"GET", url:loc, async:false, success: function(result){
+    var rsp=parseAddIndividualReply(result);
+  }});
+}
+
+function parseAddIndividualReply(reply)
+{
+  var response=[];
+  var outer=reply.split('&');
+  for( var i=0; i<outer.length; i++ )
+  {
+    var inner=outer[i].split('=');
+    switch( inner[0] )
+    {
+      case 'sessionKey':
+        sessionKey=inner[1];
+        response['sessionKey']=sessionKey;
+        break;
+      case 'inst':
+        response['inst']=inner[1];
+        break;
+      default:
+        break;
+    } //end for
+  } //end for
+  return response;
+}
+
+function saveIndividual( dat )
+{
+  var loc = 'te_ppp_pm.cmd?action=update';
+  loc += '&inst='+dat.join(',');
+  loc += '&sessionKey='+sessionKey;
+  $.ajax({type:"GET", url:loc, async:false, success: function(result){
+    var rsp=parseSaveIndividualReply(result);
+  }});
+}
+
+function parseSaveIndividualReply(reply)
+{
+  var response=[];
+  var outer=reply.split('&');
+  for( var i=0; i<outer.length; i++ )
+  {
+    var inner=outer[i].split('=');
+    switch( inner[0] )
+    {
+      case 'sessionKey':
+        sessionKey=inner[1];
+        response['sessionKey']=sessionKey;
+        break;
+      case 'inst':
+        response['inst']=inner[1];
+        break;
+      default:
+        break;
+    } //end for
+  } //end for
+  return response;
+}
+
+function removeIndividual( id, intf )
+{
+  var loc = 'te_ppp_pm.cmd?action=delete';
+  loc += '&id='+id;
+  if(intf!=null) loc += '&intf='+intf;
+  loc += '&sessionKey='+sessionKey;
+  $.ajax({type:"GET", url:loc, async:false, success: function(result){
+    var rsp=parseRemoveIndividualReply(result);
+  }});
+}
+
+function parseRemoveIndividualReply(reply)
+{
+  var response=[];
+  var outer=reply.split('&');
+  for( var i=0; i<outer.length; i++ )
+  {
+    var inner=outer[i].split('=');
+    switch( inner[0] )
+    {
+      case 'sessionKey':
+        sessionKey=inner[1];
+        response['sessionKey']=sessionKey;
+        break;
+      case 'inst':
+        response['inst']=inner[1];
+        break;
+      default:
+        break;
+    } //end for
+  } //end for
+  return response;
+}
+
+function showtable(){
+	$('thead').children('tr:not(:first)').remove();
+        var portMappingData=convertPppPortMapping1(pppPortMappingList);
+        if(portMappingData.length==1 && (portMappingData[0].length==0||(portMappingData[0].length===undefined||portMappingData[0][1]===undefined))) return;
+
+	for(i=0;i<portMappingData.length;i++){
+        $('#ActivePuertos tr:last,#MActivePuertos tr:last').after('<tr>\
+                                        <td><img class="hand" src="te_cross.png" onclick="issueDelete(this);"></td>\
+										<td></td>');
+		$('#ActivePuertos td:last,#MActivePuertos td:last').text(portMappingData[i][0]);
+		if( portMappingData[i][1] == '0' )
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>TCP</td>');
+		else if( portMappingData[i][1] == '1' )
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>UDP</td>');
+		else
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>TCP+UDP</td>');
+		$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td>'+portMappingData[i][2]+'</td>\
+                                        <td>'+portMappingData[i][3]+'</td>\
+                                        <td>'+portMappingData[i][4]+'</td>');
+		if( portMappingData[i][5] == 'on' ){
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td><img class="hand" src="te_on.png" onclick="issueEdit(this);"></td>');
+		}
+		else
+			$('#ActivePuertos td:last,#MActivePuertos td:last').after('<td><img class="hand" src="te_off.png" onclick="issueEdit(this);"></td>');
+		$('#ActivePuertos td:last,#MActivePuertos td:last').after('</tr>');	
+    }
+}
+
+function prevdata(){
+    curpage--;
+    showpage(); 
+}
+
+function showpage(){
+	var portMappingData=convertPppPortMapping(pppPortMappingList);
+	var row=portMappingData.length;
+	if( portMappingData[curpage-1][5] == 'on' )
+		$('.active').html('Activar <img style="vertical-align:middle" src="te_on.png" onclick="issueEdit(this);">');
+	else
+		$('.active').html('Activar <img style="vertical-align:middle" src="te_off.png" onclick="issueEdit(this);">');		
+	$('#Nombre').children('span').text(portMappingData[curpage-1][0]);
+	if( portMappingData[curpage-1][1] == '0' )
+		$('#Protocolo').children('span').html('TCP');
+	else if( portMappingData[curpage-1][1] == '1' )
+		$('#Protocolo').children('span').html('UDP');
+	else
+		$('#Protocolo').children('span').html('TCP+UDP');
+	$('#Externo').children('span').html(portMappingData[curpage-1][2]);
+	$('#Interno').children('span').html(portMappingData[curpage-1][3]);
+	$('#DirecciónIP').children('span').html(portMappingData[curpage-1][4]);	
+    if( curpage == 1 && curpage == row ){
+        $('#prev').addClass('divHide');
+        $('#next').addClass('divHide');
+    }   
+    else if( curpage == 1 && curpage != row ){
+        $('#prev').addClass('divHide');
+        $('#next').removeClass('divHide');
+    }
+    else if( curpage != 1 && curpage == row ){
+        $('#prev').removeClass('divHide');
+        $('#next').addClass('divHide');
+    }
+    else{
+        $('#prev').removeClass('divHide');
+        $('#next').removeClass('divHide');
+    }
+    $('#pageno').text(curpage+'/'+row);
+}
+
+function nextdata(){
+    curpage++;
+    showpage(); 
+}
+
+function issueEdit( obj )
+{
+  if(ismobile)
+	var idx=curpage-1;
+  else
+	var idx=($(obj).closest('tr').index())-1;
+  var mdf=pppPortMappingRemain[idx];
+  mdf[5]=($(obj).attr('src') == "te_on.png")?("off"):("on"); //inversion  
+  mdf[mdf.length]=false; //append meta-data to indicate this item was modified
+  var remainEdited=[];
+  remainEdited.push(mdf);
+  var remainInversed=inversePppPortMapping(remainEdited, pppPortMappingList/*[['8051','hello','TCP','192.168.1.2','2000','2001','1000','T','ppp0.1'],['8052','world','UDP','192.168.1.3','2000','2001','1000','T','ppp0.1']]*/ );
+  $.each( remainInversed, function( idx, val ){
+    saveIndividual( val );
+  }); //end of remainInversed
+  window.location = window.location;
+}
+
+function issueDelete( obj )
+{
+  if(ismobile)
+	var idx=curpage-1;
+  else
+	var idx=($(obj).closest('tr').index())-1;
+  setPppPortMapping( "delete", idx );
+  $(obj).closest("tr").remove(); //remove row
+  $.each( pppPortMappingDelete, function( idxouter, valouter ){
+    var intf=null;
+    $.each( pppPortMappingList, function( idxinner, valinner ){
+      if( valouter[6]==valinner[0] ) intf=valinner[8];
+    }); //end of pppPortMappingDelete
+    removeIndividual( valouter[6], intf );
+  }); //end of pppPortMappingDelete
+  window.location = window.location;
+}
+
+function delandactive(obj){
+    if(ismobile)
+		var idx=curpage-1;
+	else
+		var idx=($(obj).closest('tr').index())-1;
+    setPppPortMapping( "delete", idx );
+	var portMappingData=convertPppPortMapping(pppPortMappingList);
+	if( $(obj).attr('src') == "te_cross.png")
+		var loc = 'te_puertos.cmd?action=delete&portName='+portMappingData[idx][0];
+	else
+		var loc = 'te_puertos.cmd?action=active&portName='+portMappingData[idx][0];
+	loc += '&portProtocol='+portMappingData[idx][1];
+	loc += '&wanPortRange='+portMappingData[idx][2];
+	loc += '&lanPortRange='+portMappingData[idx][3];
+	loc += '&portIPAddress='+portMappingData[idx][4];
+	if( $(obj).attr('src') == "te_cross.png"){
+		loc += '&portActive='+portMappingData[idx][5];
+	}
+	else{
+		if( $(obj).attr('src') == "te_on.png" )
+			loc += '&portActive=off';
+		else
+			loc += '&portActive=on';
+	}
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	//location.reload();
+	eval(code);		
+}
+
+function deleteRow(obj){
+  var idx=($(obj).closest('tr').index())-1;
+  setPppPortMapping( "delete", idx );
+	//$(obj).closest("tr").remove(); //remove row	
+	var loc = 'te_puertos.cmd?action=delete&portName='+portMappingData[idx][0];
+	loc += '&portProtocol='+portMappingData[idx][1];
+	loc += '&wanPortRange='+portMappingData[idx][2];
+	loc += '&lanPortRange='+portMappingData[idx][3];
+	loc += '&portIPAddress='+portMappingData[idx][4];
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	//location.reload();
+	eval(code);	
+}
+
+function editTable(obj){
+    $('.edit').addClass('divHide');
+	$('.save').removeClass('divHide');
+  var portMappingData=convertPppPortMapping(pppPortMappingList);
+	for(i=1;i<=portMappingData.length;i++){
+	    $('#'+obj+' tr').eq(i).children('td').eq(0).removeClass('divHide');
+		$('#'+obj+' tr').eq(i).children('td').eq(1).remove();
+        $('#'+obj+' tr').eq(i).children('td').eq(1).html('<input class="Input_box" type="text" value="'+portMappingData[i-1][0]+'" maxlength="16">');
+		$('#'+obj+' tr').eq(i).children('td').eq(2).html('<select class="Select_box">\
+																<option value="0">TCP</option>\
+																<option value="1">UDP</option>\
+																<option value="2">TCP+UDP</option>\
+														  </select>');
+		$('#'+obj+' tr').eq(i).children('td').eq(2).find('option[value='+portMappingData[i-1][1]+']').prop('selected',true);											  
+		$('#'+obj+' tr').eq(i).children('td').eq(3).html('<input class="Input_box" type="text" value="'+portMappingData[i-1][2]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(4).html('<input class="Input_box" type="text" value="'+portMappingData[i-1][3]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(5).html('<input class="Input_box" type="text" value="'+portMappingData[i-1][4]+'">');
+		$('#'+obj+' tr').eq(i).children('td').eq(6).find('img').attr("onclick","activeport(this);");	
+		$('#'+obj+' tr').eq(i).children('td').eq(6).find('img').attr("class","hand");
+    }
+}
+
+function saveTable(obj){
+    $('.edit').removeClass('divHide');
+	$('.save').addClass('divHide');
+	var rowCount = $('#'+obj+' tr').length;
+	//var loc = 'te_puertos.cmd?action=save&portMappingData=';//portMappingData format to server "aa:0:bb:cc:dd:on;...."
+  var editedList=[];
+	for(i=1;i<rowCount;i++){
+    //prepare array for retain
+    var editedItem=[];
+    editedItem[0]=($('#'+obj+' tr').eq(i).children('td').eq(1).find('input').val());
+    editedItem[1]=($('#'+obj+' tr').eq(i).children('td').eq(2).find('select>option:selected').val());
+    editedItem[2]=($('#'+obj+' tr').eq(i).children('td').eq(3).find('input').val());
+    editedItem[3]=($('#'+obj+' tr').eq(i).children('td').eq(4).find('input').val());
+    editedItem[4]=($('#'+obj+' tr').eq(i).children('td').eq(5).find('input').val());
+    editedItem[5]=( $('#'+obj+' tr').eq(i).children('td').eq(6).find('img').attr('src') == 'te_on.png' ? 'on' : 'off' );
+    editedItem[6]=pppPortMappingRemain[i-1][6];
+    editedList.push(editedItem);
+    //end preparation
+		//loc += $('#'+obj+' tr').eq(i).children('td').eq(1).find('input').val()+':';
+		//loc += $('#'+obj+' tr').eq(i).children('td').eq(2).find('select>option:selected').val()+':';
+		//loc += $('#'+obj+' tr').eq(i).children('td').eq(3).find('input').val()+':';
+		//loc += $('#'+obj+' tr').eq(i).children('td').eq(4).find('input').val()+':';
+		//loc += $('#'+obj+' tr').eq(i).children('td').eq(5).find('input').val()+':';
+		//if( $('#'+obj+' tr').eq(i).children('td').eq(6).find('img').attr('src') == 'te_on.png')
+		//	loc += 'on;';
+		//else
+		//	loc += 'off;';
+    }
+  var remainEdited=setPppPortMapping("differentiate", editedList);
+  var remainInversed=inversePppPortMapping(remainEdited, pppPortMappingList/*[['8051','hello','TCP','192.168.1.2','2000','2001','1000','T','ppp0.1'],['8052','world','UDP','192.168.1.3','2000','2001','1000','T','ppp0.1']]*/ );
+  $.each( remainInversed, function( idx, val ){
+    saveIndividual( val );
+  }); //end of remainInversed
+  $.each( pppPortMappingDelete, function( idxouter, valouter ){
+    var intf=null;
+    $.each( pppPortMappingList, function( idxinner, valinner ){
+      if( valouter[6]==valinner[0] ) intf=valinner[8];
+    }); //end of pppPortMappingDelete
+    removeIndividual( valouter[6], intf );
+  }); //end of pppPortMappingDelete
+	//loc += '&sessionKey='+sessionKey;
+	//var code = 'location="' + loc + '"';
+	//alertSpecial(code);
+	window.location = window.location;
+	//eval(code); 
+}
+
+function activeport(obj){
+	if( $(obj).attr('src') == 'te_on.png' ){
+		$(obj).fadeOut(function(){
+			$(obj).attr('src','te_off.png').fadeIn(0.00000000001);
+		});
+	}
+	else{
+		$(obj).fadeOut(function(){
+		   $(obj).attr('src','te_on.png').fadeIn(0.00000000001);
+		});
+	}
+}
+var startPort;
+var endPort;
+var wanOpenPortRangeInterval=0;
+
+function checkwanport(inrangevalue){
+	var invalue = inrangevalue.split(':');	
+	if(inrangevalue.match("[:]") == null)
+	{
+		startPort=parseInt(invalue[0]);
+		endPort=parseInt(invalue[0]);
+	}
+	else
+	{
+		startPort=parseInt(invalue[0]);
+		endPort=parseInt(invalue[1]);
+		wanOpenPortRangeInterval=endPort-startPort;
+	}
+	if (startPort > endPort || startPort<1 || endPort>65535)
+	{
+		msg = '&iexcl;Puerto WAN no v&aacute;lido!';
+		alertSpecial(msg);
+		return false;
+	}
+	return true;
+}
+
+function checklanport(inrangevalue){
+	var invalue = inrangevalue.split(':');
+    if(inrangevalue.match("[:]") == null)
+	{
+		startPort=parseInt(invalue[0]);
+		endPort=parseInt(invalue[0]);
+	}
+	else
+	{
+		startPort=parseInt(invalue[0]);
+		endPort=parseInt(invalue[1]);
+	}
+	if (startPort > endPort || startPort<1 || endPort>65535)
+	{
+		msg = '&iexcl;Puerto LAN abierto no v&aacute;lido!';
+		alertSpecial(msg);
+		return false;
+	}
+	if((endPort-startPort)&&(wanOpenPortRangeInterval!=(endPort-startPort))){
+		msg="&iexcl;El intervalo de puertos lan y wan debe ser igual!";
+		alertSpecial(msg);
+		return false;
+	}
+	return true;
+}
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+            <div class="title">Puertos</div>
+            <div class="content">
+				<div class="littletitle">Configuraci&oacute;n Puertos</div>
+				<p class="content_word">Rellena los siguientes campos y pulsa el bot&oacute;n <b>A&ntilde;adir.</b> Ten en cuenta que para abrir un rango de puertos debes usar el siguiente formato : <b>5001:5010</b></p>
+                <table class="editItems" border="0">
+				<tr>
+                    <td class="titlesize">Nombre regla de puertos:</td>
+                    <td><input class="Input_box" type="text" name="portName" maxlength="16"></td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Direcci&oacute;n IP:</td>
+                    <td><input class="Input_box" type="text" name="IPAddress"></td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Protocolo:</td>
+                    <td>
+                    <select class="Select_box" name="Protocol">
+                        <option value="0">TCP</option>
+                        <option value="1">UDP</option>
+                        <option value="2">TCP+UDP</option>
+                    </select>
+					</td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Abrir Puerto/Rango Externo (WAN):</td>
+                    <td><input class="Input_box" type="text" name="wanPortRange">(ej: 5001:5010)</td>
+                </tr>
+                <tr>
+                    <td class="titlesize">Abrir Puerto/Rango Interno (LAN):</td>
+                    <td><input class="Input_box" type="text" name="lanPortRange">(ej: 5001)</td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="A&ntilde;adir"></td>
+                </tr>
+				</table>
+            </div> 
+			<div class="content">
+				<div class="littletitle">Tabla actual de mapeo de puertos</div>
+				<table id="ActivePuertos" border="0" style="width:100%;">
+					<thead>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;</td>
+							<td>Nombre</td>
+							<td>Protocolo</td>
+							<td>Puerto/Rango Externo</td>
+							<td>Puerto/Rango Interno</td>
+							<td>Direcci&oacute;n IP</td>
+							<td>Activar</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Puertos</div>
+			<div class="Mcontent">
+			<div class="littletitle">Configuraci&oacute;n Puertos</div>
+            <p class="Mcontent_word">Rellena los siguientes campos y pulsa el bot&oacute;n <b>A&ntilde;adir.</b> Ten en cuenta que para abrir un rango de puertos debes usar el siguiente formato : <b>5001:5010</b></p>
+                <div class="Mtitlesize">Nombre regla de puertos:</div>
+                <div><input class="MInput_box" type="text" name="MportName" maxlength="16"></div>
+                <div class="Mtitlesize">Direcci&oacute;n IP:</div>
+                <div><input class="MInput_box" type="text" name="MIPAddress"></div>
+                <div class="Mtitlesize">Protocolo:</div>
+                <div>                   
+                    <select class="MSelect_box" name="MProtocol">
+                        <option value="0">TCP</option>
+                        <option value="1">UDP</option>
+                        <option value="2">TCP+UDP</option>
+                    </select>
+                </div>
+                <div class="Mtitlesize">Abrir Puerto/Rango Externo (WAN):</div>
+                <div><input class="MInput_box" type="text" name="MwanPortRange"></div><div>(ej: 5001:5010)</div>
+                <div class="Mtitlesize">Abrir Puerto/Rango Interno (LAN):</div>
+                <div><input class="MInput_box" type="text" name="MlanPortRange"></div><div>(ej: 5001)</div>
+                <div><input type="button" value="A&ntilde;adir"></div>
+            </div>
+			<div class="page Mcontent">
+			<div class="littletitle">Tabla actual de mapeo de puertos</div>
+			<div>
+				<span class="Eliminar hand" style="color:#0174DF;" onclick="issueDelete(this);">Eliminar</span>
+				<!--<span class="savedata hand divHide" style="color:#0174DF" onclick="saveData();">OK</span>-->
+				<span class="active hand" style="display:block;margin-top:-20px;text-align:right;"></span>
+			</div>
+			<div id="Nombre">Nombre:<span></span></div>
+			<div id="Protocolo">Protocolo:<span></span></div>
+			<div id="Externo">Puerto/Rango Externo:<span></span></div>
+			<div id="Interno">Puerto/Rango Interno:<span></span></div>
+			<div id="DirecciónIP">Direcci&oacute;n IP:<span></span></div>
+			<div id="showpage" style="display:block;text-align:center;">
+			</div>
+				<!--<table id="MActivePuertos" border="0" style="width:99%;">
+					<thead>
+						<tr>
+							<td>&nbsp;&nbsp;&nbsp;</td>
+							<td>Nombre</td>
+							<td>Protocolo</td>
+							<td>Puerto/<br>Rango<br>Externo</td>
+							<td>Puerto/<br>Rango<br>Interno</td>
+							<td>Direcci&oacute;n IP</td>
+							<td>Activar</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>-->
+			</div>
+        </div>
+    </div>
+</body>
+</html>

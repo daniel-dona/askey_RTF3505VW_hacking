@@ -1,0 +1,143 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+var selectedIfname = '<%ejGet(wanIfName)%>';
+var selectedServiceId= '<%ejGet(serviceId)%>';
+var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+var serviceId= '<%ejGet(serviceId)%>';
+var cfgL2tpAc= '<%ejGet(cfgL2tpAc)%>';
+
+function btnNext() {
+   var loc = 'wancfg.cmd?';
+   if(selectedIfname.length>0) loc+='action=modify';
+   else loc+='action=add';
+
+   // disable save button to avoid bugs while clicking this button too fast
+   document.forms[0].btnSave.disabled = 1;
+   
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var ifc = '<%ejGetWl(wlInterface)%>';
+   var loc = 'natcfg2.html';
+
+   if (serviceId == '1' || cfgL2tpAc == '1') {
+     if ( prtcl == 'PPPoE' || prtcl == 'PPPoA' )
+        loc = 'pppoe.html';
+     else if ( prtcl == 'IPoA' ||  prtcl == 'MER' )
+        loc = 'natcfg2.html';
+   }
+   else {
+     if (prtcl == 'Bridge')
+          loc = 'wanifc.cmd';
+     else 
+         loc = 'ifcdns.html';
+   }
+	
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+         <b>WAN Setup - Summary</b><br><br>
+         Make sure that the settings below match the settings provided by your ISP.<br><br>
+         <table border="1" cellpadding="3" cellspacing="0">
+            <tr>
+               <td class='hd'>Connection Type:</td>
+               <td><%ejGetOther(memInfo, ntwkPrtcl)%>&nbsp;</td>
+            </tr>
+			
+<script language="javascript">
+<!-- hide
+var intfEnable = '<%ejGet(enblService)%>';
+if ( intfEnable == '1') {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Interface Enable:</td>");
+  document.writeln("                  <td>Enabled</td>");
+  document.writeln("               </tr>");
+}
+else {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Interface Enable:</td>");
+  document.writeln("                  <td>Disabled</td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+            <tr>
+               <td class='hd'>NAT:</td>
+               <td><%ejGetOther(memInfo, enblNat)%>&nbsp;</td>
+            </tr>
+            <tr>
+               <td class='hd'>Full Cone NAT:</td>
+               <td><%ejGetOther(memInfo, enblFullcone)%>&nbsp;</td>
+            </tr>
+            <tr>
+               <td class='hd'>Firewall:</td>
+               <td><%ejGetOther(memInfo, enblFirewall)%>&nbsp;</td>
+            </tr>
+            <tr>
+               <td class='hd'>IGMP Multicast Proxy:</td>
+               <td><%ejGetOther(memInfo, enblIgmp)%>&nbsp;</td>
+            </tr>
+            <tr>
+               <td class='hd'>IGMP Multicast Source Enabled:</td>
+               <td><%ejGetOther(memInfo, enblIgmpMcastSource)%>&nbsp;</td>
+            </tr>
+
+<script language="javascript">
+<!-- hide
+var enableMldText = '<%ejGetOther(memInfo, enblMld)%>';
+var enableMldMcastText = '<%ejGetOther(memInfo, enblMldMcastSource)%>';
+if ( enableMldText != 'Not Supported') {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>MLD Multicast Proxy:</td>");
+  document.writeln("                  <td><%ejGetOther(memInfo, enblMld)%></td>");
+  document.writeln("               </tr>");
+}
+if ( enableMldMcastText != 'Not Supported') {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>MLD Multicast Source Enabled:</td>");
+  document.writeln("                  <td><%ejGetOther(memInfo, enblMldMcastSource)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+            <tr>
+               <td class='hd'>Quality Of Service:</td>
+               <td><%ejGetOther(memInfo, enblQos)%>&nbsp;</td>
+            </tr>
+			<tr>
+			   <td class='hd'>MTU:</td>
+			   <td><%ejGet(wanMtu)%>&nbsp;</td>
+			</trd>
+         </table>
+         <br>
+<script language="javascript">
+<!-- hide
+{
+   document.writeln('Click "Apply/Save" to have this interface to be effective. Click "Back" to make any modifications.<br>');
+   document.writeln("<center>");
+   document.writeln("<input type='button' onClick='btnBack()' value='Back'> <input type='button' name='btnSave' onClick='btnNext()' value='Apply/Save'>");
+   document.writeln("</center>");
+}
+// done hiding -->
+         </script>
+         </form>
+      </blockquote>
+   </body>
+</html>

@@ -1,0 +1,165 @@
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+##############################################################################
+#
+# Constants that are used by the shell scripts defined by SHGW modules
+#
+# Date			: 15/Mar/2016
+##############################################################################
+
+#
+# system commands
+AWK="/usr/bin/awk"
+BRCTL="/bin/brctl"
+CAT="/bin/cat"
+CHMOD="/bin/chmod"
+CP="/bin/cp"
+CURL="/bin/curl"
+CUT="/usr/bin/cut"
+DATE="/bin/date"
+ECHO="/bin/echo"
+GREP="/bin/grep"
+IFCONFIG="/sbin/ifconfig"
+IP="/bin/ip"
+IPTABLES="/bin/iptables"
+IP6TABLES="/bin/ip6tables"
+IPSET="/bin/ipset"
+KILL="/bin/kill"
+LS="/bin/ls"
+MKDIR="/bin/mkdir"
+PS="/bin/ps"
+PING="/bin/ping"
+PING6="/bin/ping6"
+RM="/bin/rm"
+ROUTE="/sbin/route"
+SED="/bin/sed"
+SH="/bin/sh"
+SLEEP="/bin/sleep"
+TAIL="/usr/bin/tail"
+TR="/usr/bin/tr"
+WC="/usr/bin/wc"
+
+#
+# 3rd party tools paths
+SQLITE="/bin/sqlite3"
+
+#
+# Globals
+RESOLV_CONF="/etc/resolv.conf"
+TMPFS_PATH="/var"
+
+#
+# SHGW specific paths
+SHGW_NVRAM="/usr/local/auxfs/McAfee"
+SHGW_TMPFS_PATH="/var/.shgw"
+SHGW_PRIVATE="/etc/shgw"
+SHGW_BIN_STORE="/bin"
+
+#
+# SHGW DB & other details
+SHGW_PERSISTANT_DB="${SHGW_NVRAM}/shgw_persistent.db"
+SHGW_NON_PERSISTANT_DB="${SHGW_TMPFS_PATH}/shgw.db"
+SHGW_CONFIG_STORE="${SHGW_PRIVATE}/shgw_config_store.sql"
+SHGW_LOG_FILE="${SHGW_TMPFS_PATH}/shgw.log"
+SHGW_INBOUND_SEC_SCRIPT="${SHGW_TMPFS_PATH}/shgw_inbound_sec_rules"
+
+#
+# SHGW Binaries
+SHGW_DNSPROXY="${SHGW_BIN_STORE}/shgw_dnsproxy"
+SHGW_WD="${SHGW_BIN_STORE}/shgw_watchdogd"
+SHGW_CSP="${SHGW_BIN_STORE}/shgw_csp"
+SHGW_DD="${SHGW_BIN_STORE}/shgw_device_discovery"
+SHGW_RR="${SHGW_BIN_STORE}/shgw_router_registration"
+SHGW_CM="${SHGW_BIN_STORE}/shgw_command_manager"
+SHGW_LOGROTATE="${SHGW_BIN_STORE}/shgw_logrotate"
+SHGW_WD_STATS="${SHGW_BIN_STORE}/shgw_wd_sys_stats.sh"
+SHGW_WD_MONIT="${SHGW_BIN_STORE}/shgw_wd_monit"
+SHGW_ROUTER_RESET="${SHGW_BIN_STORE}/shgw_router_reset"
+SHGW_ACCESS_RESTRICTION="${SHGW_BIN_STORE}/shgw_access_restriction"
+
+#
+# SHGW Config details
+SHGW_WD_CONF="${SHGW_PRIVATE}/shgw_watchdogd.conf"
+SHGW_LOGGER_RC_PATH="${SHGW_PRIVATE}/shgw_logger.rc"
+
+#
+# SHGW logrotate related details
+LS_FILE_SIZE_FIELD=5
+LS_FILE_NAME_FIELD=9
+
+#
+# SHGW WD_STATS related details
+G_TOP_PID_POS=1
+G_TOP_CPU_POS=8
+G_TOP_MEM_POS=6
+G_TOP_NAME_POS_1=9
+G_TOP_NAME_POS_2=10
+G_TOP_NAME_POS_3=11
+BIN_PREFIX="\/bin\/"
+WD_SUFFIX="\/etc\/shgw\/shgw_watchdogd.conf"
+
+#
+# Used by the SHGW_DNSProxy module & firewall
+SHGW_REQ_PORT=3130
+SHGW_FWMARK=3
+SHGW_FWMARK6=3
+SHGW_TPROXY_MARK=0x3
+SHGW_TPROXY_MARK6=0x3
+SHGW_TABLE=100
+SHGW_TABLE6=200
+SHGW_IPV4_RULE_PREF="pref 1"
+SHGW_IPV6_RULE_PREF="pref 1"
+
+
+#
+# Specific to TEF related
+HGUINFO="/var/shgw/device_info.cfg"
+IP_SKIP_LIST_FILE="/var/shgw/whitelist_devices.cfg"
+
+#
+# Misc settings
+NO_OF_LINES=5000
+STARTUP_LOCK="${TMPFS_PATH}/startup.lock"
+SHGW_STARTUP_LOG="${TMPFS_PATH}/.shgw_startup.log"
+SHGW_STARTUP_LOG_TMP="${TMPFS_PATH}/.shgw_startup.log.tmp"
+SHGW_STARTUP_STATUS="${TMPFS_PATH}/.shgw_startup_status"
+SHGW_ACCESS_RESTRICTION_LOG="${TMPFS_PATH}/.shgw/.access_restriction.log"
+SHGW_ACCESS_RESTRICTION_LOG_TMP="${TMPFS_PATH}/.shgw/.access_restriction.log.tmp"
+SHGW_ERROR_FILE="${TMPFS_PATH}/.shgw_error_file"
+WAIT_FOR_GW_IP_SLEEP_TIME=10
+WAIT_FOR_DNS_IP_SLEEP_TIME=5
+WAIT_FOR_WAN_IP_SLEEP_TIME=5
+DEBUG_DATA_FILE="${TMPFS_PATH}/shgw_debug_data.txt"
+TLD_JSON_FILE="${SHGW_NVRAM}/shgw_tld_file.json";
+
+#
+# Certificates
+CACERT=cacert
+CERT_NAME=cloud_cert.pem
+CA_CERT_FILE="${SHGW_PRIVATE}/${CERT_NAME}"
+
+#
+# IPv6 - NDP related
+LOCAL_MULTICAST_ADDRESS="ff02::1"

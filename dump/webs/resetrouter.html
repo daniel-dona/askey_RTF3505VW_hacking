@@ -1,0 +1,33 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+function btnReset() {
+   var loc = 'rebootinfo.cgi?';
+
+   loc += 'sessionKey=' + sessionKey;
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <center>
+            <br>
+            <strong>Click the button below to reboot the router.</strong>
+      </blockquote></center>
+      <p align="center">
+         <input type='button' onClick='btnReset()' value='Reboot'>
+         <br>
+      </p>
+   </body>
+</html>

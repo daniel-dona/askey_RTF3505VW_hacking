@@ -1,0 +1,368 @@
+#
+# This file replaces the entityInfoArray in eid.c
+# (See also eid_bcm_mgmt.txt and cms_eid.h)
+#
+# Fields not set here are initialized to zero or NULL.
+# All field values must be on a single line
+#
+
+BEGIN
+  eid         = EID_SMD
+  name        = smd
+  flags = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid         = EID_SSK
+  name        = ssk
+  flags = EIF_LAUNCH_IN_STAGE_1|EIF_MESSAGING_CAPABLE|EIF_MSG_TERMINATE|EIF_DESKTOP_LINUX_CAPABLE|EIF_SET_CGROUPS|EIF_SET_SCHED
+  schedPolicy = SCHED_RR
+  schedPriority = BCM_RTPRIO_DATA
+  cpuGroupName = rt/data
+END
+
+BEGIN
+  eid         = EID_DHCPD
+  name        = dhcpd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_DHCPC
+  name        = dhcpc
+  runArgs     = -f
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_PPP
+  name        = pppd
+  runArgs     = -c
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+#ifdef RTF_DEF
+#BEGIN
+#  eid         = EID_FTPD         /* this is the ftp server */
+#  name        = bftpd
+#  flags       = EIF_SERVER|EIF_SERVER_TCP|EIF_MESSAGING_CAPABLE|EIF_IPV6
+#  backLog     = 1
+#  port        = FTPD_PORT
+#END
+#endif
+
+BEGIN
+  eid         = EID_FTP         /* this is the ftp client */
+  name        = ftp
+  flags       = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE
+END
+
+BEGIN
+  eid         = EID_TFTPD        /* this is the tftp server */
+  name        = tftpd
+  flags = EIF_SERVER|EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+  port        = TFTPD_PORT
+END
+
+##ifdef RTF_DEF
+BEGIN
+  eid         = EID_SCP        /* this is the scp services */
+  name        = scp
+  flags = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+END
+
+BEGIN
+  eid         = EID_SFTP
+  name        = sftp
+  flags       = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE
+END
+
+BEGIN
+  eid         = EID_SFTP_SERVER        /* this is the sftp-server services */
+  name        = sftp-server
+  flags = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE|EIF_IPV6
+END
+##endif
+
+BEGIN
+  eid         = EID_TFTP         /* this is the tftp client */
+  name        = tftp
+  flags       = EIF_MESSAGING_CAPABLE|EIF_DESKTOP_LINUX_CAPABLE
+END
+
+BEGIN
+  eid         = EID_DNSPROBE
+  name        = dnsprobe
+END
+
+BEGIN
+  eid         = EID_DNSPROXY
+  name        = dnsproxy
+  flags       = EIF_MESSAGING_CAPABLE|EIF_AUTO_RELAUNCH
+END
+
+BEGIN
+  eid         = EID_SYSLOGD
+  name        = syslogd
+  runArgs     = -n
+END
+
+BEGIN
+  eid         = EID_KLOGD
+  name        = klogd
+  runArgs     = -n
+END
+
+BEGIN
+  eid         = EID_DDNSD
+  name        = ddnsd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_ZEBRA
+  name        = zebra
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_RIPD
+  name        = ripd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_SNTP
+  name        = sntp
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_URLFILTERD
+  name        = urlfilterd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_MCPD
+  name        = mcpd
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MSG_TERMINATE
+END
+
+##ifdef RTF_DEF
+BEGIN
+  eid         = EID_MCPCTL
+  name        = mcpctl
+  flags       = EIF_MESSAGING_CAPABLE
+END
+##else
+##BEGIN
+##  eid         = EID_MCPCTL
+##  name        = mcpctl
+##  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+##END
+##endif
+
+BEGIN
+  eid         = EID_WLMNGR
+  name        = WLMNGR-DAEMON
+  path        = /bin/wlmngr
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE|EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_WLNVRAM
+  name        = WLNVRAM
+  path        = /bin/nvram
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_WLEVENT
+  name        = WLEVENT
+  path        = /bin/wlevt
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_WLWPS
+  name        = WLWPS
+  path        = /bin/wps_monitor
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_WLWAPID
+  name        = WLWAPID
+  path        = /bin/wapid
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_DHCP6C
+  name        = dhcp6c
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_DHCP6S
+  name        = dhcp6s
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_RADVD
+  name        = radvd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_RASTATUS6
+  name        = rastatus6
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_IPPD
+  name        = ippd
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_DSLDIAGD
+  name        = dsldiagd
+  flags       = EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_VECTORINGD
+  name        = vectoringd
+  flags       = EIF_MDM|EIF_MESSAGING_CAPABLE|EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_SOAPSERVER
+  name        = soapserver
+  runArgs     = -f
+  flags       = EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_UNITTEST
+  name        = ut
+END
+
+BEGIN
+  eid         = EID_MISC
+  name        = misc
+END
+
+BEGIN
+  eid         = EID_PING
+  name        = ping
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_TRACERT
+  name        = traceroute
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_HOTPLUG
+  name        = hotplug
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_SAMBA
+  name        = smbd
+  runArgs     = -D
+  flags        = EIF_SET_SCHED|EIF_SET_CGROUPS
+  cpuGroupName = normal/default
+END
+
+BEGIN
+  eid         = EID_DMSD
+  name        = bcmmserver
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_CMFD
+  name        = cmfd
+  flags       = EIF_LAUNCH_ON_BOOT|EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_L2TPD
+  name        = l2tpd
+  path        = /bin/openl2tpd
+END
+
+BEGIN
+  eid         = EID_PPTPD
+  name        = pptp
+END
+
+BEGIN
+  eid         = EID_MOCAD
+  name        = mocad
+  flags       = EIF_MESSAGING_CAPABLE|EIF_MULTIPLE_INSTANCES
+END
+
+BEGIN
+  eid         = EID_RNGD
+  name        = rngd
+  flags       = EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_PLC_NVM
+  name        = plcnvm
+  flags       = EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_PLC_BOOT
+  name        = plcboot
+  flags       = EIF_LAUNCH_ON_BOOT
+END
+
+BEGIN
+  eid         = EID_PWRCTL
+  name        = pwrctl
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_BMUCTL
+  name        = bmuctl
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_BMUD
+  name        = bmud
+  flags       = EIF_LAUNCH_ON_BOOT|EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_EPON_APP
+  name        = eponapp
+  flags       = EIF_MDM|EIF_LAUNCH_ON_BOOT|EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_EPON_OAM_PORT_LOOP_DETECT
+  name        = portLoopDetect
+  flags       = EIF_MESSAGING_CAPABLE
+END
+
+BEGIN
+  eid         = EID_TMSCTL
+  name        = tmsctl
+  flags       = EIF_MULTIPLE_INSTANCES
+END

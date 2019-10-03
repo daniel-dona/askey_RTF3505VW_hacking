@@ -1,0 +1,349 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicemgcp_basic.html
+  Author:
+  Creation Date: 2008
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel="stylesheet" href='stylemain.css' type='text/css'>
+<link rel="stylesheet" href='colors.css' type='text/css'>
+<script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var voiceRunning = '<%ejGetVoice(voiceStatus)%>';
+var gw = '<%ejGetVoice(gatewayName)%>';
+var ca = '<%ejGetVoice(callagentAddr)%>';
+var prt  = '<%ejGetVoice(pstnRouteRule)%>';
+var pd  = '<%ejGetVoice(pstnRouteData)%>';
+var pdp =  '<%ejGetVoice(pstnDialPlan)%>';
+var maxLines = '<%ejGetVoice(maxLines)%>';
+var ifn  = '<%ejGetVoice(ifName)%>';
+var ifList  = '<%ejGetVoice(ifList)%>';
+var locList = '<%ejGetVoice(localeList)%>';
+var selectedLocale = '<%ejGetVoice(localeName)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+eval(selectedLocale);
+
+if ( isFinite( parseInt( '<%ejGetVoice(numFxo)%>',10 ) ) ) {
+   var fxoBuild = parseInt( '<%ejGetVoice(numFxo)%>',10 );
+}
+else {
+   var fxoBuild = 0;
+}
+
+function btnStartMgcp(current_view) {
+   var loc = 'voicemgcpstart.cmd?';
+
+   loc += addParamsToQuery( loc, current_view );   
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnStopMgcp(current_view) {
+   var loc = 'voicemgcpstop.cmd?';
+
+   loc += addParamsToQuery( loc, current_view );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnApplyMgcp(current_view) {
+   var loc = 'voicemgcpapply.cmd?';
+
+   loc += addParamsToQuery( loc, current_view );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function printInterfaceListBox(){
+   var tokInterfaceList = ifList.split(" ");
+
+   for(i = 0; i < tokInterfaceList.length; i++)
+   {
+      document.writeln("<option value=\"" + tokInterfaceList[i] + "\" selected>");  
+      document.writeln(tokInterfaceList[i]);
+   }
+}
+
+function printLocaleListBox(){   
+   var tokLocCodeList = locList.split(",");
+   
+   for(i = 0; i < tokLocCodeList.length; i++)
+   {
+      var tokCodeNameList = tokLocCodeList[i].split(" - ");
+      document.writeln("<option value=\"" + tokCodeNameList[0] + "\" selected>");      
+      document.writeln(tokCodeNameList[0] + " - " + tokCodeNameList[1]);          
+   }  
+}
+
+
+function addParamsToQuery(loc_init, current_view) {
+
+   var loc = loc_init;
+   with ( document.forms[0] ) {
+      loc += 'currentview=' + current_view;
+      loc += '&callagentAddr=' + caAddr.value.replace(/['" ]/g,'');
+      loc += '&gatewayName=' + gwName.value.replace(/['" ]/g,'');
+      loc += '&localeName=' + localeName.value.replace(/['" ]/g,'');
+      loc += '&ifName=' + ifName.value.replace(/['" ]/g,'');
+      if ( fxoBuild ){
+         loc += '&pstnDialPlan=' + pstnDialPlan.value.replace(/['" ]/g,'');
+         loc += '&pstnRouteRule=' + pstnRouteRule.value.replace(/['" ]/g,'');
+
+         if ( pstnRouteRule.value != "Auto" )
+            loc += '&pstnRouteData=' + pstnRouteData.value.replace(/['" ]/g,'');
+         else
+            loc += '&pstnRouteData=0';
+      }
+      
+   }
+   //alert(loc);
+   return loc;
+}
+
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      
+      enableButtons();
+      
+      caAddr.value = ca;
+      gwName.value = gw;
+      ifName.value = ifn;
+      localeName.value = sl0;
+
+      if ( fxoBuild ){
+         pstnDialPlan.value = pdp;
+         pstnRouteRule.value = prt;
+         pstnRouteData.value = pd;
+      }
+      
+      printFxoMenu();
+   }
+}
+
+function PstnRouteCbClick(cb) {
+   if ( cb.value == 'Auto' )
+      hidePstnRouteData(1);
+   else {
+      hidePstnRouteData(0);
+      setPstnRouteDataTxt(cb.value)
+   }
+}
+
+function setPstnRouteDataTxt(txtMode){
+   var table = document.getElementById("Table5");
+   var row = table.rows[0];
+   var cell = row.cells[0];
+   if ( txtMode == "Line" )
+      cell.innerHTML = "Physical Endpt To Route Incoming PSTN Calls To:";
+   else
+      cell.innerHTML = "SIP URI of PSTN endpoint:";
+}
+
+function hidePstnRouteData(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('pstnRoutingData').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.pstnRoutingData.style.visibility = status;
+   }
+}
+
+function printFxoMenu( ) {
+   var status = 'hidden';
+   if ( fxoBuild ) {
+      status = 'visible';
+   }
+
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('pstnData').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.pstnData.style.visibility = status;
+   }
+   
+   if ( status == 'visible') {         
+      if ( prt != "Line" && prt != "Voip" ){
+         hidePstnRouteData(1);
+      }
+      else {
+         hidePstnRouteData(0);
+         setPstnRouteDataTxt(prt);
+      }
+   }   
+}
+
+function enableButtons(){
+   var buttonStart = document.getElementById("StartButton");
+   var buttonStop = document.getElementById("StopButton");
+   var buttonApply = document.getElementById("ApplyButton");
+   
+   if ( voiceRunning == 1 ) {
+      buttonStart.disabled = true;
+      buttonStop.disabled = false;
+      buttonApply.disabled = false;
+   } else {
+      buttonStart.disabled = false; 
+      buttonStop.disabled = true;
+      buttonApply.disabled = true;
+   }
+}
+
+</script>
+</head>
+<body onLoad='frmLoad()'>
+   <blockquote>
+      <form>
+         <b>Voice -- MGCP configuration</b><br>
+         <br>
+         Enter the MGCP parameters and click Start/Stop to save the parameters
+         and start/stop the voice application.<br>
+         <br>
+         <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td width="150">Bound Interface Name:</td>
+               <td><select name="ifName" size="1">
+                  <script TYPE="text/javascript">
+                     printInterfaceListBox()
+                  </script>
+               </select></td>
+            </tr>
+         </table>
+         
+         <table border="0" cellpadding="0" cellspacing="0">
+         <tr>
+            <td width="150">Locale selection:</td>
+            <td><select name="localeName" size="1">
+               <script TYPE="text/javascript">
+                  printLocaleListBox()
+               </script>                                             
+               </select></td>
+         </tr>
+         </table>
+         
+         <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td width="150">Call Agent IP Address:</td>
+               <td><input type='text' name='caAddr'></td>
+            </tr>
+            <tr>
+               <td>MGCP client name:</td>
+               <td><input type='text' name='gwName'></td>
+            </tr>
+         </table>
+         
+         <div id='pstnData'>
+            <table border="0" cellpadding="0" cellspacing="0" ID="Table4">
+               <tr>
+                  <td width="150">Incoming PSTN Call Routing:</td>
+                  <td><select name="pstnRouteRule" size="1" onClick='PstnRouteCbClick(this)'>
+                     <option value="Auto" selected>
+                     Auto -  PSTN Call switch to idle line
+                     <option value="Line">
+                     Line -  PSTN Call switch to Physical Line
+                     <option value="Voip">
+                     Voip -   PSTN Call switch to voip call
+                  </td>
+                  <td>
+                     <div id='pstnRoutingData'>
+                     <table border="0" cellpadding="0" cellspacing="20" ID="Table5">
+                        <tr>
+                           <td width="175"></td>
+                           <td><input type='text' name='pstnRouteData'></td>
+                        </tr>
+                     </table>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td width="150">PSTN DialPlan For Outgoing Calls:</td><td><input type='text' name='pstnDialPlan'></td>
+               </tr>
+            </table>
+         <br>
+         </div>
+                  
+         <br>
+         <center>
+            <input type='button' onClick="btnStartMgcp('basic')" value='Start MGCP client' ID="StartButton" disabled=true>
+            <br>
+            <br>
+            <input type='button' onClick="btnStopMgcp('basic')" value='Stop MGCP client' ID="StopButton" disabled=true>
+            <br>
+            <br>
+            <input type='button' onClick="btnApplyMgcp('basic')" value='Apply' ID="ApplyButton" disabled=true>
+            <br>
+            <br>
+         </center>
+      </form>
+   </blockquote>
+</body>
+</html>

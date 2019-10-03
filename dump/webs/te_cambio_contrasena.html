@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var wrongpassword = '<%ejGetOther(WrongPassword)%>';
+
+$(window).load( function()
+{
+	if(wrongpassword=='1')
+		alertSpecial("Su contrase&ntilde;a es incorrecta.");
+});
+
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[name=newpassword],[name=Mnewpassword]').on('change keyup paste mouseup', function() {
+        var passlevel = checkPassLevel();
+		showPassLevel(passlevel);
+    });
+	$('[src="show.gif"]').click(function(){
+		if(ismobile){
+			if($('[name=Mnewpassword]').prop('type')=='text')
+				$('[name=Mnewpassword]').prop('type','password');
+			else
+				$('[name=Mnewpassword]').prop('type','text');
+		}
+		else{
+			var password=$('[name=newpassword]').val();
+			if($('[name=newpassword][type=password]').length){	
+				$(this).prev('input').remove();	
+				$(this).before('<input class="Input_box" type="text" name="newpassword">');
+			}else{
+				$(this).prev('input').remove();
+				$(this).before('<input class="Input_box" type="password" name="newpassword">');
+			}
+			$('[name=newpassword]').val(password);
+		}
+		$('[name=newpassword],[name=Mnewpassword]').keyup(function(){
+			var passlevel = checkPassLevel();
+			showPassLevel(passlevel);
+		});
+	});
+	$('[value="Aceptar"]').on('click',function(){
+		var pass = $("[name=newpassword],[name=Mnewpassword]").val();
+		if( pass.length<8 || pass.length>32 ){
+			alertSpecial('Longitud clave de acceso router incorrecta. Debe contener entre 8 y 32 caracteres.');
+			return false;
+		}
+		if( pass != $('[name=confirmpassword],[name=Mconfirmpassword]').val() ){
+			alertSpecial("Contrase&ntilde;a no coincide. Por favor, escriba la misma contrase&ntilde;a en los campos 'nuevo' y 'confirmar'.");
+			return false;
+		}
+
+		var checkspc = /(^ |  | $)/;
+		var checkpwd = /^[\x20-\x7e]{8,32}$/;
+		if (!checkpwd.test(pass) || checkspc.test(pass)) {
+			alertSpecial("Tu contrase&ntilde;a acceso router contiene caracteres no v&aacute;lidos. Recuerda que no puedes introducir espacios al inicio o final de la contrase&ntilde;a. Tampoco introducir varios espacios consecutivos.");
+			return false;
+		}
+
+		var loc = 'te_cambio_contrasena.cgi?inOrgPassword='+$('[name=password],[name=Mpassword]').val();
+		loc += '&changePassword='+$('[name=newpassword],[name=Mnewpassword]').val();
+		$('[name=inOrgPassword]').val($('[name=password],[name=Mpassword]').val());
+		$('[name=inPassword]').val($('[name=newpassword],[name=Mnewpassword]').val());
+		$('[name=sessionKey]').val(sessionKey);
+		document.forms[0].submit();
+		var code = 'location="' + loc + '"';
+	});
+	$('[value="Cancelar"]').on('click',function(){
+		$('[name=password],[name=Mpassword]').val('');
+		$('[name=newpassword],[name=Mnewpassword]').val('');
+		$('[name=confirmpassword],[name=Mconfirmpassword]').val('');
+		$('#security,#Msecurity').find('img').attr("src","te_nopass.jpg");
+	});
+});
+
+function checkPassLevel(){
+	var pass = $("[name=newpassword],[name=Mnewpassword]").val();
+	var digitPatrn = /\d/;
+	var letterPatrn = /[a-z]/i;
+	var specialPatrn = /\W/;
+	var checkspc = /(^ |  | $)/;
+	var checkpwd = /^[\x20-\x7e]{8,32}$/;
+	var ret = 0;
+
+	if (pass.length > 32) {
+		alertSpecial('Longitud clave de acceso router incorrecta. Debe contener entre 8 y 32 caracteres.');
+		pass = pass.substr(0, 32);
+		$("[name=newpassword],[name=Mnewpassword]").val(pass);
+		$("[name=newpassword],[name=Mnewpassword]").select().focus();
+	}
+	if (checkpwd.test(pass) && !checkspc.test(pass)) {
+		ret = digitPatrn.test(pass) + letterPatrn.test(pass) + specialPatrn.test(pass);
+		if (pass.length<=10 && ret>2) ret = 2;
+	}
+	return ret;
+}
+
+function showPassLevel(passlevel)
+{
+	if(passlevel == 0){
+        $('#security,#Msecurity').find('img').attr("src","te_nopass.jpg");
+	}
+    else if(passlevel == 1){
+        $('#security,#Msecurity').find('img').attr("src","te_low.jpg");
+	}
+    else if(passlevel == 2){
+        $('#security,#Msecurity').find('img').attr("src","te_media.jpg");
+	}
+    else if(passlevel == 3){
+        $('#security,#Msecurity').find('img').attr("src","te_high.jpg");
+    }
+}
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form method='post'  action='te_cambio_contrasena.cgi'>
+<input type="hidden" name="sessionKey">
+<input type="hidden" name="inOrgPassword">
+<input type="hidden" name="inPassword">
+
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Cambio contrase&ntilde;a del router</div>
+			<div class="content">
+				<div class="littletitle">Cambio contrase&ntilde;a del router</div>
+				<p class="content_word">Desde aqu&iacute; podr&aacute;s cambiar la contrase&ntilde;a de acceso al router. Se recomienda que la clave tenga al menos 8 caracteres alfanum&eacute;ricos:</p>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Contrase&ntilde;a anterior:</td>
+					<td><input class="Input_box" type="password" name="password"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Contrase&ntilde;a nueva:</td>
+					<td width="300px"><input class="Input_box" type="password" name="newpassword"><img class="hand" src="show.gif"></td>
+					<td id="security">Nivel de seguridad de la contrase&ntilde;a<img style="margin-left:10%;" src="te_nopass.jpg"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Confirmar nueva contrase&ntilde;a:</td>
+					<td><input class="Input_box" type="password" name="confirmpassword"></td>
+				</tr>
+				<tr>
+                    <td width="350px">
+						<input type="button" value="Aceptar">
+					<input type="button" value="Cancelar">
+					</td>
+                </tr>
+				</table>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Cambio contrase&ntilde;a del router</div>
+			<div class="Mcontent">
+				<div class="littletitle">Cambio contrase&ntilde;a del router</div>
+				<p class="Mcontent_word">Desde aqu&iacute; podr&aacute;s cambiar la contrase&ntilde;a de acceso al router. Se recomienda que la clave tenga al menos 8 caracteres alfanum&eacute;ricos:</p>
+				<p>
+					<span class="Mtitlesize">Contrase&ntilde;a anterior:</span>
+					<div><input class="MInput_box" type="password" name="Mpassword"></div>
+				</p>
+				<p>
+					<span class="Mtitlesize">Contrase&ntilde;a nueva:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="password" name="Mnewpassword"><img class="hand" src="show.gif">
+				</p>	
+				<div style="text-align:center;">Nivel de seguridad de la contrase&ntilde;a</div>
+				<div id="Msecurity"><img style="width:200px;height:16px;display:block;margin:auto;" src="te_nopass.jpg"></div>
+				<p>
+					<span class="Mtitlesize">Confirmar nueva contrase&ntilde;a:</span>
+					<div><input class="MInput_box" type="password" name="Mconfirmpassword"></div>
+				</p>
+				<p>
+                    <input type="button" value="Aceptar">
+				</p>
+				<p>
+					<input type="button" value="Cancelar">
+                </p>
+			</div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

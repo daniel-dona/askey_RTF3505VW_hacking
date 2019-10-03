@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+<script language="javascript" src="te_util.js"></script>
+<script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+if (window.top.location.pathname.search('.html') >= 0 ||
+    window.top.location.pathname.search('te_configuracion_avanzada') >= 0)
+    window.top.location = '/';
+
+var oldIE = (navigator.userAgent.indexOf("MSIE") != -1) && (document.documentMode < 8);
+
+var bruteTime = '<%ejGet(bruteTime)%>';
+var cid, wait;
+var user = '<%ejGet(curUserName)%>';
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+$(function()
+{
+    if(ismobile)
+    {
+        $("#PCformat").remove();
+        $('#mobileformat').find('input').parent().css('text-align','center');
+        $(window).on("orientationchange",function(){
+            if (window.orientation == 0) // Portrait
+            {
+                $(".loginlogo").removeClass('Mloginlogo');
+                $(".loginlogo").append('<img style="width:297px;height:251px;" src="te_Mloginlogo.png">');
+            }
+            else // Landscape
+            {
+                $(".loginlogo").find('img').remove();
+                $(".loginlogo").addClass('Mloginlogo');
+            }
+        });
+        $(window).trigger('orientationchange');
+    }
+    else
+    {
+        $("#mobileformat").remove();
+    }
+
+    if (window.top.location.pathname.search('instalacion') >= 0)
+        $('.installWizard').show();
+    else
+        $('.webClient').show();
+
+    function countDown() {
+        bruteTime--;
+        if (bruteTime > 1)
+            $('#bruteTime').text(bruteTime+' segundos');
+        else
+            $('#bruteTime').text(bruteTime+' segundo');
+
+        if (bruteTime <= 0) {
+            clearInterval(cid);
+            
+            $('#login :input').attr('disabled', false);
+            $('.login_input,.Mlogin_input').attr('disabled', false);
+            $('.bruteProtect').hide();
+            $('[name=Password]').focus();
+        }
+    }
+    if (bruteTime > 0) {
+        $('#login :input').attr('disabled', true);
+        $('.login_input,.Mlogin_input').attr('disabled', true);
+        $('#bruteTime').text(bruteTime);
+        $('.bruteProtect').show();
+        cid = setInterval(countDown, 1000);
+    }
+    $('u').on('click touchstart',function(){
+        $(this).closest('p').after('<div class="pwdpopup"><div class="cross" style="font-size:24px;font-weight:bolder;margin-top:3px;margin-left:95%;cursor:pointer;">x</div> \
+            <div style="margin:0 auto;padding: 1px 10px 10px 10px;">Si has olvidado la nueva contrase&ntilde;a que estableciste para acceder a tu router deber&aacute;s realizar un RESET de f&aacute;brica. Pulsa durante al menos 10 segundos el bot&oacute;n RESET situado en al parte trasera de tu equipo.</div></div>');
+        if(ismobile)
+            $('.pwdpopup').css({'margin-left':'4%','width':'90%'});
+        else
+            $('.pwdpopup').css({'margin-left':'20%','width':'50%'});
+        $('.cross').on('click touchstart',function(){
+            $('.pwdpopup').remove();
+        });
+    });
+    $("#login").submit(function() {
+        $("[name=loginPassword]").val($("[name=Password]").val());
+    });
+    $("[name=Password]").keypress(function(e) {
+        if (e.which == 13) {
+          $("#login").submit();
+        }
+    });
+});
+
+$(window).load( function()
+{
+    if (!ismobile && oldIE) {
+        $('#login').attr('style', 'height:15px;');
+        $('#tdPwd').attr('style', 'width:60%;');
+    }
+    if(user=='xxx') //I use xxx to indicate wrong password
+        alertSpecial("Su contrase&ntilde;a es incorrecta.");
+    $('[name=Password]').focus();
+});    
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div class="Header_title_box">
+				<div class="Header_title">Base</sup></div>
+		</div>
+		<img class="te_logo" src="logo.png">
+		<div class="Header_line"></div>
+		<div class="Body"></div>
+		<div class="acceso_content">
+			<div class="webClient" style="display:none">
+				<p class="content_word">Bienvenido al configurador de tu router Fibra &Oacute;ptica. Por favor, para poder configurar tu router debes introducir la contrase&ntilde;a que encontrar&aacute;s en la pegatina situada debajo de tu router denominada "Datos de acceso al Router",siempre que no la hayas modificado anteriormente. En este caso, deber&aacute;s introducir la nueva contrase&ntilde;a de acceso. <u style="color:blue;cursor:pointer;">&iquest;Has olvidado tu contrase&ntilde;a?</u></p>
+			</div>
+			<div class="installWizard" style="display:none">
+				<p class="content_word">Bienvenido al configurador router. Para poder configurar el router debes introducir la contrase&ntilde;a que encontrar&aacute;s en la pegatina situada debajo del router denominada "Datos de acceso al Router".</p>
+			</div>
+			<div class="bruteProtect" style="display:none">
+				<p class="content_word"><font color="red">Por favor, espere <label id="bruteTime"></label> para iniciar sesi&oacute;n.</font></p>
+			</div><br>
+			<table class="editItems" align="center" style="cellspacing:0px;"><tr>
+				<td id="tdPwd" align="right"><input class="login_input" type="password" name="Password" autocomplete="off"/></td>
+				<td align="left"><form id="login" method="post" action="te_acceso_router.cgi">
+					<input type="hidden" name="loginPassword" autocomplete="off" />
+					<input type="submit" value="Entrar" style="margin-left:-30px;" />
+				</form></td>
+			</tr></table>
+			<p align="center"><img class="te_loginlogo" src="te_loginlogo.png"></p>
+		</div>
+    </div>  
+    <div id="mobileformat">
+        <div class="MHeader">
+            <div class="MHeader_title_box">
+					<div class="MHeader_title">Base</sup></div>
+			</div>
+			<img class="Mte_logo" src="logo.png">
+			<div class="MHeader_line"></div>			
+        </div>
+		<div class="MBody"></div>
+        <div class="Mcontent">            	
+            <div class="webClient" style="display:none">
+                <p class="Mcontent_word">Bienvenido al configurador de tu router Fibra &Oacute;ptica. Por favor, para poder configurar tu router debes introducir la contrase&ntilde;a que encontrar&aacute;s en la pegatina situada debajo de tu router denominada "Datos de acceso al Router",siempre que no la hayas modificado anteriormente. En este caso, deber&aacute;s introducir la nueva contrase&ntilde;a de acceso. <u style="color:blue;cursor:pointer;">&iquest;Has olvidado tu contrase&ntilde;a?</u></p>
+            </div>
+            <div class="installWizard" style="display:none">
+                <p class="Mcontent_word">Bienvenido al configurador router. Para poder configurar el router debes introducir la contrase&ntilde;a que encontrar&aacute;s en la pegatina situada debajo del router denominada "Datos de acceso al Router".</u></p>
+            </div>
+            <div class="bruteProtect" style="display:none">
+                <p class="Mcontent_word"><font color="red">Por favor, espere <label id="bruteTime"></label> para iniciar sesi&oacute;n.</font></p>
+            </div>
+            <p>
+                <input class="Mlogin_input" type="password" name="Password" autocomplete="off" />
+            </p>
+            <form id="login" method='post' action='te_acceso_router.cgi'>
+                <input type="hidden" name="loginPassword" autocomplete="off" />
+                <input type="submit" value="Entrar" />
+            </form>
+            <p align="center" class="loginlogo"></p>
+        </div>
+    </div>
+</body>
+</html>

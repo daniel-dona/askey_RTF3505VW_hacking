@@ -1,0 +1,557 @@
+body{
+	font-size:16px;
+	font-family: 'movistar_textregular','Arial','toTahoma','Helvetica','sans-serif';
+	background-repeat: repeat-x;
+	background-color:#E9EAE8;	/*Zeon*/
+}
+@font-face {
+    font-family: 'movistar_textbold';
+    src: url('movistartext-bold-webfont.eot');
+    src: url('movistartext-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('movistartext-bold-webfont.ttf') format('truetype'),
+         url('movistartext-bold-webfont.svg#movistar_textbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'movistar_textregular';
+    src: url('movistartext-regular-webfont.eot');
+    src: url('movistartext-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('movistartext-regular-webfont.ttf') format('truetype'),
+         url('movistartext-regular-webfont.svg#movistar_textregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+#PCformat,#IPCformat{
+	width: 100%; 
+	min-width: 1200px; 
+	position: relative;
+	margin:auto;
+	background-color:#FFF;	/*Zeon*/
+}
+
+.Header{
+    font-weight: bold;
+    width: 100%;
+	height:30px;
+	position: relative;
+	margin:auto;
+	/*background-color:#2B71A0;*/
+}
+
+.Body{
+	height: 100%;
+    width: 100%;
+	position: fixed;
+	margin:auto;
+	border-radius: 0px 0px 0px 0px;
+	background-color:#E9EAE8;	/*Zeon*/
+}
+
+.Body2{
+	height: 100%;
+    width: 100%;
+	position: relative;
+	margin:auto;
+	border-radius: 0px 0px 0px 0px;
+	background-color:#E9EAE8;	/*Zeon*/
+}
+
+.littletitle{
+	width: 100%;
+	font-size: 16px;
+	line-height:50px;
+	border-radius: 5px 5px 5px 5px;
+	background-color:#00A9E0;
+	text-indent:10px;
+	color:#FFF;
+}
+
+.routerinfo{
+	width: 100%;
+	position:relative;
+	margin:auto;
+	color:#50535A;	
+	text-indent:10px;
+	background-color:#E9EAE8;
+	border:0px #E9EAE8 solid;
+	z-index:0;
+}
+
+.routerinfo tr td{
+	height:30px;
+}
+
+.content{
+	width: 80%;
+	position:relative;
+	margin:auto;
+	border:1px solid #FFF;
+	border-radius: 5px 5px 5px 5px;
+    padding: 0px 0px 0px 0px;
+	background-color:#FAFAFA;
+	color:#50535A;	
+}
+
+.acceso_content{
+	width: 80%;
+	position:relative;
+	margin:auto;
+	background-color:#E9EAE8;
+	color:#50535A;	
+	height:100%;
+}
+
+.content:after{
+	content: '\A';
+    white-space: pre;
+}
+
+.install_content{
+    min-width:50%;
+	width: 85%;
+	position:relative;
+	margin:auto;
+	border:0px solid #FFF;
+	background-color:#E9EAE8;
+	z-index:0;
+}
+
+.install_content:after{
+	content: '\A';
+    white-space: pre;
+}
+
+.Footer{
+	width: 100%;
+	height: 60px;
+	line-height:40px;
+	position:relative;
+	margin:auto;
+	background-color:#FFF;
+	color:#50535A;
+	text-align:center;
+}
+
+.install_table
+{
+	background-color:#E9EAE8;
+}
+
+.login_input{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	padding: 13px 13px 13px 13px;
+	border-top-left-radius:5px;
+	border-top-right-radius:0px;
+	border-bottom-right-radius:0px;
+	border-bottom-left-radius:5px;
+	border:1px solid #000;
+	border-right:none;
+	width: 452px;
+	height:15px;
+}
+
+.Input_box{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	padding: 5px 12px;
+	border-radius:5px 5px 5px 5px;
+	border:1px solid #50535A;
+	width:200px;
+	height:25px;
+}
+
+.Select_box{ /* RTF_DEF, Zeon, Update of the Movistar brand */
+	padding: 5px 12px;
+	border-radius:4px 4px 4px 4px;
+	border:1px solid #50535A;
+	width:225px;
+	height:30px;
+}
+
+.content_word
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	margin-left:2%;
+	color:#50535A;
+}
+
+.te_loginlogo
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	position:relative;
+	padding-top:10%;
+	width:700;
+	height:250;
+}
+
+.menu_table{/* RTF_DEF, Zeon, Update of the Movistar brand */
+    margin-left:100px;
+	border:1px #BDBDBD solid;
+	height:40px;
+	background-color:#FFF;
+	z-index:1;
+}
+
+.menutitle
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	color:#00A9E0;
+	cursor:pointer;
+	z-index:1;
+}
+
+.te_menu{
+    position:absolute;
+	margin-left:25px;
+	margin-top:25px;
+	cursor:pointer;
+	z-index:1;
+}
+
+.popup { 
+	/*display:inline-block;*/
+	line-height:20px;	
+	position:absolute;
+	top:54px;
+	left:100px;
+	border: 1px solid #BDBDBD;
+	border-top: none;
+	/*border-radius: 5px 5px 5px 5px; */
+	background-color:#FFF;
+    font-weight: normal;
+	z-index:2;
+	-webkit-box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+	-moz-box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+	box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+}
+
+.Header li{
+	position:relative;
+    width: 218px;
+	height: 30px;
+	line-height:30px;
+	color: #50535A;
+	font-size: 16px;
+	text-align: left;
+	background-color:#FFF;
+	list-style-type: none;
+	z-index:3;
+}
+
+.Header li:first-child{
+	border-radius: 0px 0px 0px 0px;
+}
+
+.Header li:last-child{
+	border-radius: 0px 0px 0px 0px;
+}
+
+.menushift{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	width: 188px;
+	margin-left:30px;
+	border-top: 1px solid #BDBDBD;
+}
+
+.Header li ul 
+{
+	position: relative;
+	width: 218px;
+    top: -47px;
+    left: 100%;
+	border: 1px solid #BDBDBD;
+	background-color:#FFF;
+	-webkit-padding-start: 0px;
+	-webkit-box-shadow: 0px 0px 15px #E6E6E6;
+	-moz-box-shadow: 0px 0px 15px #E6E6E6;
+	box-shadow: 0px 0px 15px #E6E6E6;
+}
+
+.Header_title_box
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	border:2px white solid;
+	position:relative;
+	height:70px;
+	left:0;
+	right:0;
+	top:0;
+	padding-right:40px;
+}
+
+.Header_title
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	text-align:right;
+	margin-top:15px;
+	font-family: 'Arial','toTahoma','Helvetica','sans-serif';
+	font-size:30px;
+	color:#5BC500;
+}
+
+.Header_line
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	width:100%;
+	height:55px;
+	background: url('bLine.png') repeat-x scroll 100% 0px transparent;
+	background-repeat: repeat-x;
+	background-color:#E9EAE8;
+	margin-top:-2px;
+}
+
+.Header_logout_box
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	position:absolute;
+	width:100px;
+	right:0;
+	margin-top:-25px;
+}
+
+.Header_logout
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	text-decoration:none;
+	color:black;
+}
+
+.logo{
+    padding: 14px 225px 225px 14px;
+	background: url('logo.png') no-repeat scroll 100% 0px transparent;	
+	margin-left:5%;
+}
+
+.te_logo{
+	display:inline-block;
+	width:200px;
+	left:40px;
+	top:10px;
+	position:absolute;
+}
+
+.title{
+	width: 80%;
+	font-size:30px;
+	position:relative;
+	margin:auto;
+	background-color:#E9EAE8;
+	color:#5BC500;
+}
+
+.line{
+	width: 100%;
+	height:20px;
+	border-top: 1px solid #E6E6E6;
+}
+
+.titlesize{
+	font-size:16px;
+	font-weight:bolder;
+}
+
+#PCformat input[type=text],#PCformat input[type=password],#PCformat select
+{
+
+}
+
+#PCformat input[type=button],#PCformat input[type=submit]
+{
+	height:35px;
+	border: 0px solid #999;
+	background-color:#5BC500;
+	padding: 15px 40px 25px 40px;
+	border-radius: 3px 3px 3px 3px;	/*Zeon*/
+	color:#FFF;
+	cursor: pointer;
+}
+
+#PCformat input[value=Entrar]
+{
+	background: #5BC500;
+	border-radius: 0px 5px 5px 0px;	/*Zeon*/
+	border: 0 none;
+	padding: 17px 50px 28px 50px;
+	color: #fff;
+	cursor:pointer;
+}
+
+#IPCformat input[type=text],#IPCformat input[type=password],#IPCformat select
+{
+	width:200px;
+	height:20px;
+}
+
+#IPCformat input[type=button]
+{
+	background: #5BC500;
+	border-radius: 2px 2px 2px 2px;	/*Zeon*/
+	border: 0 none;
+	padding: 10px 45px;
+	color: #fff;
+	cursor:pointer;
+}
+
+.no-security {
+	width: 200px; 
+	display: inline-block; 
+	background: url('te_nopass.jpg') no-repeat; 
+}
+
+.low-security {
+	width: 200px; 
+	display: inline-block; 
+	background: url('te_low.jpg') no-repeat; 
+}
+
+.media-security {
+	width: 200px; 
+	display: inline-block; 
+	background: url('te_media.jpg') no-repeat; 
+}
+
+.high-security {
+	width: 200px; 
+	display: inline-block; 
+	background: url('te_high.jpg') no-repeat; 
+}
+
+table{
+	table-layout: fixed;
+}
+
+table tr td{
+	overflow:auto;
+}
+
+#PCformat table tr:first-child td{
+	background-color:#FFF;
+	height:25px;
+}
+
+#PCformat table tr td{
+	background-color:#E9EAE8;
+	height:25px;
+	overflow:auto;
+}
+
+#PCformat .editItems tr:first-child td{
+	background-color:transparent;
+	height:35px;
+	text-indent:20px;
+}
+
+#PCformat .editItems tr td{
+	background-color:transparent;
+	height:25px;
+	text-indent:20px;
+}
+
+#IPCformat .editItems tr:first-child td{
+	background-color:#FAFAFA;
+	height:35px;
+	text-indent:20px;
+}
+
+#IPCformat .editItems tr td{
+	background-color:#FAFAFA;
+	height:35px;
+	text-indent:20px;
+}
+
+.description{
+	position:relative;
+	margin:auto;
+	width: 80%;
+	display: block;
+	border: 1px solid #BDBDBD;
+}
+.description li{
+	width: 100%;
+	list-style: none;
+	font-weight:bolder;
+	line-height:30px;
+	border: 1px solid #BDBDBD;
+	border-radius: 2px 2px 2px 2px;
+	text-indent:20px;
+	background-color:#FFF;
+	/*width: 935px;
+	height:35px;
+	line-height:20px;
+	display: inline-block;
+	border: 1px solid #999;
+	border-radius:2px 2px 2px 2px;
+	background: #ccc;
+        text-decoration: none;
+        color: #000;
+	margin-left:15px;*/
+}
+
+.description li:hover, .description li.active {
+    cursor: pointer;
+}
+
+.description ul{
+    display: none; 
+}
+
+.description ul div{
+	display:list-item;
+	font-weight:bolder;
+	text-indent:0px;
+}
+
+.description ul p{
+	text-indent:0px;
+}
+
+.horizontal_line{
+	width: 80%;
+	height:0.01%;
+	border: 2px solid #D7DF01;
+}
+
+.vertical_line{
+	width: 0.001%;
+	height:20px;
+	border: 2px solid #D7DF01;
+}
+
+.Applypopup { 
+	line-height:20px;	
+	position:absolute;
+	left:15%;
+	top:30%;	
+	background-color:#E6E6E6;
+	color:#50535A;
+}
+
+.pwdpopup { 
+	line-height:20px;	
+	position:absolute;
+	margin-top:7%;
+	z-index:1;
+	border: 1px solid #000;
+	border-radius:3px 3px 3px 3px;
+	background-color:#E6E6E6;
+	color:#50535A;
+}
+.hand{
+	cursor: pointer;
+}
+
+.divHide{
+	display:none;
+}
+
+#progress {
+	position: absolute;
+	width: 50%;
+	left: 25%;
+	border: 1px solid #ddd;
+	padding: 1px;
+	border-radius: 3px;
+}
+#bar {
+	background-color: #B4F5B4;
+	width: 0%;
+	height: 25px; 
+	border-radius: 3px; 
+}
+#percent {
+	position: absolute;
+	display: inline-block;
+	top: 3px;
+	left: 48%;
+}

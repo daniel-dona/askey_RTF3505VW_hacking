@@ -1,0 +1,154 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+          <script language="javascript" src="portName.js"></script>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b><%ejGetOther(diagInfo, serviceName)%> Diagnostics</b><br>
+            <P>Your modem is capable of testing your DSL connection. The individual tests are 
+               listed below. If a test displays a fail status, click &quot;Rerun Diagnostic 
+               Tests&quot; at the bottom of this page to make sure the fail status is 
+               consistent. If the test continues to fail, click &quot;Help&quot; and follow 
+               the troubleshooting procedures.
+            </P>
+            <P><B>Test the connection to your local network</B>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+ <script language="javascript">
+<!-- hide                     
+    <%ejGet(enetDiag)%>                                                      
+
+if ('<%ejGet(enblUsb)%>' == '1') {
+   document.writeln("<TR><TD class='hd'>Test your USB Connection: </TD>");
+   document.writeln("<TD><B><%ejGetOther(diagnostic, 13)%></B>&nbsp;</TD>");
+   document.writeln("<TD><A href='hlpusbconn.html'>Help</A></TD> </TR>");
+}
+if ('<%ejGet(enblWireless)%>' == '1') {
+   document.writeln("<TR><TD class='hd'>Test your Wireless Connection: </TD>");
+   document.writeln("<TD><B><%ejGetOther(diagnostic, 17)%></B>&nbsp;</TD>");
+   document.writeln("<TD><A href='hlpwlconn.html'>Help</A></TD></TR>");
+}
+// done hiding -->
+</script>
+                  </TBODY></TABLE>
+            <P><b>Test the connection to your DSL service provider</b>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="250">Test ADSL Synchronization:
+                        </TD>
+                        <TD width="50"><B><%ejGetOther(diagnostic, 2)%></B>&nbsp;</TD>
+                        <TD><A href="hlpadslsync.html">Help</A></TD>
+                     </TR>
+                     <TR>
+<script language="javascript">
+<!-- hide
+var diagType = '<%ejGet(diagType)%>';
+if ( diagType == 'f4' )
+   document.writeln("                        <TD class='hd'>Test ATM OAM segment ping:</TD>");
+else
+   document.writeln("                        <TD class='hd'>Test ATM OAM F5 segment ping:</TD>");
+// done hiding -->
+</script>
+                        <TD><B><%ejGetOther(diagnostic, 3)%></B>&nbsp;</TD>
+                        <TD><A href="hlpatmseg.html">Help</A></TD>
+                     </TR>
+                     <TR>
+<script language="javascript">
+<!-- hide
+if ( diagType == 'f4' )
+   document.writeln("                        <TD class='hd'>Test ATM OAM end-to-end ping:</TD>");
+else
+   document.writeln("                        <TD class='hd'>Test ATM OAM F5 end-to-end ping:</TD>");
+// done hiding -->
+</script>
+                        <TD><B><%ejGetOther(diagnostic, 4)%></B>&nbsp;</TD>
+                        <TD><A href="hlpatmetoe.html">Help</A></TD>
+                     </TR>
+                  </TBODY></TABLE>
+            <P><B>Test the connection to your Internet service provider</B>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="250">Test PPP server session:</TD>
+                        <TD width="50"><B><%ejGetOther(diagnostic, 6)%></B>&nbsp;</TD>
+                        <TD><A href="hlppppoasess.html">Help</A></TD>
+                     </TR>
+                     <TR>
+                        <TD class='hd'>Test authentication with ISP:
+                        </TD>
+                        <TD><B><%ejGetOther(diagnostic, 7)%></B>&nbsp;</TD>
+                        <TD><A href="hlppppoeauth.html">Help</A></TD>
+                     </TR>
+                     <script language="javascript">
+<!-- hide
+var ipExtension = '<%ejGetOther(sysInfo, pppIpExtension)%>';
+
+if ( ipExtension == '0' ) {
+   document.writeln("<TR>");
+   document.writeln("  <TD class='hd'>Test the assigned IP address: </TD>");
+   document.writeln("  <TD><B><%ejGetOther(diagnostic, 8)%></B></TD>");
+   document.writeln("  <TD><A href='hlppppoeip.html'>Help</A></TD></TR>");
+   document.writeln("<TR>");
+   document.writeln("  <TD class='hd'>Ping default gateway: </TD>");
+   document.writeln("  <TD><B><%ejGetOther(diagnostic, 9)%></B></TD>");
+   document.writeln("  <TD><A href='hlppnggw.html'>Help</A></TD></TR>");
+   document.writeln("<TR>");
+   document.writeln("  <TD class='hd'>Ping primary Domain Name Server: </TD>");
+   document.writeln("  <TD><B><%ejGetOther(diagnostic, 10)%></B></TD>");
+   document.writeln("  <TD><A href='hlppngdns.html'>Help</A></TD></TR>");
+}
+// done hiding -->
+</script>
+                  </TBODY></TABLE>
+            <CENTER>
+            <br>
+<script language="javascript">
+<!-- hide
+var diagPrev = '<%ejGetOther(diagInfo, diagPrev)%>';
+var diagNext = '<%ejGetOther(diagInfo, diagNext)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var GO_PREV = 0;
+var GO_NEXT = 1;
+
+function btnGo(where) {
+   var loc = 'diag.cgi?diagCurr=';
+    
+   if ( where == GO_PREV )
+      loc += diagPrev;
+   else
+      loc += diagNext;
+      
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnTest(type) {
+   var loc = 'diag.cgi?';
+
+   loc += 'diagType=' + type;
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+if ( diagPrev != '' )
+   document.writeln("                  <input type='button' onClick='btnGo(GO_PREV)' value='Previous Connection'>");
+if ( diagNext != '' )
+   document.writeln("                  <input type='button' onClick='btnGo(GO_NEXT)' value='Next Connection'>");
+// done hiding -->
+</script>
+            <br>
+                  <input type='button' onClick="btnTest('f5')" value='Test'>
+                  <input type='button' onClick="btnTest('f4')" value='Test With OAM F4'>
+            </CENTER>
+         </form>
+      </blockquote>
+   </body>
+</html>

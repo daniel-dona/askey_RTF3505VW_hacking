@@ -1,0 +1,482 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicesip_debug.html
+  Author:
+  Creation Date: 2008
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+      <style type="text/css">
+      ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
+      ul#tabs li { display: inline; }
+      ul#tabs li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }
+      ul#tabs li a:hover { background-color: #f1f0ee; }
+      ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }
+      div.tabContent { border: 1px solid #c9c3ba; padding: 0.5em; background-color: #f1f0ee; }
+      div.tabContent.hide { display: none; }
+      </style>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+<script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var maxLines = new Array();
+var maxSp = '<%ejGetVoice(maxSp)%>';
+
+for (var i = 0; i < maxSp; i++) {
+   eval( "var la" + i + " \= \"\" " );
+   eval( "var lp" + i + " \= \"\" " );
+   eval( "var ml" + i + " \= \"\" " );
+
+   var tmpml = '<%ejGetVoice(maxLines)%>';
+   eval(tmpml);
+   
+   eval("maxLines[" + i + "] = ml" + i);
+
+   for (var j = 0; j < maxLines[i]; j++) {
+      eval( "var ve" + i + "_" + j + " \= \"\" " );
+      eval( "var ig" + i + "_" + j + " \= \"\" " );
+      eval( "var eg" + i + "_" + j + " \= \"\" " );
+   }
+}
+
+var cLogLvl  = '<%ejGetVoice(consolelogLvl)%>';
+var voiceRunning = '<%ejGetVoice(voiceStatus)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+// var tmpla = '<%ejGetVoice(sipLogAddr)%>';
+// var tmplp = '<%ejGetVoice(sipLogPort)%>';
+
+var tmpve = '<%ejGetVoice(vadEnable)%>';
+var tmpig = '<%ejGetVoice(ingressGain)%>';
+var tmpeg = '<%ejGetVoice(egressGain)%>';
+
+// eval( tmpla );
+// eval( tmplp );
+
+if ( tmpve.search("ejGetVoice") < 0 ) {
+   eval( tmpve );
+}
+if ( tmpig.search("ejGetVoice") < 0 ) {
+   eval( tmpig );
+}
+if ( tmpeg.search("ejGetVoice") < 0 ) {
+   eval( tmpeg );
+}
+
+
+// Initialize array that contains possible gain values (need for the drop-down list)
+var minGain = -20;
+var maxGain = 20;
+var gainSelectOptions = Array();
+for ( var i = minGain; i <= maxGain; i++ ) {
+   gainSelectOptions[i-minGain] = "<option value=" + i + " selected>" + i;
+}
+
+
+function btnStartSip() {
+   var loc = 'voicesipstart.cmd?';
+   
+   loc += addParamsToQuery( loc, "debug" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnStopSip() {
+   var loc = 'voicesipstop.cmd?';
+   loc += addParamsToQuery( loc, "debug" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnApplySip() {
+   var loc = 'voicesipapply.cmd?';
+   loc += addParamsToQuery( loc, "debug" );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function addParamsToQuery( loc_init, current_view) {
+
+   var loc = loc_init;
+
+   with ( document.forms[0] ) {
+   
+      loc += 'currentview=' + current_view;
+
+      for (var sp = 0; sp < maxSp; sp++) {
+	     if ( selectedTab == -1 )
+		 {
+		    selectedTab = 0;
+		 }
+         // eval( "loc += \'&sipLogAddr" + sp + "=\' + sipLogAddr" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         // eval( "loc += \'&sipLogPort" + sp + "=\' + sipLogPort" + selectedTab + ".value.replace(/[\'\" ]/g,\'\')" );
+         
+         for (var i = 0; i < maxLines[sp]; i++) {
+         
+            var checkMarkTest = eval("vadEnable" + sp + "_" + i + ".checked == true");
+            
+            if ( checkMarkTest ){
+               loc+= "&vadEnable" + sp + "_" + i + "=on";
+            } else {
+               loc+= "&vadEnable" + sp + "_" + i + "=off";
+            }
+            
+            eval( "loc += \'&ingressGain" + sp + "_" + i + "=\' + ingressGain" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+            eval( "loc += \'&egressGain" + sp + "_" + i + "=\' + egressGain" + sp + "_" + i + ".value.replace(/[\'\" ]/g,\'\')" );
+         }
+      }
+      
+      eval( "loc += \'&consolelogLvl=\' + conLogLvl.value.replace(/[\'\" ]/g,\'\')" );
+         
+   }
+   //alert(loc);
+   return loc;
+}
+
+
+function generatePerLineTable(index)
+{
+   // Generate the table
+   if (document.body.innerHTML) {
+      var tableHtmlOutput = "<table id='perLineTable" + index + "' border='1'><tbody id='perLineTbody" + index + "'>";
+
+      // Line row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Line<\/td>"
+      for (var line = 1; line <= maxLines[index]; line++) {
+         var data = line;
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // VAD support row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>VAD support<\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<input type='checkbox' size=10 name=\'vadEnable" + index + "_" + line + "\'>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Ingress gain row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Ingress gain<\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<select name='ingressGain" + index + "_" + line + "'>" + gainSelectOptions.join("") + "<\/select>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      // Egress gain row
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td class='hd'>Egress gain <\/td>"
+      for (var line = 0; line < maxLines[index]; line++) {
+         var data = "<select name='egressGain" + index + "_" + line + "'>" + gainSelectOptions.join("") + "<\/select>";
+         tableHtmlOutput += "<td align=center>" + data + "</td>";
+      }
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "</tbody></table>";
+      document.getElementById( "perLineTablePlaceholder" + index ).innerHTML = tableHtmlOutput;
+   } else {
+      alert("Cannot create per line table in this browser.");
+   }
+}
+
+function frmLoad(current_view) {
+
+   init();
+
+   for (var i = 0; i < maxSp; i++) {
+      generatePerLineTable(i);
+   }
+
+   with ( document.forms[0] ) {
+      for (var i = -1; i < maxSp; i++) {
+         enableButtons(i);
+      }
+      
+      /* Initialize global parameters */
+      conLogLvl.value = cLogLvl;
+	  
+      for (var i = 0; i < maxSp; i++) 
+      {
+         // eval("sipLogAddr" + i + ".value = la" + i);
+         // eval("sipLogPort" + i + ".value = lp" + i);         
+         
+         for (var j = 0; j < maxLines[i]; j++) 
+         {
+            temp = eval("ve" + i + "_" + j + "==1");
+
+            if ( temp )
+            {
+               eval( "vadEnable" + i + "_" + j + ".checked = true" );
+            } 
+            else 
+            {
+               eval( "vadEnable" + i + "_" + j + ".checked = false" );
+            }
+            eval("ingressGain" + i + "_" + j + ".value = ig" + i + "_" + j);
+            eval("egressGain" + i + "_" + j + ".value = eg" + i + "_" + j);
+         }
+      }
+   }
+}
+
+
+function enableButtons(index){
+   var idName = "StartButton" + index;
+   var buttonStart = document.getElementById( idName );
+   idName = "StopButton" + index;
+   var buttonStop = document.getElementById( idName );
+   idName = "ApplyButton" + index;
+   var buttonApply = document.getElementById( idName );
+
+   if ( voiceRunning == 1 ) {
+      buttonStart.disabled = true;
+      buttonStop.disabled = false;
+      buttonApply.disabled = false;
+   } else {
+      buttonStart.disabled = false;
+      buttonStop.disabled = true;
+      buttonApply.disabled = false;
+   }
+}
+
+var tabLinks = new Array();
+var contentDivs = new Array();
+var selectedTab;
+
+function init() {
+
+  // Grab the tab links and content divs from the page
+  var tabListItems = document.getElementById('tabs').childNodes;
+  for ( var i = 0; i < tabListItems.length; i++ ) {
+    if ( tabListItems[i].nodeName == "LI" ) {
+      var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+      var id = getHash( tabLink.getAttribute('href') );
+      tabLinks[id] = tabLink;
+      contentDivs[id] = document.getElementById( id );
+    }
+  }
+
+  // Assign onclick events to the tab links, and
+  // highlight the first tab
+  var i = 0;
+  selectedTab = 0;
+
+  for ( var id in tabLinks ) {
+    tabLinks[id].onclick = showTab;
+    tabLinks[id].onfocus = function() { this.blur() };
+    if ( i == 0 ) tabLinks[id].className = 'selected';
+    i++;
+  }
+
+  // Hide all content divs except the first
+  var i = 0;
+  
+  for ( var id in contentDivs ) {
+    if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
+    i++;
+  }
+}
+
+
+function showTab() {
+   var selectedId = getHash( this.getAttribute('href') );
+
+   // Highlight the selected tab, and dim all others.
+   // Also show the selected content div, and hide all others.
+   for ( var id in contentDivs ) {
+     if ( id == selectedId ) {
+        selectedTab = selectedId;
+        tabLinks[id].className = 'selected';
+        contentDivs[id].className = 'tabContent';
+     } else {
+        tabLinks[id].className = '';
+        contentDivs[id].className = 'tabContent hide';
+     }
+   }
+
+   // Stop the browser following the link
+   return false;
+}
+
+function getFirstChildWithTagName( element, tagName ) {
+  for ( var i = 0; i < element.childNodes.length; i++ ) {
+    if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+  }
+}
+
+function getHash( url ) {
+  var hashPos = url.lastIndexOf ( '#' );
+  return url.substring( hashPos + 1 );
+}
+
+function createTabs() {
+  document.writeln("<ul id='tabs'>");
+  document.writeln("<li><a href='#" + -1 + "'>Global parameters</a></li>");
+  for ( var i = 0; i < maxSp; i++ ) {
+     document.writeln("<li><a href='#" + i + "'>Service Provider " + i + "</a></li>");
+  } 
+}
+
+function createGlobal() {
+   document.writeln("<div class='tabContent' id='" + -1 + "'>");
+   document.writeln("<div>");
+   document.writeln("   <b>Global parameters</b><br>");
+   document.writeln("   <br>");
+   document.writeln("   <div id='consoleLogLevel'>");
+   document.writeln("      <table border='0' cellpadding='0' cellspacing='0'>");
+   document.writeln("         <tr>");
+   document.writeln("            <td class='txt' width='150'>Vodsl Console Log Level: </td>");
+   document.writeln("            <td><select name='conLogLvl' size='1'>");
+   document.writeln("               <option value='Error' >");
+   document.writeln("               Error");
+   document.writeln("               <option value='Notice' >");
+   document.writeln("               Notice");
+   document.writeln("               <option value='Debug' selected>");
+   document.writeln("               Debug");
+   document.writeln("            </select></td>");
+   document.writeln("         </tr>");
+   document.writeln("      </table>");
+   document.writeln("   </div>");
+   document.writeln("   <br>");
+   document.writeln("   <center>");
+   document.writeln("      <input type='button' onClick='btnStartSip()' value='Start SIP client' ID='StartButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("      <br>");
+   document.writeln("      <input type='button' onClick='btnStopSip()' value='Stop SIP client' ID='StopButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("      <br>");
+   document.writeln("      <input type='button' onClick='btnApplySip()' value='Apply' ID='ApplyButton" + -1 + "' disabled=true>");
+   document.writeln("      <br>");
+   document.writeln("   </center>");
+   document.writeln("   <br>");
+   document.writeln("</div>");
+   document.writeln("</div>");
+}  
+
+function createContent() {
+   for (var index = 0; index < maxSp; index++) {
+      document.writeln("<div class='tabContent' id='" + index + "'>");
+      document.writeln("<div>");
+      document.writeln("   <b>Voice -- SIP Debug configuration</b><br>");
+      /*document.writeln("   <br>");
+      document.writeln("   <div id='logInfo" + index + "'>");
+      document.writeln("      <table border='0' cellpadding='0' cellspacing='0' ID='Table" + index + "_1'>");
+      document.writeln("         <tr>");
+      document.writeln("            <td class='txt' width='150'>SIP log server IP Address*:</td>");
+      document.writeln("            <td><input type='text' name='sipLogAddr" + index + "'></td>");
+      document.writeln("         </tr>");
+      document.writeln("         <tr>");
+      document.writeln("            <td class='txt'>SIP log server port*:</td>");
+      document.writeln("            <td><input type='text' name='sipLogPort" + index + "'></td>");
+      document.writeln("         </tr>");
+      document.writeln("      </table>");
+      document.writeln("   </div>");
+      document.writeln("   <br>");*/
+      document.writeln("   <div class='tableWrapper' id='perLineTablePlaceholder" + index + "'>");
+      document.writeln("      <table></table>");
+      document.writeln("   </div>");
+      document.writeln("   <br>");
+      document.writeln("   <center>");
+      document.writeln("      <input type='button' onClick='btnStartSip()' value='Start SIP client' ID='StartButton" + index + "' disabled=true>");
+      document.writeln("      <br>");
+      document.writeln("      <br>");
+      document.writeln("      <input type='button' onClick='btnStopSip()' value='Stop SIP client' ID='StopButton" + index + "' disabled=true>");
+      document.writeln("      <br>");
+      document.writeln("      <br>");
+      document.writeln("      <input type='button' onClick='btnApplySip()' value='Apply' ID='ApplyButton" + index + "' disabled=true>");
+      document.writeln("      <br>");
+      document.writeln("   </center>");
+      document.writeln("   <br>");
+      document.writeln("   * Changing this parameter for one service provider affects all other service providers.");
+      document.writeln("</div>");
+      document.writeln("</div>");
+   }
+}
+
+</script>
+
+
+<body onLoad="frmLoad('debug')">
+   <blockquote>
+      <form>
+      
+      <script TYPE="text/javascript">
+        createTabs();
+        createGlobal();
+        createContent();
+     </script>  
+
+      </form>
+   </blockquote>
+
+</body>
+
+</html>

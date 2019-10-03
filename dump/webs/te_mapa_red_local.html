@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var deviceData=<%ejGet(lanDevicesList)%>;
+
+var gatewayIPaddress='<%ejGet(ethIpAddress)%>';
+var gatewayNetmask='<%ejGet(ethSubnetMask)%>';
+var DHCPActive= '<%ejGet(enblDhcpSrv)%>';
+var startIPAddress='<%ejGet(dhcpEthStart)%>';
+var endIPAddress='<%ejGet(dhcpEthEnd)%>';
+var lanHostDns = '<%ejGet(lanHostDns)%>';
+var DNSserver1='';
+var DNSserver2='';
+
+var wanPpp= '<%ejGetOther(WanPpp)%>';  //M,username,password or S,username,password
+var userselection='M';
+var PPPoEUsername='';
+var PPPoEPassword='';
+
+ var dns = lanHostDns.split(',');
+ if (dns.length > 0) DNSserver1= dns[0];
+ if (dns.length > 1) DNSserver2 = dns[1];
+
+ var ppp = wanPpp.split(',');
+ if (ppp.length > 0) userselection= ppp[0];
+ if (ppp.length > 1 && ppp[1] != '(null)') PPPoEUsername = ppp[1];
+ if (ppp.length > 2 && ppp[2] != '(null)') PPPoEPassword = ppp[2];
+
+$(function()
+{       
+    if(ismobile)
+    {
+        $("#PCformat").remove();
+    }
+    else
+    {
+        $("#mobileformat").remove();
+    }
+	$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val(gatewayIPaddress);
+	$('[name=gatewayNetmask],[name=MgatewayNetmask]').val(gatewayNetmask);
+	$('[name=DHCPActive]>option[value='+DHCPActive+'],[name=MDHCPActive]>option[value='+DHCPActive+']').prop('selected',true);
+	$('[name=startIPAddress],[name=MstartIPAddress]').val(startIPAddress);
+	$('[name=endIPAddress],[name=MendIPAddress]').val(endIPAddress);
+	$('[name=DNSserver1],[name=MDNSserver1]').val(DNSserver1);
+	$('[name=DNSserver2],[name=MDNSserver2]').val(DNSserver2);
+	$('[name=userselection][value='+userselection+'],[name=Muserselection][value='+userselection+']').click();
+	$('[name=PPPoEUsername],[name=MPPPoEUsername]').text(PPPoEUsername);
+	var pwd='';
+	for(i=0;i<PPPoEPassword.length;i++)
+		pwd+='.';
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').text(pwd);
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').css({'font-size':'36px','line-height':'8px'});
+	$('[name=PPPoEPassword],[name=MPPPoEPassword]').parent().css({'overflow-y':'hidden'});
+	userselect();	
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");  
+	if( deviceData.length > 0 ){
+		deviceData = deviceData.sort(function(a,b) {
+			return a[0] > b[0];
+		});
+		deviceData.reverse();
+		for(var i=0; i<6; i++){
+			if(!ismobile){
+				if( i == 0 ){ 
+					$('.networkmap>div:last-child').after('<div></div>');
+					$('.networkmap>div:last-child').append('<span class="vertical_line" style="position:relative;margin-left:13%;width:0.001%;display:inline-table;"></span>');
+				}
+				else{ 
+                    if( i < deviceData.length )				
+						$('.networkmap>div:last-child').find('span:last-child').after('<span class="vertical_line" style="position:relative;margin-left:14.5%;width:0.001%;display:inline-table;"></span>');
+				}			
+			}
+			else{			
+				$('.networkmap>div:last-child').after('<div></div>');
+			}			
+		}
+		for(var i=0; i<deviceData.length; i++){
+			if(!ismobile){
+				if( i%6 == 0 ){ 
+					$('.networkmap>div:last-child').after('<div></div>');
+				}
+				if(deviceData[i][1].trim()!='')
+					showdevice(deviceData[i][0],deviceData[i][2],i%6,deviceData[i][1]);	
+				else
+					showdevice(deviceData[i][0],deviceData[i][2],i%6,deviceData[i][3]);	
+			}
+			else{
+				if(deviceData[i][1].trim()!='')
+					showdevice(deviceData[i][0],deviceData[i][2],i,deviceData[i][1]);
+				else
+					showdevice(deviceData[i][0],deviceData[i][2],i,deviceData[i][3]);
+			}
+		}
+	}
+	$('.networkmap').find('img[src!="te_internet.jpg"]').on('mouseenter touchstart',function(){
+		$(this).addClass('hand');
+	})
+	.on('mouseleave touchcancel',function(){
+		$(this).removeClass('hand');
+	})
+	.on('click touchstart',function(){
+		var itemnum = ($(this).index('img')-4);
+		if( itemnum == -1 ){
+			$('.deviceinfo').addClass('divHide');
+			$('.lanSetting').removeClass('divHide');
+			$('.wanSetting').removeClass('divHide');
+		}
+		else{
+		    $('.lanSetting').addClass('divHide');
+			$('.wanSetting').addClass('divHide');
+			$('.deviceinfo').removeClass('divHide');
+			if(ismobile){
+				$('[name=MhostName]').val(deviceData[itemnum][1]);
+				$('[name=MdeviceType]>option[value='+deviceData[itemnum][2]+']').prop('selected',true);
+				$('#MIPAddress').find('span:nth-child(2)').remove();
+				$('#MIPAddress').find('span:first').after('<span>'+deviceData[itemnum][3]+'</span>');
+				$('#MinterfaceType').find('span:nth-child(2)').remove();
+				$('#MinterfaceType').find('span:first').after('<span>'+deviceData[itemnum][4]+'</span>');
+				$('#MopenPort').find('span:nth-child(2)').remove();
+				$('#MopenPort').find('span:first').after('<span>'+deviceData[itemnum][5]+'</span>');
+			}
+			else{
+				$('[name=hostName]').val(deviceData[itemnum][1]);
+				$('[name=deviceType]>option[value='+deviceData[itemnum][2]+']').prop('selected',true);
+				$('#IPAddress').find('td:nth-child(2)').remove();
+				$('#IPAddress').find('td:first').after('<td>'+deviceData[itemnum][3]+'</td>');
+				$('#interfaceType').find('td:nth-child(2)').remove();
+				$('#interfaceType').find('td:first').after('<td>'+deviceData[itemnum][4]+'</td>');
+				$('#openPort').find('td:nth-child(2)').remove();
+				$('#openPort').find('td:first').after('<td>'+deviceData[itemnum][5]+'</td>');
+			}
+		}
+	});	
+	$('[value="Configurar tus puertos"]').on('click',function(){	
+		window.location.replace('te_puertos.html');
+	});
+	$('[value="Cancelar"]').on('click',function(){	
+		$('.deviceinfo').addClass('divHide');
+	});
+	$('[value="Guardar"]').on('click',function(){
+		var str=$('[name=hostName],[name=MhostName]').val();
+		if (str.indexOf("\'") >= 0 || str.indexOf("\\") >= 0)		
+			var hostname=addslash(str);
+		else
+			var hostname=str;
+		var loc = 'te_mrl.cmd?action=setpc&hostName='+encodeUrl(hostname);
+		loc += '&deviceType='+$('[name=deviceType],[name=MdeviceType]').val();
+		if(ismobile)
+		   loc += '&deviceIPAddress='+$('#MIPAddress').find('span:nth-child(2)').text();
+		else
+		   loc += '&deviceIPAddress='+$('#IPAddress').find('td:nth-child(2)').text();
+//		loc += '&deviceIPAddress='+$('#IPAddress,#MIPAddress').val();
+		loc += '&sessionKey='+sessionKey;
+		for(var i=0; i<deviceData.length; i++){
+			if ( ismobile && deviceData[i][3]==$('#MIPAddress').find('span:nth-child(2)').text())
+			{
+				loc += '&deviceMac='+deviceData[i][6];		
+				break;
+			}
+			else if( !ismobile && deviceData[i][3]==$('#IPAddress').find('td:nth-child(2)').text())
+			{
+				loc += '&deviceMac='+deviceData[i][6];		
+				break;
+			}
+		}
+
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);
+	});
+	$('.lanSetting').find('[value="Aplicar cambios"]').on('click',function(){	
+		if(ismobile){
+			if(!checkIP(document.getElementsByName("MgatewayIPaddress")[0]))
+				return false;
+			if(!checkMask(document.getElementsByName("MgatewayNetmask")[0]))
+				return false;
+			if(!inValidNetAddr($('[name=MgatewayIPaddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("MstartIPAddress")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("MendIPAddress")[0]))
+				return false;
+			if(!checklessthan($('[name=MstartIPAddress]').val(),$('[name=MendIPAddress]').val())){
+				alertSpecial("La direcci&oacute;n de comienzo deber&iacute;a estar en la misma red que la direcci&oacute;n de fin.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=MstartIPAddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=MendIPAddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("MDNSserver1")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("MDNSserver2")[0]))
+				return false;
+		}else
+		{
+			if(!checkIP(document.getElementsByName("gatewayIPaddress")[0]))
+				return false;
+			if(!checkMask(document.getElementsByName("gatewayNetmask")[0]))
+				return false;
+			if(!inValidNetAddr($('[name=gatewayIPaddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("startIPAddress")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("endIPAddress")[0]))
+				return false;
+			if(!checklessthan($('[name=startIPAddress]').val(),$('[name=endIPAddress]').val())){
+				alertSpecial("La direcci&oacute;n de comienzo deber&iacute;a estar en la misma red que la direcci&oacute;n de fin.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=startIPAddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=endIPAddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("DNSserver1")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("DNSserver2")[0]))
+				return false;
+		}
+                var loc = 'te_mapa_red_local.cgi?ethIpAddress='+$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val();
+		loc += '&ethSubnetMask='+$('[name=gatewayNetmask],[name=MgatewayNetmask]').val();
+		loc += '&enblDhcpSrv='+$('[name=DHCPActive],[name=MDHCPActive]').val();
+		loc += '&dhcpEthStart='+$('[name=startIPAddress],[name=MstartIPAddress]').val();
+		loc += '&dhcpEthEnd='+$('[name=endIPAddress],[name=MendIPAddress]').val();
+		loc += '&lanHostDns='+$('[name=DNSserver1],[name=MDNSserver1]').val()+','+$('[name=DNSserver2],[name=MDNSserver2]').val();
+		loc += '&lanHostDhcp=3^'+$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val();
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);
+	});
+	$('.wanSetting').find('[value="Aplicar cambios"]').on('click',function(){	
+		var loc = 'te_mrl.cmd?action=wanApply&userselection='+$('[name=userselection]:checked,[name=Muserselection]:checked').val();
+		loc += '&PPPoEUsername='+PPPoEUsername;
+		loc += '&PPPoEPassword='+PPPoEPassword;
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		//alertSpecial(code);
+		//location.reload();
+		eval(code);
+	});
+	$('[value="Deshacer"]').on('click',function(){
+		$('[name=userselection][value='+userselection+'],[name=Muserselection][value='+userselection+']').click();
+		userselect();
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').val('');
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').val('');
+	});
+    $('[name="gatewayIPaddress"],[name="MgatewayIPaddress"]').on("change", function() {
+        if (!checkIP(this)) return;
+
+        var netid = this.value.substr(0, this.value.lastIndexOf('.'));
+        var minAddr = $('[name="startIPAddress"],[name="MstartIPAddress"]')[0];
+        if (checkIP(minAddr)) {
+            minAddr.value = netid + minAddr.value.substr(minAddr.value.lastIndexOf('.'));
+        }
+
+        var maxAddr = $('[name="endIPAddress"],[name="MendIPAddress"]')[0];
+        if (checkIP(maxAddr)) {
+            maxAddr.value = netid + maxAddr.value.substr(maxAddr.value.lastIndexOf('.'));
+        }
+    });
+    $('[name=DHCPActive],[name=MDHCPActive]').on('change', function() {
+        if ($('[name=DHCPActive],[name=MDHCPActive]').val() == '0')
+            $('.lanSetting input[type="text"]').prop('disabled', true);
+        else
+            $('.lanSetting input[type="text"]').prop('disabled', false);
+
+        $('[name=gatewayIPaddress],[name=MgatewayIPaddress]').prop('disabled', false);
+        $('[name=gatewayNetmask],[name=MgatewayNetmask]').prop('disabled', false);
+    });
+    $('[name=DHCPActive],[name=MDHCPActive]').trigger('change');
+});
+
+function showdevice(onoff,type,num,devicename){
+    if( num == 0 ){
+		switch(type){
+			case '0':
+				if( onoff == '1' ){
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_pc.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				}
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_pc_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '1':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_telephone.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_telephone_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');		
+			break;
+			case '2':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_tv.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_tv_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '3':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_stereo.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_stereo_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '4':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_harddrive.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_harddrive_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '5':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_portable.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_portable_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '6':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_mobile.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_mobile_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '7':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_console.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_console_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '8':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_printer.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_printer_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '9':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_other.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_other_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '10':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_unknown.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child').append('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_unknown_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+		}
+		$('.networkmap>div:last-child').find('.devicename').text(devicename);  
+	}
+	else{
+		switch(type){
+			case '0':
+				if( onoff == '1' ){
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_pc.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				}
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_pc_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '1':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_telephone.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_telephone_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');		
+			break;
+			case '2':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_tv.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_tv_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '3':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_stereo.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_stereo_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '4':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_harddrive.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_harddrive_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '5':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_portable.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_portable_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '6':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_mobile.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_mobile_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '7':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_console.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_console_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '8':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_printer.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_printer_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '9':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_other.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_other_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+			case '10':
+				if( onoff == '1' )
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_unknown.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+				else
+					$('.networkmap>div:last-child>div:last-child').after('<div style="width:100px;"><div style="position:relative;display:inline-block;width:100px;"><img src="te_unknown_grey.jpg"></div><div class="devicename" style="position:relative;display:inline-block;width:100px;"></div></div>');
+			break;
+		}
+		$('.networkmap>div:last-child>div:last-child').find('.devicename').text(devicename);  
+	}
+	if(ismobile){
+		if( num == 0 )
+			$('.networkmap>div:last-child').find('div:last-child').css({"position": "relative","margin-left":"5%","width":"5%","display": "inline-table","text-align":"center"});
+		else
+			$('.networkmap>div:last-child').find('div:last-child').css({"position": "relative","margin-left":"4%","width":"5%","display": "inline-table","text-align":"center"});
+	}else{
+	    if( num == 0 )
+			$('.networkmap>div:last-child').find('div:last-child').css({"position": "relative","margin-left":"8%","width":"5%","display": "inline-table","text-align":"center"});
+		else
+			$('.networkmap>div:last-child').find('div:last-child').css({"position": "relative","margin-left":"5.5%","width":"5%","display": "inline-table","text-align":"center"});
+	}
+}
+
+function userselect(){
+	return;
+	if(	$('[name=userselection]:checked,[name=Muserselection]:checked').val() == 'S' ){
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').attr('disabled',true);
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').attr('disabled',true);
+	}
+	else{
+		$('[name=PPPoEUsername],[name=MPPPoEUsername]').attr('disabled',false);
+		$('[name=PPPoEPassword],[name=MPPPoEPassword]').attr('disabled',false);
+	}
+}
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">          
+            <div class="title">Mapa de red local</div>
+			<div class="networkmap content">
+				<div class="littletitle">Mapa de red local</div>
+				<p class="content_word">A continuaci&oacute;n te mostramos los dispositivos conectados a tu red local. Para poder configurar cada uno de ellos, deber&aacute;s pulsar sobre su icono. Tambi&eacute;n podr&aacute;s configurar desde aqu&iacute; tu red local haciendo clic sobre el icono del router.</p>
+				<div><img src="te_internet.jpg" style="position:relative;left:50%;"></div>
+				<div style="color:red;position:relative;left:50%;">Internet</div>
+				<div class="vertical_line" style="position:relative;left:52%;"></div>
+				<div><img src="te_router.jpg" style="position:relative;left:50%;"></div>
+				<div style="position:relative;left:50%;">Router</div>
+				<div class="vertical_line" style="position:relative;left:52%;"></div>
+				<div class="horizontal_line" style="position:relative;left:10%;"></div>
+            </div>
+			<div class="deviceinfo content divHide">
+				<div class="littletitle">Configura tu dispositivo</div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Nombre:</td>
+					<td><input class="Input_box" type="text" name="hostName" maxlength="32"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Tipo:</td>
+					<td>
+					<select class="Select_box" name="deviceType">
+						<option value="0">PC Mesa</option>
+						<option value="1">Tel&eacute;fono</option>
+						<option value="2">TV</option>
+						<option value="3">Minicadena</option>
+						<option value="4">Disco duro</option>
+						<option value="5">Port&aacute;til</option>
+						<option value="6">M&oacute;vil</option>
+						<option value="7">Videoconsola</option>
+						<option value="8">Impresora</option>
+						<option value="9">Otro</option>
+						<option value="10">Desconocido</option>
+					</select>
+					</td>
+				</tr>
+				<tr id="IPAddress">
+					<td class="titlesize">Direcci&oacute;n IP:</td>					
+				</tr>
+				<tr id="interfaceType">
+					<td class="titlesize">Tipo de conexi&oacute;n:</td>					
+				</tr>
+				<tr id="openPort">
+					<td class="titlesize">Puertos abiertos:</td>					
+				</tr>
+				<tr>
+					<td>
+					<input type="button" value="Configurar tus puertos">
+					<input type="button" value="Cancelar">
+					<input type="button" value="Guardar">
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div class="lanSetting divHide">
+				<div class="content">
+				<div class="littletitle">Configura tu Red</div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP (Gateway):</td>
+					<td><input class="Input_box" type="text" name="gatewayIPaddress"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">M&aacute;scara de subred:</td>
+					<td><input class="Input_box" type="text" name="gatewayNetmask"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">DHCP:</td>
+					<td>
+					<select class="Select_box" name="DHCPActive">
+						<option value='1'>Activado</option>
+						<option value='0'>Desactivado</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP inicio rango:</td>
+					<td><input class="Input_box" type="text" name="startIPAddress"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP fin rango:</td>
+					<td><input class="Input_box" type="text" name="endIPAddress"></td>
+				</tr>
+				<tr><td colspan='2' class="content_word"><b>Configurador de servidores DNS (se recomienda no modificar)</b></td></tr>
+				<tr>
+					<td class="titlesize">Servidor DNS1:</td>
+					<td><input class="Input_box" type="text" name="DNSserver1"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Servidor DNS2:</td>
+					<td><input class="Input_box" type="text" name="DNSserver2"></td>
+				</tr>
+				
+				</table>
+			</div>
+				<p style="width:80%;position:relative;margin:auto;">
+					<input type="button" value="Aplicar cambios">
+				</p><br>
+			</div>
+			<div class="wanSetting divHide">
+				<div class="content">
+				<div class="littletitle"><input type="radio" name="userselection" value="M" onclick="userselect();"><span>Multipuesto (Con NAT) (RECOMENDADO)</span></div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direccionamiento Din&aacute;mico</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Usuario PPPoE:</td>
+					<td><label name="PPPoEUsername"><label></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Contrase&ntilde;a:</td>
+					<td><label name="PPPoEPassword"></label></td>
+				</tr>
+				</table>
+				</div>
+				<div class="content">
+				<div class="littletitle"><input type="radio" name="userselection" value="S" onclick="userselect();"><span>Monopuesto (Sin NAT)</span></div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direccionamiento Din&aacute;mico</td>
+				</tr>
+				<tr>
+					<td colspan='2' style="text-indent:0px;padding-left:20px;">Es necesario disponer de un cliente PPPoE (con su correspondiente adaptador de cliente PPPoE) en su equipo de cliente. Para m&aacute;s informaci&oacute;n consulte el men&uacute; <a href="te_ayuda_configurador_web.html">Ayuda</a></td>
+				</tr>
+				</table>
+				</div>
+				<p style="width:80%;position:relative;margin:auto;">
+					<input type="button" value="Aplicar cambios">
+					<!--<input type="button" value="Deshacer">-->
+				</p><br>
+			</div>
+        </div>      
+    </div>  
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Mapa de red local</div>
+			<div class="networkmap Mcontent">
+				<div class="littletitle">Mapa de red local</div>
+				<p class="Mcontent_word">A continuaci&oacute;n te mostramos los dispositivos conectados a tu red local. Para poder configurar cada uno de ellos, deber&aacute;s pulsar sobre su icono. Tambi&eacute;n podr&aacute;s configurar desde aqu&iacute; tu red local haciendo clic sobre el icono del router.</p>				
+				<div><img src="te_internet.jpg" style="position:relative;left:50%;"></div>
+				<div style="color:red;position:relative;margin-left:48%;">Internet</div>
+				<div class="vertical_line" style="position:relative;left:52%;"></div>
+				<div><img src="te_router.jpg" style="position:relative;left:50%;"></div>
+				<div class="device" style="position:relative;margin-left:48%;">Router</div>
+				<div class="vertical_line" style="position:relative;left:52%;"></div>
+				<div class="Mhorizontal_line" style="position:relative;left:10%;"></div>
+            </div>
+			<div class="deviceinfo Mcontent divHide">
+				<div class="littletitle">Configura tu dispositivo</div>
+				<div>
+					<span class="Mtitlesize">Nombre:</span>
+				</div>
+				<div>
+					<input class="MInput_box" type="text" name="MhostName" maxlength="32">
+				</div>
+				<div>
+					<span class="Mtitlesize">Tipo:</span>
+				</div>
+				<div>
+					<select class="MSelect_box" name="MdeviceType">
+						<option value="0">PC Mesa</option>
+						<option value="1">Tel&eacute;fono</option>
+						<option value="2">TV</option>
+						<option value="3">Minicadena</option>
+						<option value="4">Disco duro</option>
+						<option value="5">Port&aacute;til</option>
+						<option value="6">M&oacute;vil</option>
+						<option value="7">Videoconsola</option>
+						<option value="8">Impresora</option>
+						<option value="9">Otro</option>
+						<option value="10">Desconocido</option>
+					</select>
+				</div>
+				<div id="MIPAddress">
+					<span class="Mtitlesize">Direcci&oacute;n IP:</span>					
+				</div>
+				<div id="MinterfaceType">
+					<span class="Mtitlesize">Tipo de conexi&oacute;n:</span>					
+				</div>
+				<div id="MopenPort">
+					<span class="Mtitlesize">Puertos abiertos:</span>					
+				</div>
+				<p>
+					<input type="button" value="Configurar tus puertos">
+				</p>
+				<p>
+					<input type="button" value="Cancelar">
+				</p>
+				<p>
+					<input type="button" value="Guardar">
+				</p>
+			</div>
+			<div class="lanSetting divHide">
+				<div class="Mcontent">
+				<div class="littletitle">Configura tu Red</div>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP (Gateway):</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MgatewayIPaddress">
+				</p>
+				<p>
+					<span class="Mtitlesize">M&aacute;scara de subred:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MgatewayNetmask">
+				</p>
+				<p>
+					<span class="Mtitlesize">DHCP:</span><br>
+				</p>
+				<p>
+					<select class="MSelect_box" name="MDHCPActive">
+						<option value='1'>Activado</option>
+						<option value='0'>Desactivado</option>
+					</select>
+				</p>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP inicio rango:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MstartIPAddress">
+				</p>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP fin rango:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MendIPAddress">
+				</p>
+				<div><b>Configurador de servidores DNS (se recomienda no modificar)</b></div>
+				<p>
+					<span class="Mtitlesize">Servidor DNS1:</span>
+					<div><input class="MInput_box" type="text" name="MDNSserver1"></div>
+					<span class="Mtitlesize">Servidor DNS2:</span>
+					<div><input class="MInput_box" type="text" name="MDNSserver2"></div>
+				</p>
+				</div>
+				<p>
+					<input type="button" value="Aplicar cambios">
+				</p><br>
+			</div>
+			<div class="wanSetting divHide">
+				<div class="Mcontent">
+				<div class="littletitle"><input type="radio" name="Muserselection" value="M" onclick="userselect();"><span>Multipuesto (Con NAT) (RECOMENDADO)</span></div>
+				<div class="Mtitlesize">Direccionamiento Din&aacute;mico</div>
+				<p>
+					<span class="Mtitlesize">Usuario PPPoE:</span>
+					<span><label name="MPPPoEUsername"></label></span>
+				</p>
+				<p>
+					<span class="Mtitlesize">Contrase&ntilde;a:</span>
+					<span><label name="MPPPoEPassword"></label></span>
+				</p>
+				</div>
+				<div class="Mcontent">
+				<div class="littletitle"><input type="radio" name="Muserselection" value="S" onclick="userselect();"><span>Monopuesto (Sin NAT)</span></div>
+				<div class="Mtitlesize">Direccionamiento Din&aacute;mico</div>
+				<p class="Mcontent_word">
+					Es necesario disponer de un cliente PPPoE (con su correspondiente adaptador de cliente PPPoE) en su equipo de cliente. Para m&aacute;s informaci&oacute;n consulte el men&uacute; <a href="te_ayuda_configurador_web.html">Ayuda</a>
+				</p>
+				</div>
+				<p>
+					<input type="button" value="Aplicar cambios">
+					<!--<input type="button" value="Deshacer">-->
+				</p><br>
+			</div>
+        </div>      
+    </div>
+</body>
+</html>

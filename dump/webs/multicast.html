@@ -1,0 +1,397 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+
+<script language="javascript" src="util.js"></script>
+<script language="javascript">
+<!-- hide
+
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>'
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      var multicast = '<%ejGetOther(multicast)%>';
+      var mcastPrec = '<%ejGet(mcastPrecedence)%>';
+      var igmpFastLeaveEnable = '<%ejGet(igmpFastLeaveEnable)%>';
+      var mldFastLeaveEnable = '<%ejGet(mldFastLeaveEnable)%>';
+
+      setSelect(mcastPrecedence, mcastPrec);
+
+      if(igmpFastLeaveEnable == '1') {
+         igmpFastLeave.checked = true;
+      } else {
+         igmpFastLeave.checked = false;
+      }
+
+      if ( enblIP6 == '1' ) {
+         hideMldInfo(0);
+      }
+      else
+         hideMldInfo(1);
+
+      if(mldFastLeaveEnable == '1') {
+         mldFastLeave.checked = true;
+      } else {
+         mldFastLeave.checked = false;
+      }
+
+      var igmpProxyEnabled = '<%ejGet(igmpProxyEnabled)%>';
+      if(igmpProxyEnabled == '1') {
+         proxyEnabled.checked = true;
+      } else {
+         proxyEnabled.checked = false;
+      }
+      igmpFastLeave.disabled=true; //it was became read-only
+      igmpLMQI.disabled=true; //it was became read-only
+      igmpMaxGroups.disabled=true; //it was became read-only
+   }
+}
+
+function hideMldInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('mldInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.mldInfo.style.visibility = status;
+      }
+   }
+
+function btnApply() {
+   var loc = 'multicast.cmd?';
+
+   with ( document.forms[0] ) {
+      loc += submitSelect(mcastPrecedence);
+
+      if ( isNaN(parseInt(igmpVer.value)) == true ) {
+         alert('IGMP Version"' + igmpVer.value + '" is invalid.');
+         return;
+      }
+      iVer = parseInt(igmpVer.value);
+      if ( iVer < 1 || iVer > 3 ) {
+         alert('IGMP Version"' + igmpVer.value + '" is out of range [1-3].');
+         return;
+      }
+      loc += '&igmpVer=' + igmpVer.value;
+
+      if ( isNaN(parseInt(igmpQI.value)) == true ) {
+         alert('IGMP Query Interval "' + igmpQI.value + '" is invalid.');
+         return;
+      }
+      iQI = parseInt(igmpQI.value);
+      if ( iQI < 1 ) {
+         alert('IGMP Query Interval"' + igmpQI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpQI=' + igmpQI.value;
+
+      if ( isNaN(parseInt(igmpQRI.value)) == true ) {
+         alert('IGMP Query Response Interval"' + igmpQRI.value + '" is invalid.');
+         return;
+      }
+      iQRI = parseInt(igmpQRI.value);
+      if ( iQRI < 1 ) {
+         alert('IGMP Query Response Interval"' + igmpQRI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpQRI=' + igmpQRI.value;
+
+      if ( isNaN(parseInt(igmpLMQI.value)) == true ) {
+         alert('IGMP Last Member Query Interval"' + igmpLMQI.value + '" is invalid.');
+         return;
+      }
+      iLMQI = parseInt(igmpLMQI.value);
+      if ( iLMQI < 1 ) {
+         alert('IGMP Last Member Query Interval"' + igmpLMQI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpLMQI=' + igmpLMQI.value;
+
+      if ( isNaN(parseInt(igmpRV.value)) == true ) {
+         alert('IGMP Robustness Value"' + igmpRV.value + '" is invalid.');
+         return;
+      }
+      iRV = parseInt(igmpRV.value);
+      if ( iRV < 1 ) {
+         alert('IGMP Robustness Value"' + igmpRV.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpRV=' + igmpRV.value;
+
+      if ( isNaN(parseInt(igmpMaxGroups.value)) == true ) {
+         alert('IGMP Maximum Groups"' + igmpMaxGroups.value + '" is invalid.');
+         return;
+      }
+      iMaxGroups = parseInt(igmpMaxGroups.value);
+      if ( iMaxGroups < 1 ) {
+         alert('IGMP Maximum Groups"' + igmpMaxGroups.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpMaxGroups=' + igmpMaxGroups.value;
+
+      if ( isNaN(parseInt(igmpMaxSources.value)) == true ) {
+         alert('IGMP Maximum Sources"' + igmpMaxSources.value + '" is invalid.');
+         return;
+      }
+      iMaxSources = parseInt(igmpMaxSources.value);
+      if ( iMaxSources < 1 ) {
+         alert('IGMP maximum Sources"' + igmpMaxSources.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpMaxSources=' + igmpMaxSources.value;
+
+      if ( isNaN(parseInt(igmpMaxMembers.value)) == true ) {
+         alert('IGMP Maximum Members"' + igmpMaxMembers.value + '" is invalid.');
+         return;
+      }
+      iMaxMembers = parseInt(igmpMaxMembers.value);
+      if ( iMaxMembers < 1 ) {
+         alert('IGMP Maximum Members"' + igmpMaxMembers.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&igmpMaxMembers=' + igmpMaxMembers.value;
+
+      if ( igmpFastLeave.checked == true )
+        loc += '&igmpFastLeaveEnable=1';
+      else
+        loc += '&igmpFastLeaveEnable=0';
+
+      if ( proxyEnabled.checked == true )
+        loc += '&igmpProxyEnabled=1';
+      else
+        loc += '&igmpProxyEnabled=0';
+
+      if ( enblIP6 == '1' ) {
+      if ( isNaN(parseInt(mldVer.value)) == true ) {
+         alert('MLD Version "' + mldVer.value + '" is invalid.');
+         return;
+      }
+      mVer = parseInt(mldVer.value);
+      if ( mVer < 1 || mVer > 2 ) {
+         alert('MLD Version"' + mldVer.value + '" is out of range [1-2].');
+         return;
+      }
+      loc += '&mldVer=' + mldVer.value;
+
+      if ( isNaN(parseInt(mldQI.value)) == true ) {
+         alert('MLD Query Interval "' + mldQI.value + '" is invalid.');
+         return;
+      }
+      mQI = parseInt(mldQI.value);
+      if ( mldQI < 1 ) {
+         alert('MLD Query Interval"' + mldQI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldQI=' + mldQI.value;
+
+      if ( isNaN(parseInt(mldQRI.value)) == true ) {
+         alert('MLD Query Response Interval"' + mldQRI.value + '" is invalid.');
+         return;
+      }
+      mQRI = parseInt(mldQRI.value);
+      if ( mQRI < 1 ) {
+         alert('MLD Query Response Interval"' + mldQRI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldQRI=' + mldQRI.value;
+
+      if ( isNaN(parseInt(mldLMQI.value)) == true ) {
+         alert('MLD Last Member Query Interval"' + mldLMQI.value + '" is invalid.');
+         return;
+      }
+      mLMQI = parseInt(mldLMQI.value);
+      if ( mLMQI < 1 ) {
+         alert('MLD Last Member Query Interval"' + mldLMQI.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldLMQI=' + mldLMQI.value;
+
+      if ( isNaN(parseInt(mldRV.value)) == true ) {
+         alert('MLD Robustness Value"' + mldRV.value + '" is invalid.');
+         return;
+      }
+      mRV = parseInt(mldRV.value);
+      if ( mRV < 1 ) {
+         alert('MLD Robustness Value"' + mldRV.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldRV=' + mldRV.value;
+
+      if ( isNaN(parseInt(mldMaxGroups.value)) == true ) {
+         alert('MLD Maximum Groups"' + mldMaxGroups.value + '" is invalid.');
+         return;
+      }
+      mMaxGroups = parseInt(mldMaxGroups.value);
+      if ( mMaxGroups < 1 ) {
+         alert('MLD Maximum Groups"' + mldMaxGroups.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldMaxGroups=' + mldMaxGroups.value;
+
+      if ( isNaN(parseInt(mldMaxSources.value)) == true ) {
+         alert('MLD Maximum Sources"' + mldMaxSources.value + '" is invalid.');
+         return;
+      }
+      mMaxSources = parseInt(mldMaxSources.value);
+      if ( mMaxSources < 1 ) {
+         alert('MLD maximum Sources"' + mldMaxSources.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldMaxSources=' + mldMaxSources.value;
+
+      if ( isNaN(parseInt(mldMaxMembers.value)) == true ) {
+         alert('MLD Maximum Members"' + mldMaxMembers.value + '" is invalid.');
+         return;
+      }
+      mMaxMembers = parseInt(mldMaxMembers.value);
+      if ( mMaxMembers < 1 ) {
+         alert('MLD Maximum Members"' + mldMaxMembers.value + '" is out of range [1-].');
+         return;
+      }
+      loc += '&mldMaxMembers=' + mldMaxMembers.value;
+
+      if ( mldFastLeave.checked == true )
+        loc += '&mldFastLeaveEnable=1';
+      else
+        loc += '&mldFastLeaveEnable=0';
+
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+               <tr>
+                  <td width="30%"><b>Multicast Precedence:</b></td>
+                  <td><select name='mcastPrecedence' size="1">
+                      <option value='-1'>Disable
+                      <script language="javascript">
+                         <!-- hide
+                         {
+                            queueId = '<%ejGetOther(qosPrecedence, eth)%>';
+                            intf = queueId.split('|');
+
+                            for (i = 0; i < intf.length; i++) {
+                               document.write("  <option value='" + intf[i] + "'>");
+                               document.writeln(intf[i]);
+                            }
+                         }
+                         // done hiding -->
+                      </script>
+                  </select> lower value, higher priority</td>
+               </tr>
+            </table>
+            <br> <br>
+            <strong><b>IGMP Configuration</b></strong><br>
+            <br>
+            Enter IGMP protocol configuration fields if you want modify default values shown below.<br><br>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+               <tr>
+                  <td>Proxy Enable:</td>
+                  <td><input type='checkbox' name='proxyEnabled'>&nbsp;&nbsp;</td>
+               </tr>
+               <tr>
+                  <td width="30%">Default Version:</td>
+                  <td><input type='text' name='igmpVer' value='<%ejGet(igmpVer)%>'></td>
+               </tr>
+               <tr>
+                  <td>Query Interval:</td>
+                  <td><input type='text' name='igmpQI' value='<%ejGet(igmpQI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Query Response Interval:</td>
+                  <td><input type='text' name='igmpQRI' value='<%ejGet(igmpQRI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Last Member Query Interval:</td>
+                  <td><input type='text' name='igmpLMQI' value='<%ejGet(igmpLMQI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Robustness Value:</td>
+                  <td><input type='text' name='igmpRV' value='<%ejGet(igmpRV)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Groups:</td>
+                  <td><input type='text' name='igmpMaxGroups' value='<%ejGet(igmpMaxGroups)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Data Sources (for IGMPv3):</td>
+                  <td><input type='text' name='igmpMaxSources' value='<%ejGet(igmpMaxSources)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Group Members:</td>
+                  <td><input type='text' name='igmpMaxMembers' value='<%ejGet(igmpMaxMembers)%>'></td>
+               </tr>
+               <tr>
+                  <td>Fast Leave Enable:</td>
+                  <td><input type='checkbox' name='igmpFastLeave'>&nbsp;&nbsp;</td>
+               </tr>
+               <tr>
+            </table><br>
+            <br> <br>
+            <div id='mldInfo'>
+
+            <strong><b>MLD Configuration</b></strong><br>
+            <br>
+            Enter MLD protocol (IPv6 Multicast) configuration fields if you want modify default values shown below.<br><br>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+               <tr>
+                  <td width="30%">Default Version:</td>
+                  <td><input type='text' name='mldVer' value='<%ejGet(mldVer)%>'></td>
+               </tr>
+               <tr>
+                  <td>Query Interval:</td>
+                  <td><input type='text' name='mldQI' value='<%ejGet(mldQI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Query Response Interval:</td>
+                  <td><input type='text' name='mldQRI' value='<%ejGet(mldQRI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Last Member Query Interval:</td>
+                  <td><input type='text' name='mldLMQI' value='<%ejGet(mldLMQI)%>'></td>
+               </tr>
+               <tr>
+                  <td>Robustness Value:</td>
+                  <td><input type='text' name='mldRV' value='<%ejGet(mldRV)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Groups:</td>
+                  <td><input type='text' name='mldMaxGroups' value='<%ejGet(mldMaxGroups)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Data Sources (for mldv2):</td>
+                  <td><input type='text' name='mldMaxSources' value='<%ejGet(mldMaxSources)%>'></td>
+               </tr>
+               <tr>
+                  <td>Maximum Multicast Group Members:</td>
+                  <td><input type='text' name='mldMaxMembers' value='<%ejGet(mldMaxMembers)%>'></td>
+               </tr>
+               <tr>
+                  <td>Fast Leave Enable:</td>
+                  <td><input type='checkbox' name='mldFastLeave'>&nbsp;&nbsp;</td>
+               </tr>
+            </table><br>
+            </div>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'> 
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

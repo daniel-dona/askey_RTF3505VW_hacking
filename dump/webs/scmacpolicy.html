@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+
+function btnYes() {
+   var loc = 'scmacflt.cmd?action=changemp';
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnNo() {
+   var code = 'location="' + 'scmacflt.cmd?action=view' + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+   <body>
+      <blockquote>
+         <form>
+            <b>Change MAC Filtering Global Policy</b><br><br>
+            <b><font color='red'>WARNING: Changing from one global policy to another will cause
+                  all defined rules to be REMOVED AUTOMATICALLY! You will need to create 
+                  new rules for the new policy.</font></b><br><br>
+<script language="javascript">
+<!-- hide 
+{
+   var macP = '<%ejGet(macPolicy)%>';
+
+   if (macP == 0)
+      document.writeln("<b>Are you sure you want to change MAC Filtering Global Policy from <font color='green'>FORWARDED</font> to <font color='red'>BLOCKED</font> ?</b>");
+   else
+      document.writeln("<b>Are you sure you want to change MAC Filtering Global Policy from <font color='red'>BLOCKED</font> to <font color='green'>FORWARDED</font> ?</b>");
+}
+// done hiding -->
+</script>
+            <br>
+            <table border="0" cellpadding="4" cellspacing="0">
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnNo()' value='NO'> <input type='button' onClick='btnYes()' value='YES'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

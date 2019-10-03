@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var gatewayIPaddress='<%ejGet(ethIpAddress)%>';
+var gatewayNetmask='<%ejGet(ethSubnetMask)%>';
+var DHCPActive= '<%ejGet(enblDhcpSrv)%>';
+var startIPAddress='<%ejGet(dhcpEthStart)%>';
+var endIPAddress='<%ejGet(dhcpEthEnd)%>';
+var lanHostDns = '<%ejGet(lanHostDns)%>';
+var DNSserver1='';
+var DNSserver2='';
+
+
+ var dns = lanHostDns.split(',');
+ if (dns.length > 0) DNSserver1= dns[0];
+ if (dns.length > 1) DNSserver2 = dns[1];
+
+
+
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val(gatewayIPaddress);
+	$('[name=gatewayNetmask],[name=MgatewayNetmask]').val(gatewayNetmask);
+	$('[name=DHCPActive]>option[value='+DHCPActive+'],[name=MDHCPActive]>option[value='+DHCPActive+']').prop('selected',true);
+	$('[name=startIPAddress],[name=MstartIPAddress]').val(startIPAddress);
+	$('[name=endIPAddress],[name=MendIPAddress]').val(endIPAddress);
+	$('[name=DNSserver1],[name=MDNSserver1]').val(DNSserver1);
+	$('[name=DNSserver2],[name=MDNSserver2]').val(DNSserver2);
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value="Aplicar cambios"]').on('click',function(){	
+		if(ismobile){
+			if(!checkIP(document.getElementsByName("MgatewayIPaddress")[0]))
+				return false;
+			if(!checkMask(document.getElementsByName("MgatewayNetmask")[0]))
+				return false;
+			if(!inValidNetAddr($('[name=MgatewayIPaddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("MstartIPAddress")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("MendIPAddress")[0]))
+				return false;
+			if(!checklessthan($('[name=MstartIPAddress]').val(),$('[name=MendIPAddress]').val())){
+				return false;
+			}
+			if(!inValidNetAddr($('[name=MstartIPAddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=MendIPAddress]').val(),$('[name=MgatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("MDNSserver1")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("MDNSserver2")[0]))
+				return false;
+		}else
+		{
+			if(!checkIP(document.getElementsByName("gatewayIPaddress")[0]))
+				return false;
+			if(!checkMask(document.getElementsByName("gatewayNetmask")[0]))
+				return false;
+			if(!inValidNetAddr($('[name=gatewayIPaddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("startIPAddress")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("endIPAddress")[0]))
+				return false;
+			if(!checklessthan($('[name=startIPAddress]').val(),$('[name=endIPAddress]').val())){
+				return false;
+			}
+			if(!inValidNetAddr($('[name=startIPAddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!inValidNetAddr($('[name=endIPAddress]').val(),$('[name=gatewayNetmask]').val())){
+				alertSpecial("La direcci&oacute;n IP de puerta de enlace debe estar en la subred.");
+				return false;
+			}
+			if(!checkIP(document.getElementsByName("DNSserver1")[0]))
+				return false;
+			if(!checkIP(document.getElementsByName("DNSserver2")[0]))
+				return false;
+		}
+		var loc = 'te_red_local.cgi?ethIpAddress='+$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val();
+		loc += '&ethSubnetMask='+$('[name=gatewayNetmask],[name=MgatewayNetmask]').val();
+		loc += '&enblDhcpSrv='+$('[name=DHCPActive],[name=MDHCPActive]').val();
+		loc += '&dhcpEthStart='+$('[name=startIPAddress],[name=MstartIPAddress]').val();
+		loc += '&dhcpEthEnd='+$('[name=endIPAddress],[name=MendIPAddress]').val();
+		loc += '&lanHostDns='+$('[name=DNSserver1],[name=MDNSserver1]').val()+','+$('[name=DNSserver2],[name=MDNSserver2]').val();
+		loc += '&lanHostDhcp=3^'+$('[name=gatewayIPaddress],[name=MgatewayIPaddress]').val();
+		loc += '&sessionKey='+sessionKey;
+		var code = 'location="' + loc + '"';
+		eval(code);
+	});
+    $('[name="gatewayIPaddress"],[name="MgatewayIPaddress"]').on("change", function() {
+        if (!checkIP(this)) return;
+
+        var netid = this.value.substr(0, this.value.lastIndexOf('.'));
+        var minAddr = $('[name="startIPAddress"],[name="MstartIPAddress"]')[0];
+        if (checkIP(minAddr)) {
+            minAddr.value = netid + minAddr.value.substr(minAddr.value.lastIndexOf('.'));
+        }
+
+        var maxAddr = $('[name="endIPAddress"],[name="MendIPAddress"]')[0];
+        if (checkIP(maxAddr)) {
+            maxAddr.value = netid + maxAddr.value.substr(maxAddr.value.lastIndexOf('.'));
+        }
+    });
+    $('[name=DHCPActive],[name=MDHCPActive]').on('change', function() {
+        if ($('[name=DHCPActive],[name=MDHCPActive]').val() == '0')
+            $('input[type="text"]').prop('disabled', true);
+        else
+            $('input[type="text"]').prop('disabled', false);
+
+        $('[name=gatewayIPaddress],[name=MgatewayIPaddress]').prop('disabled', false);
+        $('[name=gatewayNetmask],[name=MgatewayNetmask]').prop('disabled', false);
+    });
+    $('[name=DHCPActive],[name=MDHCPActive]').trigger('change');
+});
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+	<div id="PCformat">
+        <div id="includeHeader"></div>
+        <div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Red Local</div>
+			<div class="content">
+				<div class="littletitle">Red Local</div>
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP (Gateway):</td>
+					<td><input class="Input_box" type="text" name="gatewayIPaddress"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">M&aacute;scara de subred:</td>
+					<td><input class="Input_box" type="text" name="gatewayNetmask"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">DHCP:</td>
+					<td>
+					<select class="Select_box" name="DHCPActive">
+						<option value='1'>Activado</option>
+						<option value='0'>Desactivado</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP inicio rango:</td>
+					<td><input class="Input_box" type="text" name="startIPAddress"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Direcci&oacute;n IP fin rango:</td>
+					<td><input class="Input_box" type="text" name="endIPAddress"></td>
+				</tr>
+				<tr><td colspan='2' class="content_word"><b>Configurador de servidores DNS (se recomienda no modificar)</b></td></tr>
+				<tr>
+					<td class="titlesize">Servidor DNS1:</td>
+					<td><input class="Input_box" type="text" name="DNSserver1"></td>
+				</tr>
+				<tr>
+					<td class="titlesize">Servidor DNS2:</td>
+					<td><input class="Input_box" type="text" name="DNSserver2"></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="Aplicar cambios"></td>
+				</tr>
+				</table>
+			</div>
+		</div>
+    </div>  
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">          	
+            <div class="Mtitle">Red Local</div>
+            <div class="Mcontent">
+				<div class="littletitle">Red Local</div>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP (Gateway):</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MgatewayIPaddress">
+				</p>
+				<p>
+					<span class="Mtitlesize">M&aacute;scara de subred:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MgatewayNetmask">
+				</p>
+				<p>
+					<span class="Mtitlesize">DHCP:</span>
+				</p>
+				<p>
+					<select class="MSelect_box" name="MDHCPActive">
+						<option value='1'>Activado</option>
+						<option value='0'>Desactivado</option>
+					</select>
+				</p>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP inicio rango:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MstartIPAddress">
+				</p>
+				<p>
+					<span class="Mtitlesize">Direcci&oacute;n IP fin rango:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MendIPAddress">
+				</p>
+				<div><b class="Mcontent_word">Configurador de servidores DNS (se recomienda no modificar)</b></div>
+				<p>
+					<span class="Mtitlesize">Servidor DNS1:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MDNSserver1">
+				</p>
+				<p>
+					<span class="Mtitlesize">Servidor DNS2:</span>
+				</p>
+				<p>
+					<input class="MInput_box" type="text" name="MDNSserver2">
+				</p>
+				<p>
+					<input type="button" value="Aplicar cambios">
+				</p>
+			</div>
+        </div>      
+    </div>
+</body>
+</html>

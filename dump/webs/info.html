@@ -1,0 +1,231 @@
+<html>
+   <head>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <meta http-equiv="Pragma" content="no-cache">
+            <!--<meta http-equiv="refresh" content="20">-->
+            <title></title>
+            <base target="_self">
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>Device Info<br>
+               <br>
+               <table border="1" cellpadding="3" cellspacing="0" width="50%">
+               <tr>
+                  <td class='hd'>Board ID:</td>
+                  <td><%ejGet(boardID)%></td>
+               </tr>
+
+<script language="javascript">
+<!-- hide
+var numCpuThreads = '<%ejGet(numCpuThreads)%>';
+if ( numCpuThreads == 2 ) {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Symmetric CPU Threads:</td>");
+  document.writeln("                  <td><%ejGet(numCpuThreads)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+               <tr>
+                  <td class='hd'>Build Timestamp:</td>
+                  <td><%ejGet(cmsBuildTimestamp)%></td>
+               </tr>
+               <tr>
+                  <td class='hd'>Software Version:</td>
+                  <td><%ejGet(sysVersion)%></td>
+               </tr>
+               <tr>
+                  <td class='hd'>Bootloader (CFE) Version:</td>
+                  <td><%ejGet(cfeVersion)%></td>
+               </tr>
+
+<script language="javascript">
+<!-- hide
+var buildAtm = '<%ejGetOther(sysInfo, buildAtm)%>';
+var buildPtm = '<%ejGetOther(sysInfo, buildPtm)%>';
+if ( buildAtm == 1 || buildPtm == 1 ) {
+  document.write("<tr>");
+  document.write("<td class='hd'>DSL PHY and Driver Version:</td>");
+  document.write("<td><%ejGet(dslPhyDrvVersion)%></td>");
+  document.write("</tr>");
+}
+// done hiding -->
+</script>
+
+<script language="javascript">
+<!-- hide
+if ('<%ejGetWl(wlInterface)%>' == '1') {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Wireless Driver Version:</td>");
+  document.writeln("                  <td><%ejGetWl(wlVersion)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+<script language="javascript">
+<!-- hide
+if ('<%ejGetOther(sysInfo, buildSupportPlc)%>' == '1') {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Homeplug Driver Version:</td>");
+  document.writeln("                  <td><%ejGet(plcVersion)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+<script language="javascript">
+<!-- hide
+var buildMoca = '<%ejGetOther(sysInfo, buildSupportMoca)%>';
+if ( buildMoca == 1 ) {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Moca Version:</td>");
+  document.writeln("                  <td><%ejGet(mocaVersion)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+<script language="javascript">
+<!-- hide
+var voice = '<%ejGetVoice(voiceProtocol)%>';
+if ( voice == 'SIP' || voice == 'MGCP' ) {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Voice Service Version:</td>");
+  document.writeln("                  <td><%ejGet(voiceServiceVersion)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+
+               <tr>
+                  <td class='hd'>Uptime:</td>
+                  <td><%ejGetOther(sysInfo, uptimeString)%></td>
+               </tr>
+
+        </table>
+            <br>
+            </b>This information reflects the current status of your WAN connection.<br>
+            <br>
+            <table border="1" cellpadding="3" cellspacing="0">
+               <tr>
+               
+<script language="javascript">
+<!-- hide
+var VdslIncluded = '<%ejGetOther(isVdsl, VdslIncluded)%>';
+var DslBondingEnabled = '<%ejGetOther(isDslBondingEnabled)%>';
+if ( DslBondingEnabled == 1 ) {
+  document.write("<tr>");
+  document.write("<td class='hd'>Traffic Type:</td>");
+  document.write("<td><%ejGetOther(trafficType, 0)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>Aggregate Line Rate - Upstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 0, 0)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>Aggregate Line Rate - Downstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 1, 0)%></td>");
+  document.write("</tr>");
+}
+else if ( VdslIncluded == 1 ) {
+  document.write("<tr>");
+  document.write("<td class='hd'>B0 Traffic Type:</td>");
+  document.write("<td><%ejGetOther(trafficType, 0)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>B0 Line Rate - Upstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 0, 0)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>B0 Line Rate - Downstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 1, 0)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>B1 Traffic Type:</td>");
+  document.write("<td><%ejGetOther(trafficType, 1)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>B1 Line Rate - Upstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 0, 1)%></td>");
+  document.write("</tr>");
+  document.write("<tr>");
+  document.write("<td class='hd'>B1 Line Rate - Downstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 1, 1)%></td>");
+  document.write(" </tr>");
+}
+else if ( buildAtm == 1 || buildPtm == 1 ) {
+  document.write("<tr>");
+  document.write("<td class='hd'>Line Rate - Upstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 0, 0)%></td>");
+  document.write("</tr>" );
+  document.write("<tr>");
+  document.write("<td class='hd'>Line Rate - Downstream (Kbps):</td>");
+  document.write("<td><%ejGetOther(lineRate, 1, 0)%></td>");
+  document.write("</tr>");
+}
+
+// done hiding -->
+</script>
+               <tr>
+                  <td class='hd'>LAN IPv4 Address:</td>
+                  <td><%ejGetOther(sysInfo, lanAddr)%></td>
+               </tr>
+               <tr>
+                  <td class='hd'>Default Gateway:</td>
+<script language="javascript">
+<!-- hide
+var dfltGw = '<%ejGetOther(sysInfo, dfltGw)%>';
+var dfltGwIfc = '<%ejGetOther(sysInfo, dfltGwIfc)%>';
+if ( dfltGw != '&nbsp' )
+  document.writeln("                  <td>" + dfltGw + "</td>");
+else
+  document.writeln("                  <td>" + dfltGwIfc + "</td>");
+// done hiding -->
+</script>
+               </tr>
+               <tr>
+                  <td class='hd'>Primary DNS Server:</td>
+                  <td><%ejGetOther(sysInfo, dns1)%></td>
+               </tr>
+               <tr>
+                  <td class='hd'>Secondary DNS Server:</td>
+                  <td><%ejGetOther(sysInfo, dns2)%></td>
+               </tr>
+<script language="javascript">
+<!-- hide
+if ('<%ejGetOther(sysInfo, enblIPv6)%>' == '1') {
+  document.writeln("             <tr>");
+  document.writeln("                <td class='hd'>LAN IPv6 ULA Address:</td>");
+  document.writeln("                <td><%ejGetOther(sysInfo, lanULAAddr6)%></td>");
+  document.writeln("             </tr>");
+  document.writeln("             <tr>");
+  document.writeln("                <td class='hd'>Default IPv6 Gateway:</td>");
+  document.writeln("                <td><%ejGetOther(sysInfo, dfltGw6)%> <%ejGetOther(sysInfo, dfltGw6Ifc)%></td>");
+  document.writeln("             </tr>");
+}
+// done hiding -->
+</script>
+<script language="javascript">
+<!-- hide
+var buildSntp = '<%ejGetOther(sysInfo, buildSntp)%>';
+var enblSntp = '<%ejGet(ntp_enabled)%>';
+var proto = '<%ejGetOther(sysInfo, noBrPrtcl)%>';
+
+if ( buildSntp == '1' && enblSntp == '1' && proto != 'Bridge' ) {
+  document.writeln("               <tr>");
+  document.writeln("                  <td class='hd'>Date/Time:</td>");
+  document.writeln("                  <td><%ejGetOther(sysInfo, dateTime)%></td>");
+  document.writeln("               </tr>");
+}
+// done hiding -->
+</script>
+            </table>
+         </form>
+      </blockquote>
+   </body>
+</html>

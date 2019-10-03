@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<script language="javascript">
+<!-- hide
+var wltempPage = '<%ejGetWirelessRefresh()%>';
+var wltargetPage = '<%ejGetWirelessPage()%>';
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+
+// shared function to refresh a page
+function refreshPage(page) {
+      var code = 'location="' + page + '"'; 
+      window.defaultStatus = '';        
+      eval(code); 
+}
+// shared wrapper function to refresh a page
+function autoRefresh(val, refresh, page) {
+   
+   if ( val == '1' ) {       
+        setTimeout('refreshPage("'+ refresh + '")' ,2250);                                 
+        window.defaultStatus = 'Restarting Wireless... Click menu in the left panel for manual refresh';       
+   } else {
+        refreshPage(page);
+   	window.defaultStatus = '';
+   }
+}
+autoRefresh(wlRefresh, wltempPage, wltargetPage);
+// done hiding -->
+</script>
+</head>
+<body>
+</body>
+</html>

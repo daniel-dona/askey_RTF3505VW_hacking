@@ -1,0 +1,482 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+TOTAL_ROW = 8;
+var appName = '';
+remain = <%ejGet(glbEntryCt)%>;
+NO_SEL_MSG = 'There is no application is selected';
+RE_ALL_MSG = 'Require BOTH Trigger/Open port range(Start/End values)';
+
+function btnApply() {
+   var loc = 'scprttrg.cmd?action=add';
+   with ( document.forms[0] ) {
+      if (radiosrv[0].checked == true) {
+         if (appName == '') {
+            alert(NO_SEL_MSG);
+            return;
+         }
+         loc += '&appName=' + appName;
+      }
+      else {
+         if (encodeUrl(cusAppName.value) == '') {
+            alert('Require Custom application name.');
+            return;
+         }
+		 if( isXSS(cusAppName.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Custom application");
+			return false;
+		  }else{
+			loc += '&appName=' + encodeUrl(cusAppName.value);
+		  }        
+      }
+      var idx = dstWanIf.selectedIndex;
+      var ifc = dstWanIf.options[idx].value;
+      if (ifc=='') {
+         alert('Need to select a WAN Interface for this port triggering entry".');
+         return;
+      }
+      loc += '&dstWanIf=' + ifc;
+      for (i = 0; i < TOTAL_ROW; i++) {
+         if (tStart[i].value == "" && tEnd[i].value == "" && oStart[i].value == "" && oEnd[i].value == "")
+            break;
+         if (tStart[i].value == "" || tEnd[i].value == "" || oStart[i].value == "" || oEnd[i].value == "") {
+            alert(RE_ALL_MSG);
+            return;
+         }
+      }
+      if (i == 0) {
+         alert(RE_ALL_MSG);
+         return;
+      }
+      if (i > remain) {
+         remain = i - remain;
+         alert('Exceed the maximum allowable entry count by ' + remain);
+         remain = <%ejGet(glbEntryCt)%>;
+         return;
+      }    
+      tProtoLoc = '&tProto=';
+      tStartLoc = '&tStart=';
+      tEndLoc = '&tEnd=';
+      oProtoLoc = '&oProto=';
+      oStartLoc = '&oStart=';
+      oEndLoc = '&oEnd=';
+      eCount = i;    
+      for (i = 0; i < eCount; i++) {
+         if ( isValidPort(tStart[i].value) == false ) {
+            alert('Open port range (Start) "' + tStart[i].value + '" is invalid.');
+            return;
+         }
+         if ( isValidPort(tEnd[i].value) == false ) {
+            alert('Open port range (End) "' + tEnd[i].value + '" is invalid.');
+            return;
+         }
+         if ( isValidPort(oStart[i].value) == false ) {
+            alert('Triggering port range (Start) "' + oStart[i].value + '" is invalid.');
+            return;
+         }
+         if ( isValidPort(oEnd[i].value) == false ) {
+            alert('Triggering port range (End) "' + oEnd[i].value + '" is invalid.');
+            return;
+         }
+         tS = parseInt(tStart[i].value);
+         tE = parseInt(tEnd[i].value);
+         if (tS > tE) {
+            alert('Open port range [' + tS + '-' + tE + '] is invalid.');
+            return;
+         }
+         oS = parseInt(oStart[i].value);
+         oE = parseInt(oEnd[i].value);
+         if ( oS > oE ) {
+            alert('Triggering port range [' + oS + '-' + oE + '] is invalid.');
+            return;
+         }
+         tStartLoc = tStartLoc + tStart[i].value + ',';
+         tEndLoc = tEndLoc + tEnd[i].value + ',';
+         tProtoLoc = tProtoLoc + tProto[i].value + ',';
+         oStartLoc = oStartLoc + oStart[i].value + ',';
+         oEndLoc = oEndLoc + oEnd[i].value + ',';
+         oProtoLoc = oProtoLoc + oProto[i].value + ',';
+      }               
+   }
+   loc = loc + tStartLoc + tEndLoc + tProtoLoc + oStartLoc + oEndLoc + oProtoLoc;
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function clearAll()
+{
+   with (document.forms[0]) {
+      for (i = 0; i < TOTAL_ROW; i++) {
+         tStart[i].value = tEnd[i].value = oStart[i].value = oEnd[i].value = "";
+         tProto[i].value = oProto[i].value = 1;
+      }
+   }
+}
+
+function appSelect(v)
+{
+   clearAll();
+   with (document.forms[0]) {
+      switch(v) {
+      case '0':
+         srvname.selectedIndex = 0;
+         srvname.options[0].value = "0";
+         appName = "";
+         break;                                  //trigger   open
+      case '1':   //  Aim Talk                   TCP 4099,  TCP 5191
+         appName = "Aim Talk";
+         tStart[0].value = tEnd[0].value = 4099;
+         oStart[0].value = oEnd[0].value = 5191;
+         break;
+      case '2':  // Asheron's Call                UDP 9000-9013, UDP 9000-9013
+         appName = "Asheron's Call";
+         tStart[0].value = oStart[0].value = 9000;
+         tEnd[0].value = oEnd[0].value = 9013;
+         tProto[0].value = oProto[0].value = 2;
+         break;
+      case '3':  //Calista IP Phone               TCP 5190, UDP 3000
+         appName = "Calista IP Phone";
+         tStart[0].value = tEnd[0].value = 5190;
+         oStart[0].value = oEnd[0].value = 3000;
+         oProto[0].value = 2;
+         break;
+      case '4':  //Delta Force (Client/Server)    UDP 3568, BOTH 3100-3999
+         appName = "Delta Force (Client/Server)";
+         tStart[0].value = tEnd[0].value = 3568;
+         tProto[0].value = 2;
+         oStart[0].value = 3100;
+         oEnd[0].value = 3999;
+         oProto[0].value = 0;
+         break;
+      case '5':  //ICQ                            UDP 4000, TCP 20000-20059
+         appName = "ICQ";
+         tStart[0].value = tEnd[0].value = 4000;
+         tProto[0].value = 2;
+         oStart[0].value = 20000;
+         oEnd[0].value = 20059;
+         break;
+      case '6':  //Napster                        TCP 6699, TCP 6699, 6697, 4444, 5555, 6666, 7777, 8888
+         appName = "Napster";
+         tStart[0].value = tEnd[0].value = tStart[1].value = tEnd[1].value = tStart[2].value = tEnd[2].value = 
+         tStart[3].value = tEnd[3].value = tStart[4].value = tEnd[4].value = tStart[5].value = tEnd[5].value = 
+         tStart[6].value = tEnd[6].value = 6699;
+         oStart[0].value = oEnd[0].value = 6699;
+         oStart[1].value = oEnd[1].value = 6697;
+         oStart[2].value = oEnd[2].value = 4444;
+         oStart[3].value = oEnd[3].value = 5555;
+         oStart[4].value = oEnd[4].value = 6666;
+         oStart[5].value = oEnd[5].value = 7777;
+         oStart[6].value = oEnd[6].value = 8888;
+         break;
+      case '7':   // Net2Phone                      UDP 6801, UDP 6801
+         appName = "Net2Phone";
+         tStart[0].value = tEnd[0].value = 6801;
+         tProto[0].value = 2;
+         oStart[0].value = oEnd[0].value = 6801;
+         oProto[0].value = 2;
+         break;
+      case '8':   // Rainbow Six/Rogue Spear        TCP 2346, BOTH 2436-2438
+         appName = "Rainbow Six/Rogue Spea";
+         tStart[0].value = tEnd[0].value = 2346;
+         oStart[0].value = 2436;
+         oEnd[0].value = 2438;
+         oProto[0].value = 0;
+         break;
+      default:
+         alert('Not support selection');
+      }
+   }  
+}
+
+
+function radioClick()
+{
+   with (document.forms[0]) {
+      if (radiosrv[0].checked == true)
+         cusAppName.value = '';
+   }
+   appSelect("0");
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>NAT -- Port Triggering</b><br>
+            <br>
+            Some applications such as games, video conferencing, remote access applications 
+            and others require that specific ports in the Router's firewall be opened for 
+            access by the applications. You can configure the port settings from this 
+            screen by selecting an existing application or creating your own (Custom 
+                     application)and click "Save/Apply" to add it.<br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td><b>Remaining number of entries that can be configured:</b></td>
+                  <td>
+                     <b><%ejGet(glbEntryCt)%></b>
+                  </td>
+               </tr>
+            </table>   
+            </br>         
+            <table border="0" cellpadding="0" cellspacing="0">
+	      <tr>
+      		     <td>Use Interface</td>
+                     <td><select name='dstWanIf'>
+               <script language="javascript">
+               <!-- hide
+               {
+                  var i = 0;
+                  var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+                  var interfaces = interfaceInfo.split('|');
+               
+                  for ( i = 0; i < interfaces.length; i++ ) {
+                     var names = interfaces[i].split('/');
+                     document.write("  <option value='" + names[1] + "'>");
+                     document.writeln(interfaces[i]);
+                  } 
+               }
+               // done hiding -->
+               </script>
+                      </select></td></tr>
+               <tr>
+                  <td colspan="2">Application Name:</td>
+               </tr>
+               <tr>
+            <td>&nbsp;&nbsp;<input type="radio" name="radiosrv"  onclick='radioClick()' checked>&nbsp;&nbsp;Select 
+                     an application:&nbsp;&nbsp;</td>
+                  <td><select name='srvname' size="1" onChange='appSelect(this.value)'>
+                        <option value="0" selected>
+                        Select One
+                        <option value="1">
+                        Aim Talk
+                        <option value="2">
+                        Asheron's Call
+                        <option value="3">
+                        Calista IP Phone
+                        <option value="4">
+                        Delta Force (Client/Server)
+                        <option value="5">
+                        ICQ
+                        <option value="6">
+                        Napster
+                        <option value="7">
+                        Net2Phone
+                        <option value="8">
+                        Rainbow Six/Rogue Spea</option>
+                     </select></td>
+               </tr>
+               <tr>
+                  <td>&nbsp;&nbsp;<input type="radio" name="radiosrv" onclick='radioClick()'>&nbsp;&nbsp;Custom 
+                     application:&nbsp;&nbsp;</td>
+                  <td><input type='text' size="28" name="cusAppName"></td>
+               </tr>
+               <tr>
+                  <td colspan="1">&nbsp;</td>
+               </tr>
+            </table>
+            <center><input type='button' onClick='btnApply()' value='Save/Apply'></center>
+               <tr>
+                  <td colspan="1">&nbsp;</td>
+               </tr>
+            <table border='1' cellpadding='0' cellspacing='0'>
+               <tr align='center'>
+                  <td class='hd'>Trigger Port Start </td>
+                  <td class='hd'>Trigger Port End</td>
+                  <td class='hd'>Trigger Protocol</td>                  
+                  <td class='hd'>Open Port Start</td>
+                  <td class='hd'>Open Port End</td>
+                  <td class='hd'>Open Protocol</td>
+
+               </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+               <tr>
+                  <td><input type='text' size="7" name="tStart"></td>
+                  <td><input type='text' size="7" name="tEnd"></td>
+                  <td><select name='tProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                  <td><input type='text' size="7" name="oStart"></td>
+                  <td><input type='text' size="7" name="oEnd"></td>
+                  <td><select name='oProto'>
+                        <option value='0'>
+                        TCP/UDP
+                        <option value='1' selected>
+                        TCP
+                        <option value='2'>
+                        UDP
+                     </select></td>
+                </tr>
+
+            </table>
+            <br>
+            <center><input type='button' onClick='btnApply()' value='Save/Apply'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

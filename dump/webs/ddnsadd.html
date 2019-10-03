@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <link rel="stylesheet" href="stylemain.css" type="text/css">
+         <link rel="stylesheet" href='colors.css' type="text/css">
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function ddnsChange() {
+  with ( document.forms[0] ) {
+    var div = document.getElementsByName('divDDns');
+    for (var i=0; i<div.length; i++)
+        div[i].style.display = 'none';
+
+    var ddns = ddnsMode[ddnsMode.selectedIndex].value;
+    document.getElementById(ddns+'Info').style.display = 'block';
+  }
+}
+
+function frmLoad() {
+  with (document.forms[0]) {
+    ddnsMode.selectedIndex = 1;
+  }
+
+  ddnsChange();
+}
+
+function btnApply(place) {
+  var loc = place + '?action=add&service=';
+
+  if ( place == "ddnsmngr.cmd" ) {
+    with ( document.forms[0] ) {
+      switch( ddnsMode[ddnsMode.selectedIndex].value ) {
+      case "dyndns":
+        loc += '1';
+        update_username = dyndnsUsername.value;
+        update_password = dyndnsPassword.value;
+        break;
+      case "noip":
+        loc += '2';
+        update_username = noipEmail.value;
+        update_password = noipPassword.value;
+        break;
+      case "nowip":
+        loc += '3';
+        update_username = nowipEmail.value;
+        update_password = nowipPassword.value;
+        break;
+      }
+
+      if ( update_username.length == 0 ) {
+        if ( ddnsMode[ddnsMode.selectedIndex].value == 'dyndns' )
+          alert('Empty username.' );
+        else
+          alert('Invalid Email address.' );
+        return;
+      }
+      if ( isXSS(update_username) ) {
+        alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Username");
+        return false;
+      }
+      else {
+        loc += '&username=' + update_username;
+      }
+      
+      if ( update_password.length == 0 ) {
+        if ( ddnsMode[ddnsMode.selectedIndex].value == 'dyndns' )
+          alert('Empty password.' );
+        else
+          alert('Invalid key.' );
+        return;
+      }
+      loc += '&password=' + update_password;
+
+      if ( ddnsHostname.value.length == 0 ) {
+        alert('Empty hostname.');
+        return;
+      }
+      if ( isXSS(ddnsHostname.value) ) {
+        alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Hostname");
+        return false;
+      }
+      else {
+        loc += '&hostname=' + ddnsHostname.value;
+      }
+
+      loc += '&iface=' + ddnsInterface[ddnsInterface.selectedIndex].value;
+    }
+    loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+    var code = 'location="' + loc + '"';
+    eval(code);
+  }
+}
+
+// done hiding -->
+    </script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <blockquote>
+      <form>
+        <b>Add Dynamic DNS</b><br><br>
+        <br>
+        This page allows you to add a Dynamic DNS address from
+        DynDNS.org, No-IP.com or Now-IP.com.
+        <br><br>
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width='180'>D-DNS provider</td>
+            <td><select name='ddnsMode' size="1" onChange='ddnsChange()'>
+                  <option value="dyndns">DynDNS.org</option>
+                  <option value="noip">No-IP.com</option>
+                  <option value="nowip">Now-IP.com</option>
+                </select>
+            </td>
+          </tr>
+        </table>
+        <br>
+        <div id="ddnsInfo">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width='180'>Hostname</td>
+              <td><input type="text" name="ddnsHostname" maxlength="40"></td>
+            </tr>
+            <tr>
+              <td>Interface</td>
+              <td><select name='ddnsInterface'>
+                        <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+   var interfaces = interfaceInfo.split('|');
+ 
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+      document.write("  <option value='" + names[1] + "'>");
+      document.writeln(interfaces[i]);
+
+      if (names[1].search('ppp') >= 0)
+        document.getElementsByName('ddnsInterface')[0].selectedIndex = i;
+   }
+}
+// done hiding -->
+</script>
+              </select></td>
+            </tr>
+          </table><br>
+        </div>
+        <div id="dyndnsInfo" name="divDDns">
+          <b>DynDNS Settings<b><br>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="180">Username</td>
+              <td><input type="text" name="dyndnsUsername" size="20" maxlength="40"></td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td><input type="password" name="dyndnsPassword" maxlength="24"></td>
+            </tr>
+          </table>
+        </div>
+        <div id="noipInfo" name="divDDns">
+          <b>No-IP Settings<b><br>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="180">Email</td>
+              <td><input type="text" name="noipEmail" size="20" maxlength="50"></td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td><input type="password" name="noipPassword" maxlength="32"></td>
+            </tr>
+          </table>
+        </div>
+        <div id="nowipInfo" name="divDDns">
+          <b>Now-IP Settings</b><br>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="180">Email</td>
+              <td><input type="text" name="nowipEmail" size="20"></td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td><input type="password" name="nowipPassword"></td>
+            </tr>
+          </table>
+        </div><br>
+        <center>
+          <input type='button' value="Apply/Save" onClick='btnApply("ddnsmngr.cmd")'>
+        </center>
+      </form>
+    </blockquote>
+  </body>
+</html>

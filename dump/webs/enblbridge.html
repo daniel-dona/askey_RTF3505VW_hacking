@@ -1,0 +1,83 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var service = '<%ejGet(serviceName)%>';
+var port = '<%ejGet(portId)%>';
+var vpi = '<%ejGet(atmVpi)%>';
+var vci = '<%ejGet(atmVci)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+function btnNext() {
+   var loc = 'ntwksum2.cgi?';
+
+   // protocol is bridge
+   loc += 'ntwkPrtcl=3';
+
+   with ( document.forms[0] ) {
+      if ( enblService.checked == true )
+         loc += '&enblService=1';
+      else
+         loc += '&enblService=0';
+      loc += '&serviceName=' + encodeUrl(serviceName.value);
+   }
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function btnBack() {
+   var loc = 'ntwkprtcl.cgi?';
+   loc += 'sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function frmLoad() {
+   var enableService = '<%ejGet(enblService)%>';
+
+   with ( document.forms[0] ) {
+      if ( enableService == '1' )
+         enblService.checked = true;
+      else
+         enblService.checked = false;
+
+      if ( service == '' )
+         service = 'br_' + port + '_' + vpi + '_' + vci;
+      serviceName.value = service;
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <br><br>
+            <b>Unselect the check box below to disable this WAN service</b>
+            <br><br>
+            <table border="0" cellpadding="4" cellspacing="0">
+               <tr>
+                  <td>Enable Bridge Service:</td>
+                  <td width='30' height="30"><input type='checkbox' name='enblService' checked></td>
+               </tr>
+               <tr>
+                  <td>Service Name:</td>
+                  <td><input type="text" name="serviceName"></td>
+               </tr>
+            </table>
+            <br><br><br>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

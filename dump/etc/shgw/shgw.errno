@@ -1,0 +1,97 @@
+##############################################################################
+#
+# INTEL CONFIDENTIAL
+# Copyright (c) 2016 Intel Corporation All Rights Reserved
+#
+# The source code contained or described herein and all documents related
+# to the source code ("Material") are owned by Intel Corporation or its
+# suppliers or licensors. Title to the Material remains with Intel
+# Corporation or its suppliers and licensors. The Material contains trade
+# secrets and proprietary and confidential information of Intel or its
+# suppliers and licensors. The Material is protected by worldwide copyright
+# and trade secret laws and treaty provisions. No part of the Material may
+# be used, copied, reproduced, modified, published, uploaded, posted,
+# transmitted, distributed, or disclosed in any way without Intel's prior
+# express written permission.
+#
+# No license under any patent, copyright, trade secret or other intellectual
+# property right is granted to or conferred upon you by disclosure or
+# delivery of the Materials, either expressly, by implication, inducement,
+# estoppel or otherwise. Any license under such intellectual property rights
+# must be express and approved by Intel in writing.
+#
+##############################################################################
+
+#
+# Error constants used by the SHGW startup shell script
+#
+# Date			: 15/Mar/2016
+##############################################################################
+
+#
+# Error Codes
+INVALID_MODE=1
+NO_GATEWAY_IP=2
+INVALID_GATEWAY_IP=3
+INVALID_IP_RANGE=4
+NO_LAN_IP=5
+VNICS_FAILED=6
+LIGHTTPD_FAILED=7
+DNS_PROXY_FAILED=8
+CSP_FAILED=9
+IP_ROUTE_ADD_FAILED=10
+IP_RULE_ADD_FAILED=11
+KERNEL_SUPPORT_FAILED=12
+IP_TABLES_RULES_FAILED=13
+UPDATE_TIME_FAILED=14
+SOME_TPROXY_IP_RULE_EXISTS_VERIFY=15
+DEVICE_DISCOVERY_FAILED=16
+DNS_PROXY_KILL_FAILED=17
+ROUTER_REGISTRATION_FAILED=18
+VNIC_FAILURE=19
+PERSISTANT_DB_UPDATE_FAILED=20
+NON_PERSISTANT_DB_UPDATE_FAILED=21
+LIGHTTPD_FILE_NOT_FOUND=22
+CROND_FAILED=23
+PERSISTANT_DB_CREATE_FAILED=24
+KERNEL_MODULE_INSERTION_FAILED=25
+FETCH_BASE_MAC_FAILED=26
+NO_LAN_IFACE=27
+
+#
+# Function to print the error output and exit
+fn_err_exit() {
+	ERROR_CODE=${1}
+	case ${ERROR_CODE} in
+		1) ${ECHO} "INVALID_MODE" >> ${SHGW_STARTUP_STATUS};;
+		2) ${ECHO} "NO_GATEWAY_IP" >> ${SHGW_STARTUP_STATUS};;
+		3) ${ECHO} "INVALID_GATEWAY_IP" >> ${SHGW_STARTUP_STATUS};;
+		4) ${ECHO} "INVALID_IP_RANGE" >> ${SHGW_STARTUP_STATUS};;
+		5) ${ECHO} "NO_LAN_IP" >> ${SHGW_STARTUP_STATUS};;
+		6) ${ECHO} "VNICS_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		7) ${ECHO} "LIGHTTPD_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		8) ${ECHO} "DNS_PROXY_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		9) ${ECHO} "CSP_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		10) ${ECHO} "IP_ROUTE_ADD_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		11) ${ECHO} "IP_RULE_ADD_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		12) ${ECHO} "KERNEL_SUPPORT_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		13) ${ECHO} "IP_TABLES_RULES_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		14) ${ECHO} "UPDATE_TIME_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		15) ${ECHO} "SOME_TPROXY_IP_RULE_EXISTS_VERIFY" >> ${SHGW_STARTUP_STATUS};;
+		16) ${ECHO} "DEVICE_DISCOVERY_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		17) ${ECHO} "DNS_PROXY_KILL_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		18) ${ECHO} "ROUTER_REGISTRATION_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		19) ${ECHO} "VNIC_FAILURE" >> ${SHGW_STARTUP_STATUS};;
+		20) ${ECHO} "PERSISTANT_DB_UPDATE_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		21) ${ECHO} "NON_PERSISTANT_DB_UPDATE_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		22) ${ECHO} "LIGHTTPD_FILE_NOT_FOUND" >> ${SHGW_STARTUP_STATUS};;
+		23) ${ECHO} "CRON_SETUP_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		24) ${ECHO} "PERSISTANT_DB_CREATE_FAILED" >> ${SHGW_STARTUP_STATUS};;
+		25) ${ECHO} "KERNEL MODULE INSERTION FAILED" >> {SHGW_STARTUP_STATUS};;
+		26) ${ECHO} "FETCH_BASE_MAC_FAILED" >> {SHGW_STARTUP_STATUS};;
+		27) ${ECHO} "NO_LAN_IFACE" >> {SHGW_STARTUP_STATUS};;
+		*) ${ECHO} "UNKNOWN_FAILURE" >> ${SHGW_STARTUP_STATUS};;
+	esac
+
+	exit ${ERROR_CODE}
+}

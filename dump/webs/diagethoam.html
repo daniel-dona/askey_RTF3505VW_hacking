@@ -1,0 +1,584 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+      <link rel="stylesheet" href="stylemain.css" type="text/css">
+      <link rel="stylesheet" href="colors.css" type="text/css">
+      <script language="javascript" src="util.js"></script>
+      <script language="javascript">
+<!-- hide
+
+var eoam3ahEnbl = '<%ejGet(eoam3ahEnbl)%>';
+var eoam3ahIntf = '<%ejGet(eoam3ahIntf)%>';
+var eoam3ahOamId = '<%ejGet(eoam3ahOamId)%>';
+var eoam3ahAeEnbl = '<%ejGet(eoam3ahAeEnbl)%>';
+var eoam3ahVrEnbl = '<%ejGet(eoam3ahVrEnbl)%>';
+var eoam3ahLeEnbl = '<%ejGet(eoam3ahLeEnbl)%>';
+var eoam3ahRlEnbl = '<%ejGet(eoam3ahRlEnbl)%>';
+var eoam3ahAmEnbl = '<%ejGet(eoam3ahAmEnbl)%>';
+
+var eoam1agEnbl = '<%ejGet(eoam1agEnbl)%>';
+var eoam1731Enbl = '<%ejGet(eoam1731Enbl)%>';
+var eoam1agLocIntf = '<%ejGet(eoam1agLocIntf)%>';
+var eoam1agMdLvl = '<%ejGet(eoam1agMdLvl)%>';
+var eoam1agMdId = '<%ejGet(eoam1agMdId)%>';
+var eoam1agMaId = '<%ejGet(eoam1agMaId)%>';
+var eoam1agLocMepId = '<%ejGet(eoam1agLocMepId)%>';
+var eoam1agLocVlanId = '<%ejGet(eoam1agLocVlanId)%>';
+var eoam1agLocCcmEnbl = '<%ejGet(eoam1agLocCcmEnbl)%>';
+var eoam1agCcmInterval = '<%ejGet(eoam1agCcmInterval)%>';
+var eoam1agRemMepId = '<%ejGet(eoam1agRemMepId)%>';
+
+function oam3ahEnblClick(cb) {
+   if (cb.checked == true)
+      showhide('info3ah', 1);
+   else
+      showhide('info3ah', 0);
+}
+
+function oam1agEnblClick(cb) {
+   if (cb.checked == true)
+      showhide('info1ag', 1);
+   else
+      showhide('info1ag', 0);
+}
+
+function oam1731EnblSelect() {
+   with ( document.forms[0] ) {
+      if (oam1731Enbl[1].checked == true ){
+         oam1731Enbl[0].checked = false;
+         showhide('infoMdMaCfg1ag', 0);
+         showhide('infoMeCfg1731', 1);
+      }else{
+         oam1731Enbl[0].checked = true;
+         oam1731Enbl[1].checked = false;
+         showhide('infoMdMaCfg1ag', 1);
+         showhide('infoMeCfg1731', 0);
+      }
+   }
+}
+
+function oam1agLocCcmEnblClick(cb) {
+   if (cb.checked == true)
+      showhide('infoCcmInterval1ag', 1);
+   else
+      showhide('infoCcmInterval1ag', 0);
+}
+
+function btnClick(testname) {
+   var loc = 'diagethoam.cmd?action=' + testname;
+   
+   with ( document.forms[0] ) {
+      loc += submitCheck(oam3ahEnbl);
+      loc += submitSelect(oam3ahIntf);
+      loc += submitText(oam3ahOamId);
+      loc += submitCheck(oam3ahAeEnbl);
+      loc += submitCheck(oam3ahVrEnbl);
+      loc += submitCheck(oam3ahLeEnbl);
+      loc += submitCheck(oam3ahRlEnbl);
+      loc += submitCheck(oam3ahAmEnbl);
+
+      loc += submitCheck(oam1agEnbl);
+      loc += submitCheck(oam1731Enbl[1]);
+      loc += submitSelect(oam1agLocIntf);
+      if (oam1731Enbl[1].checked == true ){
+         loc += submitSelect(oam1agMdLvl2);
+         loc += submitText(oam1agMdId2);
+      }else{
+         loc += submitSelect(oam1agMdLvl1);
+         loc += submitText(oam1agMdId1);
+         loc += submitText(oam1agMaId);
+      }
+      loc += submitText(oam1agLocMepId);
+      loc += submitText(oam1agLocVlanId);
+      loc += submitCheck(oam1agLocCcmEnbl);
+      loc += submitSelect(oam1agCcmInterval);
+      loc += submitText(oam1agRemMepId);
+      loc += submitText(oam1agTargetMac);
+      loc += submitText(oam1agLtmTtl);
+   }
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+
+   //alert(code);
+
+	eval(code);
+}
+      
+function frmLoad() {
+   with ( document.forms[0] ) {
+
+      /* Ethernet Link OAM (802.3ah) */
+
+      /* Enabled */
+      setCheck(oam3ahEnbl, eoam3ahEnbl);
+      showhide('info3ah', eoam3ahEnbl);
+
+      /* Interface */
+      setSelect(oam3ahIntf, eoam3ahIntf);
+
+      /* OAM ID */
+      oam3ahOamId.value = eoam3ahOamId;
+
+      /* Auto Event  */
+      setCheck(oam3ahAeEnbl, eoam3ahAeEnbl);
+
+      /* Variable Retrieval */
+      setCheck(oam3ahVrEnbl, eoam3ahVrEnbl);
+
+      /* Link Events */
+      setCheck(oam3ahLeEnbl, eoam3ahLeEnbl);
+
+      /* Remote Loopback */
+      setCheck(oam3ahRlEnbl, eoam3ahRlEnbl);
+
+      /* Active Mode */
+      setCheck(oam3ahAmEnbl, eoam3ahAmEnbl);
+
+      /* Ethernet Service OAM (802.1ag / Y.1731) */
+
+      /* Enabled */
+      setCheck(oam1agEnbl, eoam1agEnbl);
+      showhide('info1ag', eoam1agEnbl);
+
+      /* Select 1ag/1731 */
+      if (eoam1731Enbl == '1') {
+         oam1731Enbl[0].checked = false;
+         oam1731Enbl[1].checked = true;
+      } else {
+         oam1731Enbl[0].checked = true;
+         oam1731Enbl[1].checked = false;
+      }
+      oam1731EnblSelect();
+
+      /* Interface */
+      setSelect(oam1agLocIntf, eoam1agLocIntf);
+
+      /* MD/MEG Level */
+      setSelect(oam1agMdLvl1, eoam1agMdLvl);
+      setSelect(oam1agMdLvl2, eoam1agMdLvl);
+
+      /* MD Name */
+      oam1agMdId1.value = eoam1agMdId;
+      oam1agMdId2.value = eoam1agMdId;
+
+      /* MA ID */
+      oam1agMaId.value = eoam1agMaId;
+
+      /* Local MEP ID */
+      oam1agLocMepId.value = eoam1agLocMepId;
+
+      /* Local MEP VLAN ID */
+      oam1agLocVlanId.value = eoam1agLocVlanId;
+
+      //alert(new Error().stack);
+
+      /* CCM Transmission */
+      setCheck(oam1agLocCcmEnbl, eoam1agLocCcmEnbl);
+      showhide('infoCcmInterval1ag', eoam1agLocCcmEnbl);
+      
+      /* CCM Interval */
+      setSelect(oam1agCcmInterval, eoam1agCcmInterval);
+
+      /* Remote MEP ID */
+      oam1agRemMepId.value = eoam1agRemMepId;
+   }
+}
+
+// done hiding -->
+   </script>
+   </head>
+   <body onLoad="frmLoad()">
+      <blockquote>
+         <form>
+            <b>Ethernet Link OAM (802.3ah)</b><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahEnbl" onclick="oam3ahEnblClick(this)">
+               </td>
+               <td width="120">
+                  Enabled
+               </td>
+            </tr>
+            </table>
+            <div id="info3ah">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Interface:
+               </td>
+               <td>
+                  <select size="1" name="oam3ahIntf">
+                     <script language="javascript">
+                     <!-- hide
+                     {
+                        var i = 0;
+                        var oamIntfList = '<%ejGetOther(eoamIntfList)%>';
+                        var intf = oamIntfList.split('|');
+                        intf.sort();
+                        for ( i = 0; i < intf.length; i++ ) {
+                           if (intf[i] != '') {
+                              document.writeln("  <option value='" + intf[i] + "'>" + intf[i]);
+                           }
+                        }
+                     }
+                     // done hiding -->
+                     </script>
+                     </option>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  OAM ID:
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam3ahOamId">
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahAeEnbl">
+               </td>
+               <td width="120">
+                  Auto Event
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahVrEnbl" >
+               </td>
+               <td width="120">
+                  Variable Retrieval
+               </td>
+            </tr>            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahLeEnbl" >
+               </td>
+               <td width="120">
+                  Link Events
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahRlEnbl">
+               </td>
+               <td width="120">
+                  Remote Loopback
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam3ahAmEnbl">
+               </td>
+               <td width="120">
+                  Active Mode
+               </td>
+            </tr>
+            </table>
+            </div>
+            <br>
+
+            <b>Ethernet Service OAM (802.1ag / Y.1731)</b><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam1agEnbl" onclick="oam1agEnblClick(this)">
+               </td>
+               <td>
+                  Enabled
+               </td>
+               <td><input type="radio" name="oam1731Enbl" onChange="oam1731EnblSelect()"> 802.1ag</td>
+               <td><input type="radio" name="oam1731Enbl" onChange="oam1731EnblSelect()"> Y.1731</td>
+            </tr>
+            </table>
+            <div id="info1ag">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Interface:
+               </td>
+               <td>
+                  <select size="1" name="oam1agLocIntf">
+                     <script language="javascript">
+                     <!-- hide
+                     {
+                        var i = 0;
+                        var oamIntfList = '<%ejGetOther(eoamIntfList)%>';
+                        var intf = oamIntfList.split('|');
+                        intf.sort();
+                        for ( i = 0; i < intf.length; i++ ) {
+                           if (intf[i] != '') {
+                              document.writeln("  <option value='" + intf[i] + "'>" + intf[i]);
+                           }
+                        }
+                     }
+                     // done hiding -->
+                     </script>
+                     </option>
+                  </select>
+               </td>
+            </tr>
+            </table>
+            <div id="infoMdMaCfg1ag">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  MD Level:
+               </td>
+               <td>
+                  <select size="1" name="oam1agMdLvl1">
+                     <option value="0" selected>0
+                     <option value="1">1
+                     <option value="2">2
+                     <option value="3">3
+                     <option value="4">4
+                     <option value="5">5
+                     <option value="6">6
+                     <option value="7">7
+                     </option>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  MD Name: 
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agMdId1">
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  MA ID:  
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agMaId">
+               </td>
+            </tr>
+            </table>
+            </div>
+            <div id="infoMeCfg1731">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  MEG Level:
+               </td>
+               <td>
+                  <select size="1" name="oam1agMdLvl2">
+                     <option value="0" selected>0
+                     <option value="1">1
+                     <option value="2">2
+                     <option value="3">3
+                     <option value="4">4
+                     <option value="5">5
+                     <option value="6">6
+                     <option value="7">7
+                     </option>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  MEG ID:
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agMdId2">
+               </td>
+            </tr>
+            </table>
+            </div>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Local MEP ID:
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agLocMepId">
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Local MEP VLAN ID:
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agLocVlanId">
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+                  <input type="checkbox" name="oam1agLocCcmEnbl" onclick="oam1agLocCcmEnblClick(this)">
+               </td>
+               <td width="120">
+                  CCM Transmission
+               </td>
+            </tr>
+            </table>
+            <div id="infoCcmInterval1ag">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  CCM Interval:
+               </td> 
+               <td>
+                  <select size="1" name="oam1agCcmInterval">
+                     <option value="1">3.3 ms
+                     <option value="2">10 ms
+                     <option value="3">100 ms
+                     <option value="4" selected>1 sec
+                     <option value="5">10 sec
+                     <option value="6">1 min
+                     <option value="7">10 min
+                     </option>
+                  </select>
+               </td>
+            </tr>
+            </table>
+            </div>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Remote MEP ID:
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agRemMepId">
+               </td>
+            </tr>
+            </table><br>
+            
+            <b>Loopback and Linktrace Test</b><br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Target MAC: 
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agTargetMac">
+               </td>
+            </tr>
+            <tr>
+               <td valign="center" align="middle" width="30" height="30">
+               </td>
+               <td width="120">
+                  Linktrace TTL: 
+               </td>
+               <td>
+                  <input type="text" size="10" name="oam1agLtmTtl">
+               </td>
+            </tr>
+            </table><br>
+            <table border="1" cellpadding="3" cellspacing="0">
+            <tr>
+               <td class="hd" width="120">
+                  Loopback Result:
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLbmResult)%>&nbsp;
+               </td>
+            </tr>
+            <tr>
+               <td class="hd" width="120">
+                  Linktrace Result:
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 1)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 2)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 3)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 4)%>&nbsp;
+               </td>
+            </tr>
+            <tr>
+               <td class="hd" width="120">
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 5)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 6)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 7)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 8)%>&nbsp;
+               </td>
+            </tr>
+            <tr>
+               <td class="hd" width="120">
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 9)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 10)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 11)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 12)%>&nbsp;
+               </td>
+            </tr>
+            <tr>
+               <td class="hd" width="120">
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 13)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 14)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 15)%>&nbsp;
+               </td>
+               <td width="120">
+                  <%ejGetOther(eoam1agLtmResult, 16)%>&nbsp;
+               </td>
+            </tr>
+            </table><br>
+            <CENTER>
+               <input type="button" name="oam1agLbm" onClick="btnClick(this.name)" value="Send Loopback">
+               <input type="button" name="oam1agLtm" onClick="btnClick(this.name)" value="Send Linktrace">
+            </CENTER>
+            <br>
+            </div>
+            <CENTER>
+               <input type="button" name="savapply" onClick="btnClick(this.name)" value="Apply/Save">
+            </CENTER>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

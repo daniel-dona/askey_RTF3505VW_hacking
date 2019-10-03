@@ -1,0 +1,677 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var chipId = '<%ejGetOther(sysInfo, chipId)%>';
+var supportfaptm = '<%ejGetOther(sysInfo, supportfaptm)%>';
+var supportrddtm = '<%ejGetOther(sysInfo, supportrddtm)%>';
+var ifchoice = -1; 
+var upRate = parseInt('<%ejGetOther(lineRate, 0, 0)%>');
+var rateMax    = 50000;     // VDSL: 50000 Kbps
+var rateMaxEth = 1000000;   // ETH : 1000000 Kbps
+//Minimum burst size shall be minimally larger than the size of the largest possible IP packet in the stream.
+var burstMin = 1600;
+
+if (isNaN(upRate) == false)
+   rateMax = Math.ceil(upRate);
+
+function hideAllElements()
+{
+   showhide("eth_p_shaper", 0);
+   showhide("precedence", 0);
+   showhide("sched_alg", 0);
+   showhide("alg_sp", 0);
+   showhide("alg_wrr", 0);
+   showhide("alg_wfq", 0);
+   showhide("wght_val", 0);
+   showhide("eth_q_shaper", 0);
+   showhide("dsl_latency", 0);
+   showhide("ptm_prio", 0);
+}
+
+function changeSched(OnPageLoad) 
+{
+   with ( document.forms[0] ) {
+
+      showhide("wght_val", 0);
+      showhide("eth_q_shaper", 0);
+      
+      if (queueintf.selectedIndex == 0)
+         return;
+      intfSelected = getSelect(queueintf);
+
+      /* reset the weight value */
+      wght.value = '1';
+
+      if (alg[1].checked || alg[2].checked)
+         showhide("wght_val", 1);
+      else if (supportrddtm != 1) { 
+              if (intfSelected.indexOf('eth') != -1)
+                 showhide("eth_q_shaper", 1);
+           } else {
+              if ((intfSelected.indexOf('veip') != -1) || (intfSelected.indexOf('epon') != -1) || (intfSelected.indexOf('eth4') != -1))
+                 showhide("eth_q_shaper", 1);
+           }
+   }
+}
+
+function changePrecedence(OnPageLoad) 
+{
+   with ( document.forms[0] ) {
+
+      showhide("sched_alg", 0);
+      showhide("alg_sp", 0);
+      showhide("alg_wrr", 0);
+      showhide("alg_wfq", 0);
+      showhide("wght_val", 0);
+      showhide("eth_q_shaper", 0);
+
+      if (queueintf.selectedIndex == 0)
+         return;
+      intfSelected = getSelect(queueintf);
+
+      /* reset the weight value */
+      wght.value = '1';
+
+      txt = queueprecedence.options[queueprecedence.selectedIndex].text;
+      alg[0].checked = false;   /* SP */
+      alg[1].checked = false;   /* WRR */
+      alg[2].checked = false;   /* WFQ */
+
+      if (txt.indexOf('SP|WRR|WFQ') != -1) {
+         alg[0].checked = true;    /* default SP */
+         showhide("sched_alg", 1);
+         showhide("alg_sp", 1);
+         showhide("alg_wrr", 1);
+         showhide("alg_wfq", 1);
+         if (supportrddtm != 1) { 
+              if (intfSelected.indexOf('eth') != -1)
+                 showhide("eth_q_shaper", 1);
+         } else {
+              if ((intfSelected.indexOf('veip') != -1) || (intfSelected.indexOf('epon') != -1) || (intfSelected.indexOf('eth4') != -1))
+                 showhide("eth_q_shaper", 1);
+         }
+      }
+      else if (txt.indexOf('SP|WRR') != -1) {
+         alg[0].checked = true;    /* default SP */
+         showhide("sched_alg", 1);
+         showhide("alg_sp", 1);
+         showhide("alg_wrr", 1);
+         if (supportrddtm != 1) { 
+              if (intfSelected.indexOf('eth') != -1)
+                 showhide("eth_q_shaper", 1);
+         } else {
+              if ((intfSelected.indexOf('veip') != -1) || (intfSelected.indexOf('epon') != -1) || (intfSelected.indexOf('eth4') != -1))
+                 showhide("eth_q_shaper", 1);
+         }
+      }
+      else if (txt.indexOf('WRR|WFQ') != -1) {
+         alg[1].checked = true;    /* default WRR */
+         showhide("sched_alg", 1);
+         showhide("alg_wrr", 1);
+         showhide("alg_wfq", 1);
+         showhide("wght_val", 1);
+      }
+      else if (txt.indexOf('WFQ') != -1) {
+         alg[2].checked = true;
+         showhide("wght_val", 1);
+      }
+      else if (txt.indexOf('WRR') != -1) {
+         alg[1].checked = true;
+         showhide("wght_val", 1);
+      }
+      else if (txt.indexOf('RR') != -1) {
+         alg[1].checked = true;
+      }
+      else {
+         /* SP */
+         alg[0].checked = true;
+         if (supportrddtm != 1) { 
+              if (intfSelected.indexOf('eth') != -1)
+                 showhide("eth_q_shaper", 1);
+         } else {
+              if ((intfSelected.indexOf('veip') != -1) || (intfSelected.indexOf('epon') != -1) || (intfSelected.indexOf('eth4') != -1))
+                 showhide("eth_q_shaper", 1);
+         }
+      }
+   }
+}
+
+function changeSelect(OnPageLoad) 
+{
+   with ( document.forms[0] ) {
+
+      hideAllElements();
+
+      if (queueintf.selectedIndex == 0)
+         return;
+      intfSelected = getSelect(queueintf);
+
+//      if ((supportfaptm == 1  || supportrddtm == 1) && intfSelected.indexOf('eth') != -1) {
+//         showhide("eth_p_shaper", 1);
+//      }
+
+      /* These constants must be consistant with those defined
+       * in function cgiGetIntfQueuePrec() in cgi_qos_queue.c.
+       */              
+      BLOCK         = '0';
+      SP            = '1';
+      RR            = '2';
+      WRR           = '3';
+      WFQ           = '4';
+      SP_WRR_WFQ    = '5';
+      SP_WRR        = '6';
+      WRR_WFQ       = '7';
+
+      /* adjust the queueprecedence select list. */
+      len  = 0;
+      prec = intfSelected.split('&');
+
+      queueprecedence.length = prec[1].length;
+
+      for (i = 0; i < prec[1].length; i++) {
+         if (prec[1].charAt(i) != BLOCK) {
+            queueprecedence.options[len].value  = i+1;
+            queueprecedence.options[len].text   = i+1;
+         
+            if (prec[1].charAt(i) == SP)
+               queueprecedence.options[len].text += '(SP)';
+            else if (prec[1].charAt(i) == RR)
+               queueprecedence.options[len].text += '(RR)';
+            else if (prec[1].charAt(i) == WRR)
+               queueprecedence.options[len].text += '(WRR)';
+            else if (prec[1].charAt(i) == WFQ)
+               queueprecedence.options[len].text += '(WFQ)';
+            else if (prec[1].charAt(i) == SP_WRR_WFQ)
+               queueprecedence.options[len].text += '(SP|WRR|WFQ)';
+            else if (prec[1].charAt(i) == SP_WRR)
+               queueprecedence.options[len].text += '(SP|WRR)';
+            else if (prec[1].charAt(i) == WRR_WFQ)
+               queueprecedence.options[len].text += '(WRR|WFQ)';
+               
+            len++;
+         }
+      }
+      if (len > 0) {
+         queueprecedence.length = len;
+         queueprecedence.selectedIndex = 0;
+         showhide("precedence", 1);
+
+         changePrecedence(0);
+      }
+      else {
+         queueprecedence.length = 1;
+         queueprecedence.options[0].value  = '-1';
+         queueprecedence.options[0].text   = '';
+         queueprecedence.selectedIndex = 0;
+
+         alert('No more queue can be added to the selected interface.');
+         queueintf.selectedIndex = 0;
+         return;
+      }
+
+      /* all dsl wan interfaces are appended with layer 2 interface descriptors in [],
+       * e.g., atm2[1_0_42], ptm0[1_0_1],....
+       */
+      latency.length        = 1;
+      latency.selectedIndex = 0;
+      if (intfSelected.indexOf('[4_') != -1) {
+         /* dual latency vdsl link */
+         latency.length           = 2;
+         latency.options[0].value = '0';
+         latency.options[0].text  = 'Path0';
+         latency.options[1].value = '1';
+         latency.options[1].text  = 'Path1';
+         showhide("dsl_latency", 1);
+      }
+      else if (intfSelected.indexOf('[0_') != -1) {
+         latency.options[0].value = '0';
+         latency.options[0].text  = 'Path0';
+         showhide("dsl_latency", 1);
+      }
+      else if (intfSelected.indexOf('[1_') != -1) {
+         latency.options[0].value = '1';
+         latency.options[0].text  = 'Path1';
+         showhide("dsl_latency", 1);
+      }
+      else {
+         /* non-dsl wan interface */
+         latency.options[0].value = '-1';
+         latency.options[0].text  = '';
+      }
+
+      ptmpriority.length        = 1;
+      ptmpriority.selectedIndex = 0;
+      if (intfSelected.indexOf('_1_1]') != -1) {
+         /* dual ptm priority */
+         ptmpriority.length           = 2;
+         ptmpriority.options[0].value = '0';
+         ptmpriority.options[0].text  = 'Low';
+         ptmpriority.options[1].value = '1';
+         ptmpriority.options[1].text  = 'High';
+         showhide("ptm_prio", 1);
+      }
+      else if (intfSelected.indexOf('_0_1]') != -1) {
+         ptmpriority.options[0].value = '0';
+         ptmpriority.options[0].text  = 'Low';
+         showhide("ptm_prio", 1);
+      }
+      else if (intfSelected.indexOf('_1_0]') != -1) {
+         ptmpriority.options[0].value = '1';
+         ptmpriority.options[0].text  = 'High';
+         showhide("ptm_prio", 1);
+      }
+      else {
+         /* non-ptm wan interface */
+         ptmpriority.options[0].value = '-1';
+         ptmpriority.options[0].text  = '';
+      }
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      hideAllElements();
+      
+      /* set default values */
+      wght.value = '1';
+      if (chipId == '63268' || chipId == '6318') {
+         minrate.value   = '-1';
+         shaperate.value = '-1';
+         burstsize.value = '3000';
+      }
+      if (supportfaptm == 1 || supportrddtm == 1) {
+         p_maxrate.value = '-1';
+         p_mbs.value     = '3000';
+         q_minrate.value = '-1';
+         q_maxrate.value = '-1';
+         q_mbs.value     = '3000';
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'qosqueue.cmd?action=add';
+
+   with ( document.forms[0] ) {
+
+      if (queuename.value == '' ) {
+         alert('Please enter QoS queue name.');
+         return;
+      }
+
+      if ( isValidName(queuename.value) == false ) {
+         alert('Please enter valid QoS queue name: No special characters.');
+         return;
+      }
+      if (queuename.value.length > 15) {
+         alert('Maximum QoS queue name cannot exceed 15 characters.');
+         return;
+      }
+      
+      if ( queueintf.selectedIndex == 0 ) {
+         alert('Specify an egress interface for this queue.');
+         return;
+      }      
+	  if( isXSS(queuename.value) ){
+		alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Name");
+		return false;
+	  }else{
+        // queuename
+         loc += '&queueName=' + encodeUrl(queuename.value);
+      }
+      // queueenbl
+      idx = queueenbl.selectedIndex;
+      loc += '&enable=' + queueenbl.options[idx].value;
+
+      // queueintf
+      idx = queueintf.selectedIndex;
+      val = queueintf.options[idx].value.split('&');
+      val = val[0].split('(');
+      val = val[0].split('[');
+      loc += '&queueintf=' + val[0];
+      
+      // queue precedence
+      idx = queueprecedence.selectedIndex;
+      val = queueprecedence.options[idx].value.split('(');
+      loc += '&precedence=' + val[0];
+
+      // scheduler
+      if (isNaN(parseInt(wght.value)) == true) {
+         alert('Weight Value "' + wght.value + '" is invalid.');
+         return;
+      }
+      wghtval = parseInt(wght.value);
+      if (wghtval < 1 || wghtval > 63) {
+         alert('Weight Value "' + wght.value + '" is out of range [1-63].');
+         return;
+      }
+      
+      if (alg[0].checked)
+         loc += '&alg=SP';
+      else if (alg[1].checked)
+         loc += '&alg=WRR';
+      else
+         loc += '&alg=WFQ';
+
+      loc += '&wght=' + wght.value;
+
+      // latency path
+      idx = latency.selectedIndex;
+      loc += '&latency=' + latency.options[idx].value;
+
+      // ptm priority
+      idx = ptmpriority.selectedIndex;
+      loc += '&ptmpriority=' + ptmpriority.options[idx].value;
+      
+      ifchoice = -1;
+      if (supportfaptm == 1)
+         ifchoice = intfSelected.indexOf('eth');
+      
+      if (supportrddtm == 1) {
+         var ifchoice1 = -1;
+         var ifchoice2 = -1;
+         var ifchoice3 = -1;
+      
+         ifchoice1 = intfSelected.indexOf('veip');
+         ifchoice2 = intfSelected.indexOf('eth4');
+         ifchoice3 = intfSelected.indexOf('epon');
+
+         if ((ifchoice1 != -1) || (ifchoice2 != -1) || (ifchoice3 != -1))
+            ifchoice = 1;
+      }                  
+
+      // Shaping
+      intfSelected = getSelect(queueintf);
+      if ((supportfaptm == 1 || supportrddtm == 1) && (ifchoice != -1) && alg[0].checked) {
+//         if (p_maxrate.value != '') {
+//            if (isNaN(parseInt(p_maxrate.value)) == true) {
+//               alert('Port Max Shaping Rate "' + p_maxrate.value + '" is invalid.');
+//               return;
+//            }
+//            rate = parseInt(p_maxrate.value);
+//            if (rate != -1 && (rate <= 0 || rate > rateMaxEth)) {
+//               alert('Port Max Shaping Rate "' + p_maxrate.value + '" is out of range [1-' + rateMaxEth + '].');
+//               return;
+//            }
+//            loc += '&p_maxrate=' + p_maxrate.value;
+//	    
+//            if (isNaN(parseInt(p_mbs.value)) == true) {
+//               alert('Port Max Burst Size "' + p_mbs.value + '" is invalid.');
+//               return;
+//            }
+//            burst = parseInt(p_mbs.value);
+//            if (burst < burstMin) {
+//               alert('Port Max Burst Size "' + p_mbs.value + '" shall be >=' + burstMin + '.');
+//               return;
+//            }
+//            loc += '&p_mbs=' + p_mbs.value;
+            
+            if (isNaN(parseInt(q_minrate.value)) == true) {
+               alert('Min Bit Rate "' + q_minrate.value + '" is invalid.');
+               return;
+            }
+            rate = parseInt(q_minrate.value);
+            if (rate != -1 && (rate <= 0 || rate > rateMaxEth)) {
+               alert('Min Bit Rate "' + q_minrate.value + '" is out of range [1-' + rateMaxEth + '].');
+               return;
+            }
+            loc += '&minrate=' + q_minrate.value;
+	
+            if (supportrddtm != 1) {	
+                if (isNaN(parseInt(q_maxrate.value)) == true) {
+                   alert('Shaping Rate "' + q_maxrate.value + '" is invalid.');
+                   return;
+                }
+                rate = parseInt(q_maxrate.value);
+                if (rate != -1 && (rate <= 0 || rate > rateMaxEth)) {
+                   alert('Shaping Rate "' + q_maxrate.value + '" is out of range [1-' + rateMaxEth + '].');
+                   return;
+                }
+                loc += '&shaperate=' + q_maxrate.value;
+    	
+                if (isNaN(parseInt(q_mbs.value)) == true) {
+                   alert('Shaping Burst Size "' + q_mbs.value + '" is invalid.');
+                   return;
+                }
+                burst = parseInt(q_mbs.value);
+                if (burst < burstMin) {
+                   alert('Shaping Burst Size "' + q_mbs.value + '" shall be >=' + burstMin + '.');
+                   return;
+                }
+                loc += '&burstsize=' + q_mbs.value;
+            }
+//         }
+	  }
+      else if ((chipId == '63268' || chipId == '6318') && intfSelected.indexOf('ptm') != -1) {
+         if (isNaN(parseInt(minrate.value)) == true) {
+            alert('Min Bit Rate "' + minrate.value + '" is invalid.');
+            return;
+         }
+         rate = parseInt(minrate.value);
+         if (rate != -1 && (rate <= 0 || rate > rateMax)) {
+            alert('Min Bit Rate "' + minrate.value + '" is out of range [1-' + rateMax + '].');
+            return;
+         }
+         loc += '&minrate=' + minrate.value;
+	    
+         if (isNaN(parseInt(shaperate.value)) == true) {
+            alert('Shaping Rate "' + shaperate.value + '" is invalid.');
+            return;
+         }
+         rate = parseInt(shaperate.value);
+         if (rate != -1 && (rate <= 0 || rate > rateMax)) {
+            alert('Shaping Rate "' + shaperate.value + '" is out of range [1-' + rateMax + '].');
+            return;
+         }
+         loc += '&shaperate=' + shaperate.value;
+	    
+         if (isNaN(parseInt(burstsize.value)) == true) {
+            alert('Shaping Burst Size "' + burstsize.value + '" is invalid.');
+            return;
+         }
+         burst = parseInt(burstsize.value);
+         if (burst < burstMin) {
+            alert('Shaping Burst Size "' + burstsize.value + '" shall be >=' + burstMin + '.');
+            return;
+         }
+         loc += '&burstsize=' + burstsize.value;
+	  }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body onload="frmLoad()">
+      <blockquote>
+         <form>
+            <b>QoS Queue Configuration</b><br><br>
+            This screen allows you to configure a QoS queue and add it to a selected layer2 interface.
+            <br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="160">Name:</td>
+                  <td><input type='text' size="22" name="queuename"></td>
+               </tr>
+               <td>&nbsp;</td>
+               <tr>
+                  <td>Enable:</td>
+                  <td><select name='queueenbl' size="1">
+                      <option value="0"> Disable
+                      <option value="1" selected="selected"> Enable
+                  </select></td>
+               </tr>
+               <td>&nbsp;</td>
+               <tr>
+                  <td>Interface:</td>
+                  <td><select name='queueintf' size="1" onChange='changeSelect(0)'>
+                      <option value='-1'>&nbsp;
+                      <script language="javascript">
+                         <!-- hide
+                         {
+                            queueIntf = '<%ejGetOther(queueIntf, all)%>';
+                            intf = queueIntf.split('|');
+                            intf.sort();
+
+                            for (i = 0; i < intf.length; i++) {
+                               ifname = intf[i].split('&');
+                               ifname = ifname[0].split('[');
+                               document.write("  <option value='" + intf[i] + "'>" + ifname[0]);
+                            }
+                         }
+                         // done hiding -->
+                      </script>
+                  </select></td>
+               </tr>
+            </table><br>
+
+            <div id='eth_p_shaper'><table cellSpacing="0" cellPadding="0" border="0">
+            <script language="javascript">
+            <!-- hide
+            if (supportfaptm == 1 || supportrddtm == 1) {
+               document.write("<tr>");
+               document.write("<td width='160'>Port Max Shaping Rate:</td>");
+               document.write("<td><input type='text' size='4' name='p_maxrate'>&nbsp;[1-" + rateMaxEth + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td width='160'>Port Max Burst Size:</td>");
+               document.write("<td><input type='text' size='4' name='p_mbs'>&nbsp;[bytes] (shall be >=" + burstMin + ")</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td>&nbsp;</td>");
+               document.write("</tr>");
+            }
+            // done hiding -->
+            </script>
+            </table><br></div>
+
+            <div id='precedence'>
+            <table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td width="160">Queue Precedence:</td>
+                  <td><select name='queueprecedence' size="1" onChange='changePrecedence(0)'>
+                      <option value='-1'>&nbsp;
+                  </select>&nbsp;(lower value, higher priority)</td>
+               </tr>
+            </table>
+            - The precedence list shows the scheduler algorithm for each precedence level.<br>
+            - Queues of equal precedence will be scheduled based on the algorithm.<br>
+            - Queues of unequal precedence will be scheduled based on SP.<br>
+            <br></div>
+
+            <div id='sched_alg'><table cellSpacing="0" cellPadding="0" border="0">
+               <td>Scheduler Algorithm</td>
+            </table></div>
+            <div id='alg_sp'><table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td colspan='2'><input type='radio' name='alg' onChange='changeSched(0)'>&nbsp;Strict Priority</td>
+               </tr>
+            </table></div>
+            <div id='alg_wrr'><table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td colspan='2'><input type='radio' name='alg' onChange='changeSched(0)'>&nbsp;Weighted Round Robin</td>
+               </tr>
+            </table></div>
+            <div id='alg_wfq'><table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td colspan='2'><input type='radio' name='alg' onChange='changeSched(0)'>&nbsp;Weighted Fair Queuing</td>
+               </tr>
+            </table></div>
+            <br>
+
+            <div id='wght_val'><table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td width="160">Queue Weight:</td>
+                  <td><input type='text' size='4' name='wght'>&nbsp;[1-63]</td>
+               </tr>
+            </table><br></div>
+
+            <div id='eth_q_shaper'><table cellSpacing="0" cellPadding="0" border="0">
+            <script language="javascript">
+            <!-- hide
+            if (supportfaptm == 1) {
+               document.write("<tr>");
+               document.write("<td width='160'>Minimum Rate:</td>");
+               document.write("<td><input type='text' size='4' name='q_minrate'>&nbsp;[1-" + rateMaxEth + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td width='160'>Shaping Rate:</td>");
+               document.write("<td><input type='text' size='4' name='q_maxrate'>&nbsp;[1-" + rateMaxEth + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td width='160'>Shaping Burst Size:</td>");
+               document.write("<td><input type='text' size='4' name='q_mbs'>&nbsp;[bytes] (shall be >=" + burstMin + ")</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td>&nbsp;</td>");
+               document.write("</tr>");
+            }
+            
+            if (supportrddtm == 1) {
+               document.write("<tr>");
+               document.write("<td width='160'>Minimum Rate:</td>");
+               document.write("<td><input type='text' size='4' name='q_minrate'>&nbsp;[1-" + rateMaxEth + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td>&nbsp;</td>");
+               document.write("</tr>");
+            }            
+            
+            // done hiding -->
+            </script>
+            </table><br></div>
+
+            <div id='ptm_prio'><table cellSpacing="0" cellPadding="0" border="0">
+            <script language="javascript">
+            <!-- hide
+            if (chipId == '63268' || chipId == '6318') {
+               document.write("<tr>");
+               document.write("<td width='160'>Minimum Rate:</td>");
+               document.write("<td><input type='text' size='4' name='minrate'>&nbsp;[1-" + rateMax + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td width='160'>Shaping Rate:</td>");
+               document.write("<td><input type='text' size='4' name='shaperate'>&nbsp;[1-" + rateMax + " Kbps] (-1 indicates no shaping)</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td width='160'>Shaping Burst Size:</td>");
+               document.write("<td><input type='text' size='4' name='burstsize'>&nbsp;[bytes] (shall be >=" + burstMin + ")</td>");
+               document.write("</tr>");
+               document.write("<tr>");
+               document.write("<td>&nbsp;</td>");
+               document.write("</tr>");
+            }
+            document.write("<tr>");
+            document.write("<td width='160'>PTM Priority:</td>");
+            document.write("<td><select name='ptmpriority' size='1'>");
+            document.write("<option value='-1'>&nbsp;");
+            document.write("</select></td>");
+            document.write("</tr>");
+            // done hiding -->
+            </script>
+            </table><br></div>
+
+            <div id='dsl_latency'><table cellSpacing="0" cellPadding="0" border="0">
+               <tr>
+                  <td width="160">DSL Latency:</td>
+                  <td><select name='latency' size="1">
+                      <option value='-1'>&nbsp;
+                  </select></td>
+               </tr>
+            </table><br></div>
+
+            <center><input type='button' onClick='btnApply()' value='Apply/Save'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

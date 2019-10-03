@@ -1,0 +1,359 @@
+#mobileformat,#Imobileformat{
+	width: 100%; 
+	position: relative;
+	margin:auto;
+}
+
+.MHeader{
+    width: 100%;
+	color:#FFF;
+	height:100px;
+	background-color:#FFF;
+	/*position: relative;
+	margin:auto;*/
+}
+
+.MBody{
+	height: 100%;
+    width: 100%;
+	position: fixed;
+	margin:auto;
+	background-color:#E9EAE8;
+}
+
+.MBody2{
+	height: 100%;
+    width: 100%;
+	position: relative;
+	margin:auto;
+	background-color:#E9EAE8;
+}
+
+.Minfobg{
+	width: 100%;
+	position:relative;
+	margin:auto;
+}
+
+.Minfobg tr td{
+	text-align:center;
+	background-color:#A9A5A5;
+}
+
+.Minfobg tr td:first-child{
+    background-color:#8A8888;
+}
+
+.Mrouterinfo{
+	font-weight:bolder;
+}
+
+.install_Mcontent{
+	width: 100%;
+	position:relative;
+	margin:auto;
+	border:0px solid #E6E6E6;
+	background-color:#E9EAE8;
+	display:block;
+}
+
+.Mcontent{
+	width: 98%;
+	position:relative;
+	margin:auto;
+	border-radius: 5px 5px 5px 5px;
+	background-color:#E9EAE8;
+}
+
+.Mcontent:after{
+	content: '\A';
+    white-space: pre;
+}
+
+.MFooter{
+	width: 100%;
+	height: 60px;
+	color:#50535A;	
+	position:relative;
+	margin:auto;
+	background-color:#FFF;
+	font-size:14px;
+	text-align:center;
+}
+
+.Mlogin_input{
+    background: url("te_login_input.png") no-repeat;
+    background-size: 100% 100%;
+    background-position: center center;
+    border: 0 none;
+    border-radius: 5px 5px 5px 5px;
+    padding: 0 10px;
+	width:90%;
+}
+
+.MInput_box{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	padding: 10px 10px 10px 10px;
+	border-radius:5px 5px 5px 5px;
+	border:1px solid #50535A;
+	width:90%;
+}
+
+.MSelect_box{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	padding: 6px 12px;
+	border-radius:4px 4px 4px 4px;
+	border:1px solid #50535A;
+	width:95%;
+}
+
+.Mcontent_word
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	margin-left:2%;
+	color:#50535A;
+}
+
+.Mmenu_table{/* RTF_DEF, Zeon, Update of the Movistar brand */
+    margin-left:10px;
+	border:1px #BDBDBD solid;
+	height:30px;
+	background-color:#FFF;
+	z-index:1;
+}
+
+.Mmenutitle
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	height:30px;
+	color:#00A9E0;
+	cursor:pointer;
+	z-index:1;
+}
+
+.Infopopup {
+    width:50%; 
+	line-height:20px;	
+	position:absolute;
+	top:30px;
+	left:0px;
+	z-index:1;
+	background-color:#938A8A;
+}
+
+.Mpopup { 
+	line-height:20px;	
+	position:absolute;
+	left:10px;
+	top:40px;
+	z-index:2;
+	background-color:#FFF;
+	font-weight: normal;
+	border: 1px solid #BDBDBD;
+	border-top: none;
+	-webkit-box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+	-moz-box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+	box-shadow: 10px 10px 10px #E6E6E6, -10px 10px 10px #E6E6E6;
+}
+
+.MHeader li{
+    width: 218px;
+	height: 30px;
+	line-height:30px;
+	position:relative; 
+	color: #50535A;
+	font-size: 14px;
+	text-align: left;
+	background-color:#FFF;
+	list-style-type: none;
+	z-index:3;
+}
+
+.MHeader li:first-child{
+	border-radius: 0px 0px 0px 0px;
+}
+
+.MHeader li:last-child{
+	border-radius: 0px 0px 0px 0px;
+}
+
+.MHeader li ul
+{
+	position: relative;
+	width: 218px;
+    top: -47px;
+	left: 100%;
+	border: 1px solid #BDBDBD;
+	background-color:#FFF;
+	-webkit-padding-start: 0px;
+	-webkit-box-shadow: 0px 0px 15px #E6E6E6;
+	-moz-box-shadow: 0px 0px 15px #E6E6E6;
+	box-shadow: 0px 0px 15px #E6E6E6;
+}
+
+.MHeader_title_box
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	border:2px white solid;
+	position:relative;
+	height:50px;
+	left:0;
+	right:0;
+	top:0;
+	padding-right:10px;
+}
+
+.MHeader_title
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	text-align:right;
+	margin-top:15px;
+	font-family: 'Arial','toTahoma','Helvetica','sans-serif';
+	font-size:18px;
+	color:#5BC500;
+	margin-left:48%;
+}
+
+.MHeader_line
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	width:100%;
+	height:55px;
+	background: url('bLine.png') repeat-x scroll 100% 0px transparent;
+	background-repeat: repeat-x;
+	background-color:#E9EAE8;
+	margin-top:-2px;
+}
+
+.MHeader_logout_box
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	position:absolute;
+	width:100px;
+	right:0;
+	margin-top:-20px;
+}
+
+.MHeader_logout
+{/* RTF_DEF, Zeon, Update of the Movistar brand */
+	text-decoration:none;
+	color:black;
+}
+
+.Mloginlogo{
+	padding: 10% 33% 33% 0%;
+	background: url('te_Mloginlogo.png') no-repeat scroll 50% 0% transparent;	
+	background-size:contain;
+}
+
+.Mheadertitle{
+	font-weight: bolder; 
+	font-family: 'Arial','toTahoma','Helvetica','sans-serif';
+	left:20%;
+	right:30%;
+	max-width:50%;
+	text-align:center;
+	position:absolute;
+	margin-top:-25px;
+}
+
+.Mtitlesize{
+	font-size:14px;
+	font-weight:bolder;
+}
+
+.Mline{
+	width: 100%;
+	height:20px;
+	border-top: 1px solid Gray;
+}
+
+#mobileformat input[type=text],#mobileformat input[type=password],#mobileformat select
+{
+	height:40px;
+	font-size:16px;
+}
+
+.Mhorizontal_line{
+	width: 80%;
+	height: 0.01%;
+	border: 2px solid #D7DF01;
+}
+
+.Mtitle{
+	width: 80%;
+	font-size:40px;
+	position:relative;
+	margin:auto;
+	background-color:#E9EAE8;
+	color:#5BC500;
+}
+
+.Mte_logo{
+	display:inline-block;
+	width:40%;
+	max-width:163px;
+	left:10px;
+	top:10px;
+	position:absolute;
+}
+
+#Imobileformat input[type=text],#Imobileformat input[type=password],#Imobileformat select
+{
+	width:90%;
+	height:40px;
+}
+
+#mobileformat input[type=button],#mobileformat input[type=submit]
+{	
+	width:90%;
+	height:40px;
+	border: 1px solid #999;
+	background-color:#5BC500;
+	border-radius: 3px 3px 3px 3px;
+	color:#FFF;
+	cursor: pointer;
+}
+
+/*#mobileformat input[type=button]:not([value=>],[value=<]),#mobileformat input[type=submit]:not([value=Entrar]){
+	width:auto;   
+}*/
+
+#mobileformat input[value=Entrar],#Imobileformat input[type=button]
+{	
+    background: #5BC500;
+	border: 0 none;
+	padding: 10px 45px;
+	color: #fff;
+	cursor:pointer;
+}
+
+*! > #mobileformat input[type=text],*! > #mobileformat input[type=password],*! > #mobileformat select,*! >#mobileformat input[value=Entrar],*! >#mobileformat input[type=button],*! >#mobileformat input[type=submit]
+{
+    text-align:center;
+}
+
+#mobileformat table tr:first-child td{
+	background-color:#FFF;
+	height:25px;
+}
+
+#mobileformat table tr td{
+	background-color:#E6E6E6;
+	height:25px;
+	overflow:auto;
+}
+
+#mobileformat .editItems tr:first-child td{
+	background-color:transparent;
+	height:35px;
+	text-indent:20px;
+}
+
+#mobileformat .editItems tr td{
+	background-color:transparent;
+	height:25px;
+	text-indent:20px;
+}
+
+#Imobileformat .editItems tr:first-child td{
+	background-color:#FAFAFA;
+	height:35px;
+}
+
+#Imobileformat .editItems tr td{
+	background-color:#FAFAFA;
+	height:35px;
+}

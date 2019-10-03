@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+    <script language="javascript" src="te_jquery.form.js"></script>
+<script language="JavaScript">
+<!-- hide
+var oldIE = (navigator.userAgent.indexOf("MSIE") != -1) && (document.documentMode <= 9);
+
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input[type!=radio],select').parent().not('td,tr').css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value="Actualizar Firmware"]').on('click',function(){
+		alertSpecial("Funcionalidad no disponible en estos momentos");
+	});
+ 
+    function wlInitWait() {
+        $.ajaxSetup({async:false, cache:false});
+        $.get('te_wlinit_status.html', function(data, status) {
+            if (status == 'success') window.top.location = '/'; 
+        });
+    }
+    var oid = 0;
+    var progress = 0;
+    function oldIEProgress() {
+        if (progress < 100) progress++;
+        $('#bar').width(progress+'%')
+        $('#percent').html(progress+'%');
+    }
+    var cid = 0;
+    var reboot = 220;
+    function countDown() {
+        reboot--;
+        $('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+
+        if (reboot <= 0) {
+            clearInterval(cid);
+            $('#reboot').html('Terminado! Redirigir a la p&aacute;gina iniciar sesi&oacute;n.');
+            cid = setInterval(wlInitWait, 3000);
+        }
+    }
+    function uploadError() {
+        if (oldIE) clearInterval(oid);
+        $('#message').html('<font color="red">ERROR: no se puede cargar archivos</font>');
+        $('#progress').hide();
+        $('#caption').html('<font color="red">Cargar fall&oacute;!</font>');
+        $('#backButton').show();
+    }
+
+    var msg = new Array();
+    msg[0] = 'Firmware se actualiza! El sistema se est&aacute; reiniciando ahora...';
+    msg[1] = 'Subir Image fall&oacute;. El sistema no tiene memoria. El router de banda ancha se est&aacute; reiniciando.';
+    msg[2] = 'Subir Image fall&oacute;. No se seleccion&oacute; un archivo de imagen.';
+    msg[3] = 'Subir Image fall&oacute;. El archivo seleccionado contiene una imagen ilegal.';
+    msg[4] = 'Error grave durante la carga de im&aacute;genes.';
+    $('form').on('submit', function(){
+        if ($('[name="firmware"]').val() == '') {
+            alertSpecial('No se seleccion&oacute; un archivo de imagen.');
+            return false;
+        }
+        if (!confirmSpecial('&iquest;Realmente desea actualizar el firmware?'))
+            return false;
+    });
+    $('form').ajaxForm({
+        beforeSend: function() {
+            try {
+                $('#inputFile').hide();
+                $('#uploadInfo').show();
+                $('#caption').html('Subiendo...');
+                $('#message').html('');
+                $('#backButton').hide();
+                $('#countDown').hide();
+                $('#progress').show();
+                $('#bar').width('0%');
+                $('#percent').html('0%');
+                if (oldIE) {
+                    progress = 0;
+                    oid = setInterval(oldIEProgress, 120);
+                }
+            }
+            catch (e) {
+                uploadError();
+            }
+        },
+        uploadProgress: function(event, position, total, percentComplete) {
+            $('#bar').width(percentComplete+'%');
+            $('#percent').html(percentComplete+'%');
+        },
+        success: function(response) {
+            if (oldIE) clearInterval(oid);
+            var idx = parseInt(response.split('=')[1]);
+            if (isNaN(idx) || idx < 0 || idx > 4) idx = 4;
+            $('#progress').hide();
+            if (idx == 0) {
+                $('#caption').html('<font color="red">&iexcl;Reinicio del sistema!</font>');
+                $('#message').html(msg[idx]);
+                $('#countDown').show();
+                $('#reboot').html(reboot+' segundo'+((reboot>1)?'s':''));
+                cid = setInterval(countDown, 1000);
+            }
+            else {
+                $('#caption').html('<font color="red">Cargar fall&oacute;!</font>');
+                $('#message').html('<font color="red">'+msg[idx]+'</font>');
+                $('#backButton').show();
+            }
+        },
+        error: function() {
+            uploadError();
+        }
+    });
+
+    $('[value=Volver]').on('click touchstart',function(){
+        $('#uploadInfo').hide();
+        $('#inputFile').show();
+        $('input:file').clearInputs();
+    });
+});
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form method="post" ENCTYPE="multipart/form-data" action="upload.cgi">
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+		<div class="Body"></div>
+        <div class="Body2" id="inputFile">
+			<div class="title">Actualizaciones Firmware desde tu PC</div>
+			<div class="content">
+				<div class="littletitle">Actualizaciones Firmware desde tu PC</div>
+				<p class="content_word">Esta opci&oacute;n te permitir&aacute; actualizar el Firmware de tu Router, cargando el archivo directamente desde tu ordenador. Para ello, selecciona el archivo de actualizaci&oacute;n en tu PC. Recuerda no apagar tu router ni desconectar el cable ethernet durante el proceso de actualizaci&oacute;n. Es muy importante no interrumpir este proceso ya que podr&iacute;a dejar inutilizado tu router.</p>				
+				<table class="editItems" border="0">
+				<tr>
+					<td class="titlesize">Selecciona el archivo de actualizaci&oacute;n en tu PC:</td>
+					<td><input class="Input_box" type="file" name="firmware"></td>
+				</tr>
+				<tr>
+                    <td><input type="submit" value="Actualizar"></td>
+                </tr>
+				</table>
+			</div>
+        </div>
+        <div class="Body" id="uploadInfo" style="display:none">
+			<div class="title" id="caption"></div>
+			<div class="content">
+				<p class="content_word"><label id="message"></label></p>
+				<div id="backButton"><br>
+				<span style="position:relative;margin-left:50%;">
+					<input type="button" value="Volver">
+				</span>
+				</div>
+				<div id="countDown">
+                    <p class="content_word"><font color="red">Por favor, espere <label id="reboot"></label></font></p>
+				</div>
+                <div id="progress">
+                    <div id="bar"></div>
+                    <div id="percent">0%</div>
+                </div><br>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+		<div class="MBody"></div>
+        <div class="MBody2" id="inputFile">
+            <div class="Mtitle">Actualizaciones Firmware desde tu PC</div>
+			<div class="Mcontent">
+				<div class="littletitle">Actualizaciones Firmware desde tu PC</div>
+				<p class="Mcontent_word">Esta opci&oacute;n te permitir&aacute; actualizar el Firmware de tu Router, cargando el archivo directamente desde tu ordenador. Para ello, selecciona el archivo de actualizaci&oacute;n en tu PC. Recuerda no apagar tu router ni desconectar el cable ethernet durante el proceso de actualizaci&oacute;n. Es muy importante no interrumpir este proceso ya que podr&iacute;a dejar inutilizado tu router.</p>				
+				<p class="Mcontent_word">
+					<span class="Mtitlesize">Selecciona el archivo de actualizaci&oacute;n en tu PC:</span>
+					<div><input class="MInput_box" type="file" name="Mfirmware"></div>
+				</p>
+				<p class="Mcontent_word">
+                    <input type="submit" value="Actualizar">
+                </p>
+			</div>
+        </div>
+        <div class="MBody" id="uploadInfo" style="display:none">
+			<div class="Mtitle" id="caption"></div>
+			<div class="Mcontent">
+				<p class="Mcontent_word"><label id="message"></label></p>
+				<div id="backButton"><br>
+				<span style="position:relative;margin-left:50%;">
+					<input type="button" value="Volver">
+				</span>
+				</div>
+				<div id="countDown">
+                    <p class="Mcontent_word"><font color="red">Por favor, espere <label id="reboot"></label></font></p>
+				</div>
+                <div id="progress">
+                    <div id="bar"></div>
+                    <div id="percent">0%</div>
+                </div><br>
+			</div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

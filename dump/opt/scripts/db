@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ ! -n "$1" ] ; then
+  echo "Usage: $0 <hexaddr> [<length> [<unitsize>]]: Dump a memory region as bytes"
+else
+  if [ ! -n "$2" ] ; then
+    LEN=1
+  else
+   LEN=$2
+  fi
+  echo m $1 $LEN b > /proc/bcmlog
+fi

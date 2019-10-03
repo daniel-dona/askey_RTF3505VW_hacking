@@ -1,0 +1,137 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+      <script language="javascript" src="util.js"></script>
+      <script language="javascript">
+<!-- hide
+
+function btnApply(testname) {
+   var loc = 'diag8021ag.cgi?test8021ag=' + testname;
+
+   with ( document.forms[0] ) {
+
+      idx = mdLevel.selectedIndex;
+      val = mdLevel.options[idx].value;
+      loc += '&mdLevel8021ag=' + val;
+
+      if( testname != 'mdl' ) {
+         if (isValidMacAddress(destMac.value) == false ) {
+            alert('MAC address "' + destMac.value + '" is invalid. Eg. 11:22:33:AA:BB:CC');
+            return;
+         }
+         loc += '&macAddr8021ag=' + destMac.value;
+
+         vlanid = parseInt(vlanId.value);
+         if ( vlanid < 0 || vlanid > 4095 ) {
+            alert('VLAN ID "' + vlanid + '" is out of range [0-4095].');
+            return;
+         }
+         loc += '&vlanId8021ag=' + vlanid;
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+      
+function frmLoad() {
+   var mdlvl = <%ejGet(mdLevel8021ag)%>;
+   setSelect(document.forms[0].mdLevel, mdlvl);
+}
+
+// done hiding -->
+   </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>802.1ag Connectivity Fault Management</b><br>
+            <P>This diagnostic is only used for VDSL PTM mode.</P> <br>
+
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr> 
+              <td width="200">Maintenance Domain (MD) Level: </td>
+              <td><select size="1" name="mdLevel">
+                  <option value="0"> 0 
+                  <option value="1"> 1 
+                  <option value="2" selected> 2 
+                  <option value="3"> 3 
+                  <option value="4"> 4 
+                  <option value="5"> 5 
+                  <option value="6"> 6 
+                  <option value="7"> 7
+                  </option>
+                </select> </td>
+            </tr>
+            <tr>
+               <td width="200">Destination MAC Address:</td>
+               <td><input type='text' name="destMac" value="<%ejGet(macAddr8021ag)%>"></td>
+            </tr>
+            <tr>
+               <td width="200">802.1Q VLAN ID: [0-4095]</td>
+               <td><input type="text" size="4" name="vlanId" value="<%ejGet(vlanId8021ag)%>"></td>
+            </tr>
+            </table> <br>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="190">VDSL Traffic Type:</TD>
+                        <TD width="50"><%ejGetOther(trafficType, 0)%>&nbsp;</TD>
+                     </TR>
+                     <TR>
+                  </TBODY></TABLE>
+            <P><B>Test the connection to another Maintenance End Point (MEP)</B></P>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="190">Loopback Message (LBM):</TD>
+                        <TD width="50"><B><%ejGetOther(diag8021ag, lbresult)%></B>&nbsp;</TD>
+                     </TR>
+                     <TR>
+                  </TBODY></TABLE>
+            <P><B>Find Maintenance End Points (MEPs)</B></P>
+               <TABLE border="1" cellspacing="0" cellpadding="3">
+                  <TBODY>
+                     <TR>
+                        <TD class='hd' width="190">Linktrace Message (LTM):</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr1)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr2)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr3)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr4)%>&nbsp;</TD>
+                     </TR>
+                     <TR>
+                        <TD class='hd' width="190"></TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr5)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr6)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr7)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr8)%>&nbsp;</TD>
+                     </TR>
+                     <TR>
+                        <TD class='hd' width="190"></TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr9)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr10)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr11)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr12)%>&nbsp;</TD>
+                     </TR>
+                     <TR>
+                        <TD class='hd' width="190"></TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr13)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr14)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr15)%>&nbsp;</TD>
+                        <TD width="120"><%ejGetOther(diag8021ag, ltaddr16)%>&nbsp;</TD>
+                     </TR>
+                  </TBODY></TABLE>
+            <CENTER>
+            <br><br> <br>
+                  <input type='button' name="mdl" onClick='btnApply(this.name)' value='Set MD Level'>
+                  <input type='button' name="lbm" onClick='btnApply(this.name)' value='Send Loopback'>
+                  <input type='button' name="ltm" onClick='btnApply(this.name)' value='Send Linktrace'>
+            </CENTER>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

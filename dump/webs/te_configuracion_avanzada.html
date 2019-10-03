@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0" />
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+    <link rel="stylesheet" href='te_pc_style.css' type='text/css'>
+	<link rel="stylesheet" href='te_mobile_style.css' type='text/css'>
+    <link rel="stylesheet" href='te_colors.css' type='text/css'>
+    <script language="javascript" src="te_util.js"></script>
+    <script language="javascript" src="te_jquery.min.js"></script>
+<script language="JavaScript">
+<!-- hide
+var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+$(function()
+{   
+    if(ismobile)
+    {
+        $('#PCformat').remove();
+    }
+    else
+    {
+        $('#mobileformat').remove();
+    }
+	$(".content,.Mcontent").after("<br>");
+	$('#mobileformat').find('input').parent().css('text-align','center');
+	//include header
+	$('#includeHeader').load("te_header.html");
+	$('[value="Aceptar"]').on('click',function(){
+		window.location.replace("te_configuracion_avanzada");	
+	});
+	$('[value="Cancelar"]').on('click',function(){
+		window.location.replace("/");
+	});
+});
+
+function Logout(){
+	if(confirmSpecial("&iquest;Esta seguro que desea cerrar la sesi&oacute;n?"))
+		window.location = 'te_acceso_router.html';
+}
+// done hiding -->
+</script>
+</head>
+<body>
+    <div id="PCformat">
+        <div id="includeHeader"></div>
+		<div class="Body"></div>
+        <div class="Body2">
+			<div class="title">Configuraci&oacute;n avanzada</div>
+			<div class="content">
+				<div class="littletitle">Advertencia</div>
+				<p class="content_word">Estas accediendo a las opciones de configuraci&oacute;n avanzada del equipo. Si no dispones de conocimientos avanzados te recomendamos no modificar estos par&aacute;metros.</p>
+				<div>
+				<span style="position:relative;margin-left:40%;">
+					<input type="button" value="Cancelar">
+				</span>
+				<span style="position:relative;margin-left:0%;">
+					<input type="button" value="Aceptar">
+				</span>
+				</div><br>
+			</div>
+        </div>
+    </div>
+    <div id="mobileformat">
+        <div id="includeHeader"></div>
+        <div class="MBody"></div>
+        <div class="MBody2">
+            <div class="Mtitle">Configuraci&oacute;n avanzada</div>
+			<div class="Mcontent">
+				<div class="littletitle">Advertencia</div>
+				<p class="Mcontent_word">Estas accediendo a las opciones de configuraci&oacute;n avanzada del equipo. Si no dispones de conocimientos avanzados te recomendamos no modificar estos par&aacute;metros.</p>
+				<p>
+					<input type="button" value="Cancelar">
+				</p>
+				<p>
+					<input type="button" value="Aceptar">
+				</p>
+			</div>
+        </div>
+    </div>
+</body>
+</html>

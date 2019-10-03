@@ -1,0 +1,167 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel='stylesheet' href='stylemain.css' type='text/css'>
+         <link rel='stylesheet' href='colors.css' type='text/css'>
+            <script language='javascript' src='util.js'></script>
+            <script language='javascript'>
+<!-- hide
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var enbl = '<%ejGetWl(wlEnbl)%>';
+var bit = '<%ejGetWl(wlKeyBit)%>';
+var keyIdx = '<%ejGetWl(wlKeyIndex)%>';
+var keys = new Array( "<%ejGetWl(wlKey1)%>", "<%ejGetWl(wlKey2)%>",
+                      "<%ejGetWl(wlKey3)%>", "<%ejGetWl(wlKey4)%>" );
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var wep = '<%ejGetWl(wlWep)%>';
+var auth = '<%ejGetWl(wlAuth)%>';
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+      for ( i = 0; i < 4; i++ ) {
+         wlKeys[i].value = keys[i];
+      }
+      if (mode != "open" && mode != "shared") {
+         wlKeys[0].disabled = 1;
+         wlKeys[3].disabled = 1;
+         wlKeyIndex[0] = new Option("2", "2");
+         wlKeyIndex[1] = new Option("3", "3");
+         if (keyIdx != "2" && keyIdx != "3") {
+            wlKeyIndex.selectedIndex = 0;
+         }
+         else {
+            wlKeyIndex.selectedIndex = parseInt(keyIdx) - 2;
+         }
+      }
+      else {
+         wlKeyIndex[0] = new Option("1", "1");
+         wlKeyIndex[1] = new Option("2", "2");
+         wlKeyIndex[2] = new Option("3", "3");
+         wlKeyIndex[3] = new Option("4", "4");
+         wlKeyIndex.selectedIndex = parseInt(keyIdx) - 1;
+      }
+   }
+}
+
+function btnApply() {
+   if ( enbl == '0' ) {
+      alert('Cannot apply the change since wireless is currently disabled.');
+      return;
+   }
+   
+   with ( document.forms[0] ) {
+      var idx = wlKeyIndex.selectedIndex;
+      var keyIndex = wlKeyIndex.options[idx].value;
+      var num = parseInt(keyIndex-1);
+      if ( wlKeys[num].value == '' ) {
+         if (!((wep == 'enabled') && (mode == 'radius'))) {
+            alert('Cannot choose key that has empty value.');
+            return;
+         }
+      }
+      
+      var i, val;
+      for ( i = 0; i < 4; i++ ) {
+         val = wlKeys[i].value;
+         if ( val != '' ) {
+            if ( bit == '0' ) {
+               if ( isValidKey(val, 13) == false ) {
+                  alert('Key "' + val + '" is not a valid 128-bit encryption key.');
+                  return;
+               }
+            } else {
+               if ( isValidKey(val, 5) == false ) {
+                  alert('Key "' + val + '" is not a valid 64-bit encryption key.');
+                  return;
+               }
+            }
+         }
+      }
+
+      var loc = 'wlsecurity.wl?';
+      loc += 'wlKeyIndex=' + keyIndex;
+      loc += '&wlKey1=' + encodeUrl(wlKeys[0].value);
+      loc += '&wlKey2=' + encodeUrl(wlKeys[1].value);
+      loc += '&wlKey3=' + encodeUrl(wlKeys[2].value);
+      loc += '&wlKey4=' + encodeUrl(wlKeys[3].value);
+
+      loc += '&wlSyncNvram=1';
+
+      loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+      var code = 'location="' + loc + '"';
+      eval(code);
+   }
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form onSubmit='return false'>
+            <b>Wireless Settings -- Encryption Keys</b><br>
+            <br>
+            <script language='javascript'>
+<!-- hide
+if ( bit == '0' )
+   document.writeln("Enter 13 ASCII characters or 26 hexadecimal digits for 128-bit encryption keys.");
+else
+   document.writeln("Enter 5 ASCII characters or 10 hexadecimal digits for 64-bit encryption keys.");
+// done hiding -->
+            </script>
+            <br>
+            <br>
+            <table border='0' cellpadding='4' cellspacing='0'>
+               <script language='javascript'>
+<!-- hide
+if ( bit == '0' ) {
+   document.writeln("  <tr>");
+   document.writeln("    <td width='120'>Network Key 1:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' size='30' maxlength=26></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 2:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' size='30' maxlength=26></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 3:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' size='30' maxlength=26></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 4:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' size='30' maxlength=26></td>");
+   document.writeln("  </tr>");
+} else {
+   document.writeln("  <tr>");
+   document.writeln("    <td width='120'>Network Key 1:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' maxlength=10></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 2:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' maxlength=10></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 3:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' maxlength=10></td>");
+   document.writeln("  </tr>");
+   document.writeln("  <tr>");
+   document.writeln("    <td>Network Key 4:</td>");
+   document.writeln("    <td><input type='text' name='wlKeys' maxlength=10></td>");
+   document.writeln("  </tr>");
+}
+// done hiding -->
+               </script>
+               <tr>
+                  <td>Current Network Key:</td>
+                  <td><select name='wlKeyIndex' size='1'>
+                     </select></td>
+               </tr>
+            </table>
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

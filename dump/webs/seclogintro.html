@@ -1,0 +1,58 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+var state = '<%ejGet(seclogRefresh)%>';
+if ( state == '1' ) {
+   var code = 'location="seclogintro.cgi?seclogRefresh=0&sessionKey=<%ejGetOther(sessionKey)%>"';
+   eval(code);
+}
+
+function btnView() {
+   var options;
+   options = 'menubar=yes,resizable=yes,scrollbars=yes,titlebar=yes,toolbar=no,width=640,height=600';
+
+   window.open('seclogview.cmd', 'BCM963xxSecLog', options);
+}
+
+function btnReset() {
+   var options;
+   options = 'menubar=yes,resizable=yes,scrollbars=yes,titlebar=yes,toolbar=no,width=320,height=200';
+
+   window.open('seclogreset.cmd', 'BCM963xxSecLog', options);
+}
+
+function btnSave() {
+   var loc = 'security_log.txt';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>Security Log</b><br>
+            <br>
+            The Security Log dialog allows you to view the Security Log and configure the 
+            Security Log options.<br>
+            <br>
+            Click "View" to view the Security Log.<br>
+            <br>
+            Click "Reset" to clear and reset the Security Log.<br>
+            <br>
+            Right-click <A href='security_log.txt'>here</A> to save Security Log to a file.<br>
+            <br>
+            <br>
+            <p align="center">
+               <input type='button' onClick='btnView()' value='View'> <input type='button' onClick='btnReset()' value='Reset'>
+         </form>
+      </blockquote>
+   </body>
+</html>

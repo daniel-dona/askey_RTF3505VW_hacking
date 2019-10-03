@@ -1,0 +1,685 @@
+<!--
+ Copyright (c) 2009 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+  Filename: voicedect.html
+  Author:
+  Creation Date: 2009
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel="stylesheet" href='stylemain.css' type='text/css'>
+<link rel="stylesheet" href='colors.css' type='text/css'>
+<script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var dectStatusVal = '<%ejGetVoice(dectStatus)%>';
+var dectRegWndVal = '<%ejGetVoice(dectRegWdn)%>';
+var dectAcVal     = '<%ejGetVoice(dectAc)%>';
+var dectFwVerVal  = '<%ejGetVoice(dectFwVer)%>';
+var dectLnkVal    = '<%ejGetVoice(dectLnk)%>';
+var dectTypeVal   = '<%ejGetVoice(dectType)%>';
+var dectIdVal     = '<%ejGetVoice(dectId)%>';
+var dectManicVal  = '<%ejGetVoice(dectManic)%>';
+var dectModicVal  = '<%ejGetVoice(dectModic)%>';
+var dectMaxHsetVal  = '<%ejGetVoice(dectMaxHset)%>';
+var dectCurHsetVal  = '<%ejGetVoice(dectCurHset)%>';
+
+/* Get all the per-handset items from the DECT module.
+** The interface will provide javascript variables
+** with initialized values if the values are available.
+*/
+for ( var i = 0 ; i < dectMaxHsetVal ; i++ )
+{
+   eval( "var st" + i + " \= \"\" " );
+   eval( "var ma" + i + " \= \"\" " );
+   eval( "var mo" + i + " \= \"\" " );
+   eval( "var ip" + i + " \= \"\" " );
+   eval( "var su" + i + " \= \"\" " );
+   eval( "var id" + i + " \= \"\" " );
+   eval( "var hn" + i + " \= \"\" " );
+}
+
+var dectHsStatusVal = '<%ejGetVoice(dectHsStatus)%>';
+var dectHsManicVal = '<%ejGetVoice(dectHsManic)%>';
+var dectHsModicVal = '<%ejGetVoice(dectHsModic)%>';
+var dectHsIpeiVal = '<%ejGetVoice(dectHsIpei)%>';
+var dectHsSubTimeVal  = '<%ejGetVoice(dectHsSubTime)%>';
+var dectHsIdentVal  = '<%ejGetVoice(dectHsIdent)%>';
+var dectHsNameVal  = '<%ejGetVoice(dectHsName)%>';
+
+if ( dectHsStatusVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsStatusVal );
+}
+
+if ( dectHsManicVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsManicVal );
+}
+
+if ( dectHsModicVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsModicVal );
+}
+
+if ( dectHsIpeiVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsIpeiVal );
+}
+
+if ( dectHsSubTimeVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsSubTimeVal );
+}
+
+if ( dectHsIdentVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsIdentVal );
+}
+
+if ( dectHsNameVal.search( "ejGetVoice" ) < 0 )
+{
+   eval( dectHsNameVal );
+}
+
+function timedRefresh(timeoutPeriod) {
+   setTimeout("dectPageReload();",timeoutPeriod);
+}
+
+function dectPageReload() {
+   //When a page first loads, the location is set to http://hostname/voicedect.html
+   //When we click a button, we modify the location to buttonhandler.cmd which results
+   //in a http GET request which is handled on the IAD and the related buttonhandler is called
+   //When a subsequent auto refresh happens the last good location is resent, so we get unwanted
+   //calls to the button handler on the IAD. In order to avoid this, after a x seconds interval, we
+   //readjust the location to the original voice dect page
+   var newLocation = "http://" + location.hostname + "/voicedect.html"
+   location.replace ( newLocation );
+}
+
+function btnStartDect(current_view) {
+   var loc ='voicedectstart.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnStopDect(current_view) {
+   var loc ='voicedectstop.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnSetRFID(current_view) {
+   var loc ='voicedectsetrfid.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   var validChars = "0123456789abcdefABCDEF";
+
+   with ( document.forms[0] )
+   {
+      if (dectId.value.length != 10)
+      {
+         alert("Entry must be 10 hex values long");
+         return false;
+      }
+      else if(dectId.value.charAt(0) != '0')
+      {
+         alert("First entry must be 0");
+         return false;
+      }
+      else
+      {
+         for (var i = 0; i < dectId.value.length; i++)
+         {
+            if (validChars.indexOf(dectId.value.charAt(i)) < 0)
+            {
+               alert("Entry must be hexidecimal");
+               return false;
+            }
+         }
+
+         loc += '&dectId=' + dectId.value.replace(/['" ]/g,'');
+
+         //Stripping quotes and spaces
+         loc = loc.replace(/['" ]/g,'');
+
+         var code = 'location="' + loc + '"';
+         eval(code);
+      }
+   }
+}
+
+function btnOpenDectRegWdn(current_view) {
+   var loc = 'voicedectopenreg.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnCloseDectRegWdn(current_view) {
+   var loc = 'voicedectclosereg.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnSetDectAc(current_view) {
+   var loc = 'voicedectsetac.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   with ( document.forms[0] )
+   {
+      loc += '&dectAc=' + dectAc.value.replace(/['" ]/g,'');
+
+      //Stripping quotes and spaces
+      loc = loc.replace(/['" ]/g,'');
+
+      var code = 'location="' + loc + '"';
+      eval(code);
+   }
+}
+
+function btnDelDectHset(current_view, hset)
+{
+   var loc = 'voicedectdelhset.cmd?';
+   var hsetId;
+
+   loc += addParamsToQuery( loc, 'dect' );
+
+   hsetId = eval("id" + hset);
+   loc += '&dectHset=' + hsetId;
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnPingDectHset(current_view, hset)
+{
+   var loc = 'voicedectpinghset.cmd?';
+   var hsetId;
+
+   loc += addParamsToQuery( loc, 'dect' );
+
+   hsetId = eval("id" + hset);
+   loc += '&dectHset=' + hsetId;
+
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnPingAllDectHset(current_view) {
+   var loc = 'voicedectpingallhset.cmd?';
+   loc += addParamsToQuery( loc, 'dect' );
+
+   loc = loc.replace(/['" ]/g,'');
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function addParamsToQuery( loc_init, current_view) {
+
+   var loc = loc_init;
+
+   with ( document.forms[0] )
+   {
+      loc += 'currentview=' + current_view;
+   }
+
+   return loc;
+}
+
+
+function frmLoad(current_view)
+{
+   //Refresh page after 15 seconds
+   timedRefresh(15000);
+
+   generatePerHandsetTable()
+
+   with ( document.forms[0] )
+   {
+      enableButtons();
+
+      dectRegWnd.value = dectRegWndVal;
+      dectAc.value = dectAcVal;
+      dectStatus.value = dectStatusVal;
+      dectFwVer.value = dectFwVerVal;
+
+      /* Format linkdate */
+      for( var i = 0; i< dectLnkVal.length; i++ )
+      {
+         dectLnk.value += dectLnkVal.charAt(i) ;
+         if( (i%2 == 1) && (i < dectLnkVal.length-1) )
+         {
+            dectLnk.value += "." ;
+         }
+      }
+
+      dectType.value = dectTypeVal;
+      dectId.value = dectIdVal;
+      dectManic.value = dectManicVal;
+      dectModic.value = dectModicVal;
+      dectCurHset.value = dectCurHsetVal;
+      dectMaxHset.value = dectMaxHsetVal;
+
+      var handsetIpei;
+
+      for ( var i = 0 ; i < dectCurHsetVal ; i++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + i + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            eval("dectHsStatus" + i + ".value=st"+i);
+            eval("dectHsManic" + i + ".value=ma"+i);
+            eval("dectHsModic" + i + ".value=mo"+i);
+            eval("dectHsIpei" + i + ".value=ip"+i);
+            eval("dectHsSubTime" + i + ".value=su"+i);
+            eval("dectHsIdent" + i + ".value=id"+i);
+            eval("dectHsName" + i + ".value=hn"+i);
+         }
+      }
+   }
+}
+
+
+function enableButtons()
+{
+   var dectStart = document.getElementById("DectStart");
+   var dectStop = document.getElementById("DectStop");
+   var dectSetRFID = document.getElementById("DectSetRFID");
+   var dectOpenRegWnd = document.getElementById("DectOpenRegWnd");
+   var dectCloseRegWnd = document.getElementById("DectCloseRegWnd");
+   var dectSetAc = document.getElementById("DectSetAc");
+   var dectPingAllHs = document.getElementById("DectPingAllHset");
+   var handsetIpei = false;
+
+   if ( dectStatusVal == "Enabled" )
+   {
+      if ( dectRegWndVal == "Open" )
+      {
+         dectOpenRegWnd.disabled = true;
+         dectCloseRegWnd.disabled = false;
+      }
+      else
+      {
+         dectOpenRegWnd.disabled = false;
+         dectCloseRegWnd.disabled = true;
+      }
+
+      dectStart.disabled = true;
+      dectStop.disabled = false;
+      dectSetRFID.disabled = false;
+
+      dectSetAc.disabled = false;
+      dectPingAllHs.disabled = false;
+
+      for ( var i = 0 ; i < dectCurHsetVal ; i++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + i + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            document.getElementById("DectDelHs" + i ).disabled = false;
+            document.getElementById("DectPingHs" + i ).disabled = false;
+         }
+      }
+   }
+   else
+   {
+      dectStart.disabled = false;
+      dectStop.disabled = true;
+      dectSetRFID.disabled = true;
+      dectOpenRegWnd.disabled = true;
+      dectCloseRegWnd.disabled = true;
+      dectSetAc.disabled = true;
+      dectPingAllHs.disabled = true;
+      for ( var i = 0 ; i < dectCurHsetVal ; i++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + i + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            document.getElementById("DectDelHs" + i ).disabled = true;
+            document.getElementById("DectPingHs" + i ).disabled = true;
+         }
+      }
+   }
+}
+
+
+function generatePerHandsetTable()
+{
+   if (document.body.innerHTML)
+   {
+      var tableHtmlOutput = "<table id='perHsTable' border='0'><tbody id='perHsTBody'>";
+      var handsetIpei;
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Handset Identifier<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsIdent" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Handset Name<\/td>";
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsName" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Status<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsStatus" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Subscription Time<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsSubTime" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>International Portable Equipment Identity<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsIpei" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "<td width=\"20\"></td>"
+      tableHtmlOutput += "<td>(IPEI)</td>"
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Manufacturer Identifier<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsManic" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "<td width=\"20\"></td>"
+      tableHtmlOutput += "<td>(MANIC)</td>"
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Model Identifier<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data = "<input type='text' readonly=\"readonly\" name=\'dectHsModic" + hset + "\'>";
+            tableHtmlOutput += "<td align=center>" + data + "</td>";
+         }
+      }
+      tableHtmlOutput += "<td width=\"20\"></td>"
+      tableHtmlOutput += "<td>(MODIC)</td>"
+      tableHtmlOutput += "</tr>";
+
+      tableHtmlOutput += "<tr>";
+      tableHtmlOutput += "<td>Action<\/td>"
+      for ( var hset = 0 ; hset < dectCurHsetVal ; hset++ )
+      {
+         eval( "handsetIpei=" + "(" + "ip" + hset + ")"  );
+         if ( handsetIpei != '(null)'  )
+         {
+            var data1 = "<input type='button' onClick=\"btnDelDectHset('dect'," + hset + ")\" value=\'Delete\' ID=\'DectDelHs" + hset + "\' disabled=true>";
+            var data2 = "<input type='button' onClick=\"btnPingDectHset('dect'," + hset + ")\" value=\'Ping\' ID=\'DectPingHs" + hset + "\' disabled=true>";
+            tableHtmlOutput += "<td align=center>" + data1 + data2 + "</td>";
+         }
+      }
+      tableHtmlOutput += "</tr>";
+
+
+      tableHtmlOutput += "</tbody></table>";
+      document.getElementById("dectHandset").innerHTML = tableHtmlOutput;
+   }
+   else
+   {
+      alert("Cannot create per handset table in this browser.");
+   }
+}
+
+
+</script>
+
+
+<body onLoad="frmLoad('dect')">
+   <blockquote>
+      <form>
+
+      <b><i>The content of this page refreshes every 15 seconds</i></b>
+      <br>
+      <br>
+      <br>
+      <br>
+
+      <b>DECT --- <u>General Module Information</u></b>
+      <br>
+      <br>
+
+      <div id='miscInfo'>
+         <table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+            <tr>
+               <td width="150">Firmware Version</td>
+               <td><input type='text' name='dectFwVer' readonly="readonly"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Link Date</td>
+               <td><input type='text' name='dectLnk' readonly="readonly"></td>
+               <td width="20"></td>
+               <td width="150">(yy.mm.dd.hr.min)</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Module Type</td>
+               <td><input type='text' name='dectType' readonly="readonly"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Module Identifier</td>
+               <td><input type='text' name='dectId' maxlength="10"></td>
+               <td width="20"></td>
+               <td><input type='button' onClick="btnSetRFID('dect')" value='Set Module Identifier' ID="DectSetRFID" disabled=true></td>
+               <td>( Note: This will restart the DECT app )</td>
+           </tr>
+            <tr>
+               <td width="150">Manufacturer Identifier</td>
+               <td><input type='text' name='dectManic' readonly="readonly"></td>
+               <td width="20"></td>
+               <td width="150">(MANIC)</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Model Identifier</td>
+               <td><input type='text' name='dectModic' readonly="readonly"></td>
+               <td width="20"></td>
+               <td width="150">(MODIC)</td>
+            </tr>
+         </table>
+      </div>
+      <br>
+
+
+      <br>
+      <br>
+      <b>DECT --- <u>Base Station: Information and Action</u></b>
+      <br>
+      <br>
+
+      <div id='baseInfo'>
+         <table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+            <tr>
+               <td width="150">DECT Interface Status</td>
+               <td><input type='text' name='dectStatus' readonly="readonly"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Maximum Number of Handset</td>
+               <td><input type='text' name='dectMaxHset' readonly="readonly"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Currently Registered Handset</td>
+               <td><input type='text' name='dectCurHset' readonly="readonly"></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Registration Window</td>
+               <td><input type='text' name='dectRegWnd' readonly="readonly"></td>
+               <td width="20"></td>
+               <td><input type='button' onClick="btnOpenDectRegWdn('dect')" value='Open Window' ID="DectOpenRegWnd" disabled=true><input type='button' onClick="btnCloseDectRegWdn('dect')" value='Close Window' ID="DectCloseRegWnd" disabled=true></td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+               <td width="150">Station Registration Access Code</td>
+               <td><input type='text' name='dectAc' maxlength="4"></td>
+               <td width="20"></td>
+               <td><input type='button' onClick="btnSetDectAc('dect')" value='Set Code' ID="DectSetAc" disabled=true></td>
+            </tr>
+            <tr>
+               <td width="150">&nbsp;</td>
+               <td><input type='button' onClick="btnPingAllDectHset('dect')" value='Ping All Handsets' ID="DectPingAllHset" disabled=true /></td>
+            </tr>
+         </table>
+      </div>
+      <br>
+
+      <br>
+      <br>
+      <b>DECT --- <u>Handset: Information and Action</u></b>
+      <br>
+      <br>
+
+      <div class="tableWrapper" id="dectHandset">
+         <table>
+         </table>
+      </div>
+
+      <div id ="dectControl">
+         <table width = "100%">
+            <tr>
+               <td width = "100%" align = "center"><input type='button' onClick="btnStartDect('dect')" value='Start DECT client' ID="DectStart" disabled=true></td>
+            </tr>
+            <tr>
+               <td width = "100%" align = "center"><input type='button' onClick="btnStopDect('dect')" value='Stop DECT client' ID="DectStop" disabled=true></td>
+            </tr>
+         </table>
+      </div>
+
+      </form>
+   </blockquote>
+
+</body>
+
+</html>

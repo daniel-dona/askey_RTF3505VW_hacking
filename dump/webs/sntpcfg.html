@@ -1,0 +1,464 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var state = '<%ejGet(sntpRefresh)%>';
+if ( state == '1' ) {
+   var loc = 'sntpcfg.cgi?sntpRefresh=0';
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+var ntpServers = new Array();
+
+ntpServers[0] = 'clock.fmt.he.net';
+ntpServers[1] = 'clock.nyc.he.net';
+ntpServers[2] = 'clock.sjc.he.net';
+ntpServers[3] = 'clock.via.net';
+ntpServers[4] = 'ntp1.tummy.com';
+ntpServers[5] = 'time.cachenetworks.com';
+ntpServers[6] = 'time.nist.gov';
+
+var timeZones = new Array();
+
+timeZones[0] = '(GMT-12:00) International Date Line West';
+timeZones[1] = '(GMT-11:00) Midway Island, Samoa';
+timeZones[2] = '(GMT-10:00) Hawaii';
+timeZones[3] = '(GMT-09:00) Alaska';
+timeZones[4] = '(GMT-08:00) Pacific Time, Tijuana';
+timeZones[5] = '(GMT-07:00) Arizona, Mazatlan';
+timeZones[6] = '(GMT-07:00) Chihuahua, La Paz';
+timeZones[7] = '(GMT-07:00) Mountain Time';
+timeZones[8] = '(GMT-06:00) Central America';
+timeZones[9] = '(GMT-06:00) Central Time';
+timeZones[10] = '(GMT-06:00) Guadalajara, Mexico City, Monterrey';
+timeZones[11] = '(GMT-06:00) Saskatchewan';
+timeZones[12] = '(GMT-05:00) Bogota, Lima, Quito';
+timeZones[13] = '(GMT-05:00) Eastern Time';
+timeZones[14] = '(GMT-05:00) Indiana';
+timeZones[15] = '(GMT-04:00) Atlantic Time';
+timeZones[16] = '(GMT-04:00) Caracas, La Paz';
+timeZones[17] = '(GMT-04:00) Santiago';
+timeZones[18] = '(GMT-03:30) Newfoundland';
+timeZones[19] = '(GMT-03:00) Brasilia';
+timeZones[20] = '(GMT-03:00) Buenos Aires, Georgetown';
+timeZones[21] = '(GMT-03:00) Greenland';
+timeZones[22] = '(GMT-02:00) Mid-Atlantic';
+timeZones[23] = '(GMT-01:00) Azores';
+timeZones[24] = '(GMT-01:00) Cape Verde Is.';
+timeZones[25] = '(GMT-00:00) Casablanca, Monrovia';
+timeZones[26] = '(GMT-00:00) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London';
+timeZones[27] = '(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna';
+timeZones[28] = '(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague';
+timeZones[29] = '(GMT+01:00) Brussels, Copenhagen, Madrid, Paris';
+timeZones[30] = '(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb';
+timeZones[31] = '(GMT+01:00) West Central Africa';
+timeZones[32] = '(GMT+02:00) Athens, Istanbul, Minsk';
+timeZones[33] = '(GMT+02:00) Bucharest';
+timeZones[34] = '(GMT+02:00) Cairo';
+timeZones[35] = '(GMT+02:00) Harare, Pretoria';
+timeZones[36] = '(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius';
+timeZones[37] = '(GMT+02:00) Jerusalem';
+timeZones[38] = '(GMT+03:00) Baghdad';
+timeZones[39] = '(GMT+03:00) Kuwait, Riyadh';
+timeZones[40] = '(GMT+03:00) Moscow, St. Petersburg, Volgograd';
+timeZones[41] = '(GMT+03:00) Nairobi';
+timeZones[42] = '(GMT+03:30) Tehran';
+timeZones[43] = '(GMT+04:00) Abu Dhabi, Muscat';
+timeZones[44] = '(GMT+04:00) Baku, Tbilisi, Yerevan';
+timeZones[45] = '(GMT+04:30) Kabul';
+timeZones[46] = '(GMT+05:00) Ekaterinburg';
+timeZones[47] = '(GMT+05:00) Islamabad, Karachi, Tashkent';
+timeZones[48] = '(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi';
+timeZones[49] = '(GMT+05:45) Kathmandu';
+timeZones[50] = '(GMT+06:00) Almaty, Novosibirsk';
+timeZones[51] = '(GMT+06:00) Astana, Dhaka';
+timeZones[52] = '(GMT+06:00) Sri Jayawardenepura';
+timeZones[53] = '(GMT+06:30) Rangoon';
+timeZones[54] = '(GMT+07:00) Bangkok, Hanoi, Jakarta';
+timeZones[55] = '(GMT+07:00) Krasnoyarsk';
+timeZones[56] = '(GMT+08:00) Beijing, Chongquing, Hong Kong, Urumqi';
+timeZones[57] = '(GMT+08:00) Irkutsk, Ulaan Bataar';
+timeZones[58] = '(GMT+08:00) Kuala Lumpur, Singapore';
+timeZones[59] = '(GMT+08:00) Perth';
+timeZones[60] = '(GMT+08:00) Taipei';
+timeZones[61] = '(GMT+09:00) Osaka, Sapporo, Tokyo';
+timeZones[62] = '(GMT+09:00) Seoul';
+timeZones[63] = '(GMT+09:00) Yakutsk';
+timeZones[64] = '(GMT+09:30) Adelaide';
+timeZones[65] = '(GMT+09:30) Darwin';
+timeZones[66] = '(GMT+10:00) Brisbane';
+timeZones[67] = '(GMT+10:00) Canberra, Melbourne, Sydney';
+timeZones[68] = '(GMT+10:00) Guam, Port Moresby';
+timeZones[69] = '(GMT+10:00) Hobart';
+timeZones[70] = '(GMT+10:00) Vladivostok';
+timeZones[71] = '(GMT+11:00) Magadan';
+timeZones[72] = '(GMT+11:00) Solomon Is., New Caledonia';
+timeZones[73] = '(GMT+12:00) Auckland, Wellington';
+timeZones[74] = '(GMT+12:00) Fiji, Kamchatka, Marshall Is.';
+
+function getTimeZoneIndex(timeZoneName) {
+  var i = 0, ret = 4;  // default to Pacific time
+
+  for ( var i = 0; i < timeZones.length; i++ ) {
+    if ( timeZones[i].search(timeZoneName) != -1 )
+      break;
+  }
+
+  if ( i < timeZones.length )
+    ret = i;
+
+  return ret;
+}
+
+function getTimeZoneName(idx) {
+  var str = timeZones[idx];
+  var ret = '';
+
+  ret = str.substr(12);
+
+  return ret;
+}
+
+function getTimeZoneOffset(idx) {
+  var str = timeZones[idx];
+  var ret = '';
+
+  if ( idx != 25 && idx != 26 )
+    ret = str.substr(4, 6);
+
+  return ret;
+}
+
+function writeTimeZoneList() {
+  for( var i = 0; i < timeZones.length; i++ )
+    document.writeln("<option value=" + getTimeZoneOffset(i) + ">" + timeZones[i] + "</option>");
+}
+
+function ntpChange(optionlist,textbox) {
+  if( optionlist[optionlist.selectedIndex].value == "Other" )
+    textbox.disabled = false;
+  else {
+    textbox.value = "";
+    textbox.disabled = true;
+  }
+}
+
+function btnApply() {
+  var loc = 'sntpcfg.cgi?ntp_enabled=';
+
+  with( document.forms[0] ) {
+    if( ntpEnabled.checked ) {
+      loc += '1&ntpServer1=';
+      if( ntpServer1.selectedIndex == ntpServers.length ) {
+        if( ntpServerOther1.value.length == 0 ) { // == Other
+          alert('First time server is other, but Other field is blank');
+          return;
+        } else {
+		  if( isXSS(ntpServerOther1.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on First NTP time server");
+			return false;
+		  }else{
+			loc += ntpServerOther1.value;
+		  }        
+        }
+      } else {
+        loc += ntpServer1[ntpServer1.selectedIndex].value;
+      }
+
+      loc += '&ntpServer2=';
+      if( ntpServer2.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther2.value.length == 0 ) { // == Other
+          alert('Second time server is other, but Other field is blank');
+          return;
+        } else {
+          if( isXSS(ntpServerOther2.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Second NTP time server");
+			return false;
+		  }else{
+			loc += ntpServerOther2.value;
+		  }  
+        }
+      } else {
+        if( ntpServer2.selectedIndex > 0 )
+          loc += ntpServer2[ntpServer2.selectedIndex].value;
+      }
+
+      loc += '&ntpServer3=';
+      if( ntpServer3.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther3.value.length == 0 ) { // == Other
+          alert('Third time server is other, but Other field is blank');
+          return;
+        } else {
+          if( isXSS(ntpServerOther3.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Third NTP time server");
+			return false;
+		  }else{
+			loc += ntpServerOther3.value;
+		  } 		  
+        }
+      } else {
+        if( ntpServer3.selectedIndex > 0 )
+          loc += ntpServer3[ntpServer3.selectedIndex].value;
+      }
+      loc += '&ntpServer4=';
+      if( ntpServer4.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther4.value.length == 0 ) { // == Other
+          alert('Fourth time server is other, but Other field is blank');
+          return;
+        } else {
+          if( isXSS(ntpServerOther4.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Fourth NTP time server");
+			return false;
+		  }else{
+			loc += ntpServerOther4.value;
+		  } 		  
+        }
+      } else {
+        if( ntpServer4.selectedIndex > 0 )
+          loc += ntpServer4[ntpServer4.selectedIndex].value;
+      }
+      loc += '&ntpServer5=';
+      if( ntpServer5.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther5.value.length == 0 ) { // == Other
+          alert('Fifth time server is other, but Other field is blank');
+          return;
+        } else {
+          if( isXSS(ntpServerOther5.value) ){
+			alert("!!Scripting Cross-site (Persistent) - Persistent XSS on Fifth NTP time server");
+			return false;
+		  }else{
+			loc += ntpServerOther5.value;
+		  } 
+        }
+      } else {
+        if( ntpServer5.selectedIndex > 0 )
+          loc += ntpServer5[ntpServer5.selectedIndex].value;
+      }
+
+      loc += '&timezone_offset=' + cboTimeZone[cboTimeZone.selectedIndex].value;
+      loc += '&timezone=' + getTimeZoneName(cboTimeZone.selectedIndex);
+
+      loc += '&use_dst=0';
+    } else {
+      loc += '0';
+    }
+  }
+  loc += '&sessionKey=' + sessionKey;
+  var code = 'location="' + loc + '"';
+  eval(code);
+}
+
+function frmLoad() {
+  var i = 0;
+  var ntp1 = "<%ejGet(ntpServer1)%>";
+  var ntp2 = "<%ejGet(ntpServer2)%>";
+  var ntp3 = "<%ejGet(ntpServer3)%>";
+  var ntp4 = "<%ejGet(ntpServer4)%>";
+  var ntp5 = "<%ejGet(ntpServer5)%>";
+  var ntp_enabled = "<%ejGet(ntp_enabled)%>";
+  var tz_name = "<%ejGet(timezone)%>";
+
+  with (document.forms[0]) {
+    if( ntp_enabled == "1" ) {
+      ntpEnabled.checked = true;
+    } else {
+      ntpEnabled.checked = false;
+    }
+
+    if( ntp1.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp1 == ntpServers[i] ) {
+          ntpServer1.selectedIndex = i;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer1.selectedIndex = i; // Set to 'Other'
+        ntpServerOther1.value = ntp1;
+      }
+    }
+    ntpChange(ntpServer1,ntpServerOther1);
+
+    if( ntp2.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp2 == ntpServers[i] ) {
+          ntpServer2.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer2.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther2.value = ntp2;
+      }
+    }
+    ntpChange(ntpServer2,ntpServerOther2);
+
+    if( ntp3.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp3 == ntpServers[i] ) {
+          ntpServer3.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer3.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther3.value = ntp3;
+      }
+    }
+    ntpChange(ntpServer3,ntpServerOther3);
+
+    if( ntp4.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp4 == ntpServers[i] ) {
+          ntpServer4.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer4.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther4.value = ntp4;
+      }
+    }
+    ntpChange(ntpServer4,ntpServerOther4);
+
+    if( ntp5.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp5 == ntpServers[i] ) {
+          ntpServer5.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer5.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther5.value = ntp5;
+      }
+    }
+    ntpChange(ntpServer5,ntpServerOther5);
+
+    cboTimeZone.selectedIndex = getTimeZoneIndex(tz_name);
+
+    ntpEnblChange();
+  }
+}
+
+function hideNtpConfig(hide) {
+  var status = 'visible';
+
+  if(hide)
+    status = 'hidden';
+
+  if( document.getElementById )
+    document.getElementById('ntpConfig').style.visibility = status;
+  else
+    if(!document.layers)
+      document.all.ntpConfig.style.visibility = status;
+}
+
+function ntpEnblChange() {
+  if( document.forms[0].ntpEnabled.checked )
+    hideNtpConfig(0);
+  else
+    hideNtpConfig(1);
+}
+
+function writeNtpList(needed) {
+  if(!needed)
+    document.writeln("<option value=None>None</option>");
+  for( var i = 0; i < ntpServers.length; i++ )
+    document.writeln("<option value=" + ntpServers[i] + ">" + ntpServers[i] + "</option>");
+  document.writeln("<option value=Other>Other</option>");
+}
+
+// done hiding -->
+    </script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <blockquote>
+      <form>
+        <b>Time settings</b><br><br>
+        This page allows you to the modem's time configuration.
+        <br><br>
+        <input type='checkbox' name='ntpEnabled' onClick='ntpEnblChange()'> Automatically synchronize with Internet time servers
+        <br><br>
+        <div id='ntpConfig'>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width='150'>First NTP time server:</td>
+              <td><select name='ntpServer1' size="1" onChange='ntpChange(this.form.ntpServer1,this.form.ntpServerOther1)'>
+                    <script language="javascript">
+                      writeNtpList(true);
+                    </script>
+                  </select>
+              </td>
+              <td><input type='text' name='ntpServerOther1'></td>
+            </tr>
+            <tr>
+              <td>Second NTP time server:</td>
+              <td><select name='ntpServer2' size="1" onChange='ntpChange(this.form.ntpServer2,this.form.ntpServerOther2)'>
+                    <script language="javascript">
+                      writeNtpList(false);
+                    </script>
+                  </select>
+              </td>
+              <td><input type='text' name='ntpServerOther2'></td>
+            </tr>
+            <tr>
+              <td>Third NTP time server:</td>
+              <td><select name='ntpServer3' size="1" onChange='ntpChange(this.form.ntpServer3,this.form.ntpServerOther3)'>
+                    <script language="javascript">
+                      writeNtpList(false);
+                    </script>
+                  </select>
+              </td>
+              <td><input type='text' name='ntpServerOther3'></td>
+            </tr>
+            <tr>
+              <td>Fourth NTP time server:</td>
+              <td><select name='ntpServer4' size="1" onChange='ntpChange(this.form.ntpServer4,this.form.ntpServerOther4)'>
+                    <script language="javascript">
+                      writeNtpList(false);
+                    </script>
+                  </select>
+              </td>
+              <td><input type='text' name='ntpServerOther4'></td>
+            </tr>
+            <tr>
+              <td>Fifth NTP time server:</td>
+              <td><select name='ntpServer5' size="1" onChange='ntpChange(this.form.ntpServer5,this.form.ntpServerOther5)'>
+                    <script language="javascript">
+                      writeNtpList(false);
+                    </script>
+                  </select>
+              </td>
+              <td><input type='text' name='ntpServerOther5'></td>
+            </tr>
+          </table>
+          <br>
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width='150'>Time zone offset:</td>
+              <td colspan=2><select name='cboTimeZone' size="1">
+                    <script language="javascript">
+                      writeTimeZoneList();
+                    </script>
+                  </select>
+              </td>
+            </tr>
+          </table>
+          <br><br>
+        </div>
+        <center>
+        <input type='button' value="Apply/Save" onClick='btnApply()'>
+        </center>
+      </form>
+    </blockquote>
+  </body>
+</html>

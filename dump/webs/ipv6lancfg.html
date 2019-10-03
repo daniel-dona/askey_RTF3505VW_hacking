@@ -1,0 +1,545 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var enblRadvdaemon = '<%ejGetOther(enblRadvd, all)%>';
+var enblDhcps = '<%ejGetOther(enblDhcp6s, all)%>';
+var enblDhcpsStateful = '<%ejGet(enblDhcp6sStateful)%>';
+var IntfIDStart = '<%ejGet(ipv6IntfIDStart)%>';
+var IntfIDEnd = '<%ejGet(ipv6IntfIDEnd)%>';
+var dhcp6Lease = '<%ejGet(dhcp6LeasedTime)%>';
+var intfAddress6 = '<%ejGet(lanIntfAddr6)%>';
+
+var enblRadvdUla = '<%ejGet(enblRadvdUla)%>';
+var ulaPrefix = '<%ejGet(ipv6UlaPrefix)%>';
+var ulaPlt = '<%ejGet(ipv6UlaPlt)%>';
+var ulaVlt = '<%ejGet(ipv6UlaVlt)%>';
+
+var enblMldSnp = '<%ejGetOther(sysInfo, enblMldSnp)%>';
+var enblMldMode = '<%ejGetOther(sysInfo, enblMldMode)%>';
+var enblMldLanToLanMcast = '<%ejGetOther(sysInfo, enblMldLanToLanMcast)%>';
+
+var enblRandomOrig = '<%ejGet(enblRandomULA)%>';
+
+var enblUlaOrig = enblRadvdUla;
+var nullUlaPrefix = 0;
+var wanInterface = '<%ejGetOther(wanInterface, all)%>';
+var currentPdInterface = '<%ejGetOther(wanInterface, currentPdInterface)%>';
+
+
+function hideMldSnpInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('mldSnpInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.mldSnpInfo.style.visibility = status;
+   }
+}
+
+function hideDhcpInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('dhcpInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.dhcpInfo.style.visibility = status;
+   }
+}
+
+function configStatelessDhcp6s() {
+   with ( document.forms[0] ) {
+      dhcpSrv6Type[1].checked = false;
+      ipv6IntfIDStart.disabled = 1;
+      ipv6IntfIDEnd.disabled = 1;
+      ipv6IntfIDStart.value = IntfIDStart;
+      ipv6IntfIDEnd.value = IntfIDEnd;
+      dhcp6LeasedTime.disabled = 1;
+   }
+}
+
+function configStatefulDhcp6s() {
+   with ( document.forms[0] ) {
+      dhcpSrv6Type[1].checked = true;
+      ipv6IntfIDStart.disabled = 0;
+      ipv6IntfIDEnd.disabled = 0;
+      dhcp6LeasedTime.disabled = 0;
+      ipv6IntfIDStart.value = IntfIDStart;
+      ipv6IntfIDEnd.value = IntfIDEnd;
+      dhcp6LeasedTime.value = dhcp6Lease;
+   }
+}
+
+function configRadvdUla(parm) {
+   with ( document.forms[0] ) {
+      if ( parm == 1 )
+      {
+         enableRadvdUla.checked = true;
+         RandomUla[0].disabled = false;
+         RandomUla[1].disabled = false;
+
+         if ( enblRandomOrig == '1' )
+         {
+            RandomUla[0].checked = true;
+            RandomUla[1].checked = false;
+            ipv6UlaPrefix.disabled = 1;
+            ipv6UlaPlt.disabled = 1;
+            ipv6UlaVlt.disabled = 1;
+         }
+         else
+         {
+            RandomUla[0].checked = false;
+            RandomUla[1].checked = true;
+            ipv6UlaPrefix.disabled = 0;
+            ipv6UlaPlt.disabled = 0;
+            ipv6UlaVlt.disabled = 0;
+         }
+      }
+      else
+      {
+         enableRadvdUla.checked = false;
+         RandomUla[0].disabled = true;
+         RandomUla[1].disabled = true;
+         ipv6UlaPrefix.disabled = 1;
+         ipv6UlaPlt.disabled = 1;
+         ipv6UlaVlt.disabled = 1;
+      }
+
+      ipv6UlaPrefix.value = ulaPrefix;
+      ipv6UlaPlt.value = ulaPlt;
+      ipv6UlaVlt.value = ulaVlt;
+   }
+}
+
+function typeClick() {
+   with ( document.forms[0] ) {
+      if ( dhcpSrv6Type[0].checked == true ) {
+         configStatelessDhcp6s();
+      } else {
+         configStatefulDhcp6s();
+      }
+   }
+}
+
+function MldClick() {
+}
+
+function radvdClick(cb) {
+   if (cb.checked == true)
+      hideRadvdUlaInfo(0);
+   else
+      hideRadvdUlaInfo(1);
+}
+
+function radvdUlaClick(cb) {
+   if (cb.checked == true)
+      configRadvdUla(1);
+   else
+      configRadvdUla(0);
+}
+
+function UlatypeClick() {
+   with ( document.forms[0] ) {
+      ipv6UlaPrefix.value = ulaPrefix;
+      ipv6UlaPlt.value = ulaPlt;
+      ipv6UlaVlt.value = ulaVlt;
+
+      if ( RandomUla[0].checked == true ) {
+         RandomUla[1].checked = false;
+         ipv6UlaPrefix.disabled = 1;
+         ipv6UlaPlt.disabled = 1;
+         ipv6UlaVlt.disabled = 1;
+      } else {
+         RandomUla[1].checked = true;
+         ipv6UlaPrefix.disabled = 0;
+         ipv6UlaPlt.disabled = 0;
+         ipv6UlaVlt.disabled = 0;
+      }
+   }
+}
+
+function hideRadvdUlaInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('radvdUlaInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.radvdUlaInfo.style.visibility = status;
+   }
+}
+
+function dhcp6sClick(cb) {
+   if (cb.checked == true)
+      hideStatefulInfo(0)
+   else
+      hideStatefulInfo(1);
+}
+
+function hideMldSnpInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('mldSnpInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.mldSnpInfo.style.visibility = status;
+   }
+}
+
+function hideStatefulInfo(hide) {
+   var status = 'visible';
+
+   if ( hide == 1 )
+      status = 'hidden';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('statefulInfo').style.visibility = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.statefulInfo.style.visibility = status;
+   }
+}
+
+function mldClick(cb) {
+   if (cb.checked == true)
+      hideMldSnpInfo(0)
+   else
+      hideMldSnpInfo(1);
+}
+
+function btnApply() {
+   var loc = 'ipv6lancfg.cmd?action=savapply';
+
+   with ( document.forms[0] ) {
+      //there is no need to send it back cause UniqueLocalAddress became read-only
+      //if ( (intfAddr.value != '') && (intfAddr.value.indexOf('/') == -1) ) {
+      //   alert('Address must configure with network prefix length');
+      //   return;
+      //}
+
+      if ( (RandomUla[1].checked == true) && (ipv6UlaPrefix.value == '') ) {
+         alert('Please configure ULA prefix information');
+         return;
+      }
+
+      if (enableRadvd.checked == true)
+         loc += '&enblRadvd=1';
+      else
+         loc += '&enblRadvd=0';
+
+      if (enableDhcp6s.checked == true) {
+         loc += '&enblDhcp6s=1';
+      }
+      else {
+         loc += '&enblDhcp6s=0';
+      }
+
+      if (enableRadvdUla.checked == true)
+         loc += '&enblRadvdUla=1';
+      else
+         loc += '&enblRadvdUla=0';
+
+      if (dhcpSrv6Type[0].checked == true)
+      {
+         loc += '&enblDhcp6sStateful=0';
+      }
+      else
+      {
+         loc += '&enblDhcp6sStateful=1';
+      }
+
+      loc += '&ipv6IntfIDStart=' + ipv6IntfIDStart.value;
+      loc += '&ipv6IntfIDEnd=' + ipv6IntfIDEnd.value;
+      loc += '&dhcp6LeasedTime=' + dhcp6LeasedTime.value;
+      //there is no need to send it back cause UniqueLocalAddress became read-only
+      //loc += '&lanIntfAddr6=' + intfAddr.value; 
+
+      if ( ((enblUlaOrig=='1') && (enableRadvdUla.checked != true)) ||
+           ((enblUlaOrig=='0') && (enableRadvdUla.checked == true)) )
+      {
+         if ( ((enblUlaOrig == '1') && (enableRadvdUla.checked == false) && (enblRandomOrig == '1')) )
+         {
+            nullUlaPrefix = 1;
+         }
+      }
+
+      if ( (enblRandomOrig == '0') && (RandomUla[0].checked == true) )
+      {
+         nullUlaPrefix = 1;
+      }
+
+      if ( RandomUla[0].checked == true )
+      {
+         loc += '&ipv6UlaRandom=1';
+      }
+      else
+      {
+         loc += '&ipv6UlaRandom=0';
+      }
+
+      if ( nullUlaPrefix == 0 )
+         loc += '&ipv6UlaPrefix=' + ipv6UlaPrefix.value;
+      else
+         loc += '&ipv6UlaPrefix=';
+
+      loc += '&ipv6UlaPlt=' + ipv6UlaPlt.value;
+      loc += '&ipv6UlaVlt=' + ipv6UlaVlt.value;
+
+     if ( chkMldSnp.checked == true )
+        loc += '&enblMldSnp=1';
+     else
+        loc += '&enblMldSnp=0';
+
+     if ( mldMode[1].checked == true )
+        loc += '&enblMldMode=1';
+     else
+        loc += '&enblMldMode=0';
+
+     loc += '&enblMldLanToLanMcast='+getSelect(mldLanToLanMcast);
+
+     //added by Leo 20151109
+     if(pdWanInterface.length>0)
+     {
+        loc += '&pdwanifname='+pdWanInterface.value;
+     }
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+function frmLoad() {
+
+   with ( document.forms[0] ) {
+      enableRadvd.checked = false;
+
+      if (enblRadvdaemon == '1') {
+         enableRadvd.checked = true;
+
+         hideRadvdUlaInfo(0);
+      } else {
+         enableRadvd.checked = false;
+         hideRadvdUlaInfo(1);
+      }
+
+      if ( enblRadvdUla == '1' )
+         configRadvdUla(1);
+      else
+         configRadvdUla(0);
+
+      intfAddr.value = intfAddress6;
+      intfAddr.disabled=true; //there is no need to send it back cause UniqueLocalAddress became read-only
+      enableDhcp6s.checked = false;
+      
+      if (enblDhcps == '1') {
+         enableDhcp6s.checked = true;
+         hideStatefulInfo(0);
+
+         if ( enblDhcpsStateful == '1' ) {
+            configStatefulDhcp6s(1);
+         } else {
+            dhcpSrv6Type[0].checked = true;
+            configStatelessDhcp6s();
+         }
+
+      } else {
+         enableDhcp6s.checked = false;
+         hideStatefulInfo(1);
+      }
+
+      if ( enblMldSnp == '1' ) {
+        chkMldSnp.checked = true;
+        hideMldSnpInfo(0);
+      } else {
+        chkMldSnp.checked = false;
+        hideMldSnpInfo(1);
+      }
+
+      if ( enblMldMode == '1' ) {
+    	mldMode[0].checked = false;
+    	mldMode[1].checked = true;
+      } else {
+        mldMode[0].checked = true;
+        mldMode[1].checked = false;
+      }
+
+      setSelect (mldLanToLanMcast, enblMldLanToLanMcast);
+      //added by Leo 20151109
+      var intfouter=wanInterface.split('|');
+      for(var i=0; i<intfouter.length; i++)
+      {
+        var intfinner=intfouter[i].split(',');
+        document.forms[0].pdWanInterface[i]=new Option(intfinner[1], intfinner[1]);
+      } //end for
+      if(currentPdInterface.length>0)
+      {
+        document.forms[0].pdWanInterface.value=currentPdInterface;
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <P>
+               <b>IPv6 LAN Auto Configuration</b><br>
+               Note: Stateful DHCPv6 is supported based on the assumption of prefix length less than 64. 
+               Interface ID does NOT support ZERO COMPRESSION "::". Please enter the complete information.
+               For exampe: Please enter "0:0:0:2" instead of "::2".<br>
+            </P>
+            <table border='0' cellpadding='0' cellspacing='0'>
+               <tr>
+                  <b>Static LAN IPv6 Address Configuration</b>
+               </tr>
+               <tr>
+                  <td>Interface Address (prefix length is required):</td>
+                  <td><input type='text' name='intfAddr' size='48'></td>
+               </tr>
+            </table><br>
+
+            <tr>
+               <b>IPv6 LAN Applications</b>
+            </tr>
+            <table border='0' cellpadding='0' cellspacing='0'>
+               <tr>
+                  <td valign='center' align='middle' colspan='2' width='30' height='30'>
+                     <input type='checkbox' name='enableDhcp6s' onClick='dhcp6sClick(this)'></td>
+                  <td colspan='2'>Enable DHCPv6 Server</td>
+               </tr>
+            </table>
+
+            <div id='statefulInfo'>
+            <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td colspan="2"><input type='radio' name='dhcpSrv6Type' onClick='typeClick()'>&nbsp;&nbsp;Stateless</td>
+                  </tr>
+                  <tr>
+                     <td colspan="2"><input type='radio' name='dhcpSrv6Type' onClick='typeClick()'>&nbsp;&nbsp;Stateful</td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start interface ID:</td>
+                     <td><input type='text' name='ipv6IntfIDStart'></td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End interface ID:</td>
+                     <td><input type='text' name='ipv6IntfIDEnd'></td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Leased Time (second):&nbsp;</td>
+                     <td><input type='text' name='dhcp6LeasedTime'></td>
+                  </tr>
+            </table>
+            <br>
+            </div>
+
+            <table border='0' cellpadding='0' cellspacing='0'>
+               <tr>
+                  <td valign='center' align='middle' colspan='2' width='30' height='30'>
+                     <input type='checkbox' name='enableRadvd' onClick='radvdClick(this)'></td>
+                  <td colspan='2'>Enable RADVD</td>
+               </tr>
+            </table>
+
+            <div id='radvdUlaInfo'>
+	        <table border="0" cellpadding="0" cellspacing="0">
+	        	<tr>
+	              <td >
+	                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='enableRadvdUla' onClick='radvdUlaClick(this)'> Enable ULA Prefix Advertisement
+	              </td>
+                </tr>
+                <tr>
+                   <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='radio' name='RandomUla' onClick='UlatypeClick()'> Randomly Generate</td>
+                </tr>
+                <tr>
+                   <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='radio' name='RandomUla' onClick='UlatypeClick()'> Statically Configure</td>
+                </tr>
+                <table>
+                   <tr>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prefix:</td>
+                      <td><input type='text' name='ipv6UlaPrefix'></td>
+                   </tr>
+                </table>
+
+                <table>
+                   <tr>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Preferred Life Time (second):</td>
+                      <td><input type='text' name='ipv6UlaPlt'></td>
+                   </tr>
+                </table>
+
+                <table>
+                   <tr>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Valid Life Time (second):</td>
+                      <td><input type='text' name='ipv6UlaVlt'></td>
+                   </tr>
+                </table>
+
+	        </table>
+	        </div>
+                     <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td><input type='checkbox' name='chkMldSnp' onClick='mldClick(this)'>&nbsp;&nbsp;Enable MLD Snooping</td>
+               </tr>
+            </table>
+            <br>
+               <tr>
+                  <tr>
+            <div id='mldSnpInfo'>
+            <table border="0" cellpadding="0" cellspacing="0">
+                     <td colspan="2"><input type='radio' name='mldMode'>&nbsp;&nbsp;Standard Mode</td>
+                  </tr>
+                  <tr>
+                     <td colspan="2"><input type='radio' name='mldMode'>&nbsp;&nbsp;Blocking Mode</td>
+                  </tr>
+               </tr>
+            </table>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+              <td width="120">Enable MLD LAN to LAN Multicast:  </td>
+              <td><select name='mldLanToLanMcast' size=1>
+                <option value="0">Disable</option>
+                <option value="1">Enable</option>
+              </select></td>
+              </tr>
+              <tr><td>(LAN to LAN Multicast is enabled until the first WAN service is connected, regardless of this setting.)</td></tr>
+            </table>
+            <br>
+            </div>
+
+            <div id='pdwanconnection'><!--added by Leo 20151109-->
+            <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td>Prefix Delegation WAN Interface:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                     <td colspan="2"><select name='pdWanInterface'></select></td>
+                  </tr>
+            </table>
+            <br>
+            </div>
+
+            <center>
+               <input type='button' onClick='btnApply()' value='Save/Apply'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>

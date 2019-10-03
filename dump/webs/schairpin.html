@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var nat = '<%ejGetOther(sysInfo, enblNat)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var hairpinList='<%ejGetOther(HairpinList)%>'; //'ppp0.1,false;ppp1.4,true';
+
+function apply(obj)
+{
+  var ifname=obj.ifname;
+  var inputs = document.getElementsByTagName('input');
+  var found=false;
+  var enabled=false;
+  for(var j = 0; j < inputs.length; j++)
+  {
+    if(inputs[j].type.toLowerCase() == 'checkbox' && inputs[j].ifname == ifname)
+    {
+      enabled=inputs[j].checked;
+      found=true;
+      break;
+    }
+  } //end for
+  if(found==true)
+  {
+    var loc = 'te_hairpin.cmd?action=apply';
+    loc += '&ifname='+ifname;
+    loc += '&enabled='+(enabled==true?'true':'false');
+    loc += '&sessionKey='+sessionKey;
+    var code = 'location="' + loc + '"';
+    eval(code);
+  }
+}
+
+function frmLoad() {
+  var INTRA=',';
+  var INTER=';';
+  var hairpin=[];
+  var outer=hairpinList.split(INTER);
+  for(var j=0; j<outer.length; j++)
+  {
+    var inner=outer[j].split(INTRA);
+    if(inner.length>=2)
+    {
+      hairpin.push( {"ifname":inner[0], "enabled":inner[1]} );
+    }
+  } //end for
+  var tbl=document.createElement('table');
+  tbl.border='0';
+  tbl.cellpadding='0';
+  tbl.cellspacing='0';
+  for(var j=0; j<hairpin.length; j++)
+  {
+    var tr = document.createElement('tr');
+    var td1 = document.createElement('td');
+    //td1.className = 'hd';
+    var td2 = document.createElement('td');
+    var td3 = document.createElement('td');
+    td3.colSpan='1';
+    td3.align='right';
+    td3.width='240px';
+    var prompt='Enable';
+    if(hairpin.length>1)
+    {
+      prompt+=' for '+hairpin[j].ifname+'';
+    }
+    var text2 = document.createTextNode(prompt);
+    var chkbox1 = document.createElement('input');
+    chkbox1.type='checkbox';
+    chkbox1.checked=hairpin[j].enabled=='true'?'checked':'';
+    chkbox1.ifname=hairpin[j].ifname;
+    var btn3 = document.createElement('input');
+    btn3.type='button';
+    btn3.value='Apply/Save';
+    btn3.ifname=hairpin[j].ifname;
+    btn3.onclick=function(){
+      apply(this);
+    };
+    var br3 = document.createElement('br');
+    td2.appendChild(text2);
+    td1.appendChild(chkbox1);
+    td3.appendChild(br3);
+    td3.appendChild(btn3);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tbl.appendChild(tr);
+  } //end for
+  document.getElementById('anchor').appendChild(tbl);
+
+  var intf='';
+  for(var j=0; j<hairpin.length; j++)
+  {
+    if(j!=0)
+    {
+      intf+=',';
+    }
+    intf+=hairpin[j].ifname;
+  } //end for
+  var note=document.createTextNode(
+    ('NOTE: NAT loopback is activated/deactivated only for ')+intf+(' ')+((hairpin.length>1)?('interfaces'):('interface'))+('.')
+  );
+  document.getElementById('note').appendChild(note);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+ <script language="javascript">
+<!-- hide
+   if (nat != '1') {
+     document.writeln("<b>NAT is not enabled. A routed WAN service with NAT enabled is needed to configure this service.</b><br><br>");
+   }	
+   else {
+     document.writeln("<b>NAT Loopback -- hairpin</b><br/><br/>");
+     document.writeln("<div id=\"note\"></div><br/><br/>");
+     document.writeln("<div id=\"anchor\"></div>");
+   }	  
+// done hiding -->
+</script>            
+         </form>
+      </blockquote>
+   </body>
+</html>

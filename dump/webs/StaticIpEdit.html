@@ -1,0 +1,83 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var iidStack = '';
+
+function frmLoad() {
+   var names = '<%ejGet(paramBuf)%>'.split('/');
+   if (names.length == 3) {
+      iidStack = names[0];
+      with (document.forms[0]) {
+         MacAddr.value = names[1];
+         IpAddr.value = names[2];
+
+         selectFocus(MacAddr);
+      }
+   }
+}
+
+function selectFocus(inputText) {
+   inputText.focus();
+   inputText.setSelectionRange(0, inputText.value.length);
+}
+
+function btnApply() {
+   var loc = 'dhcpdstaticlease.cmd?action=edit';
+   with ( document.forms[0] ) {
+      if (isValidIpAddress(IpAddr.value) == false) {
+         alert( 'Address "' + IpAddr.value + '" is invalid IP address.');
+         selectFocus(IpAddr);
+         return;
+      }
+      else if (isValidMacAddress(MacAddr.value) == false) {
+         alert( 'Address "' + MacAddr.value + '" is invalid MAC address.');
+         selectFocus(MacAddr);
+         return;
+      }
+      else {
+         loc += '&iid=' + iidStack;
+         loc += '&mac=' + MacAddr.value;
+         loc += '&static_ip=' + IpAddr.value;
+         loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+         var code = 'location="' + loc + '"';
+         eval(code);
+      }
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <blockquote>
+         <form>
+            <b>Edit DHCP Static IP Lease </b><br>
+            <br>
+            Modify the Mac address and Static IP address then click "Apply/Save".<br>
+            <br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td width="180">MAC Address:</td>
+                  <td><input type='text' name='MacAddr'></td>
+               </tr>
+               <tr>
+                  <td>IP Address:</td>
+                  <td><input type='text' name='IpAddr'> </td>
+               </tr>
+            </table>
+            <br>
+            <br>
+            <center>
+               <input type='button' onClick='btnApply()' value='Apply/Save'>
+            </center>
+         </form>
+      </blockquote>
+   </body>
+</html>
+

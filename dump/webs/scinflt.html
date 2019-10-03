@@ -1,0 +1,280 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var ifCount = 0;
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+
+function btnApply() {
+   var loc = 'scinflt.cmd?action=add';
+   var okChk = 0;
+
+   with ( document.forms[0] ) {
+      if ( txtfltname.value == '' ) {
+         msg = 'Please enter incoming IP filtering name.';
+         alert(msg);
+         return;
+      }
+      
+      if ( isValidName(txtfltname.value) == false ) {
+         msg = 'Please enter valid incoming IP filtering name: No special characters.';
+         alert(msg);
+         return;
+      }      
+
+      if ( srcaddr.value == "" && srcport.value == "" &&
+           dstaddr.value == "" && dstport.value == "" &&
+           protocol.selectedIndex == 0 ) {
+         msg = 'At least one condition must be specified.'
+         alert(msg);
+         return;
+      }      
+
+      if ( srcaddr.value != "" ) {
+         if (ipver.options[ipver.selectedIndex].value == '4') {
+            if (isValidIpAddress(srcaddr.value) == false ) {
+               msg = 'Source address "' + srcaddr.value + '" is invalid IPv4 address.';
+               alert(msg);
+               return;
+            }
+         }
+         else {
+            if (isValidIpAddress6(srcaddr.value) == false ) {
+               msg = 'Source address "' + srcaddr.value + '" is invalid IPv6 address.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+
+      if ( srcport.value != "" && isValidPort(srcport.value) == false ) {
+         msg = 'Source port "' + srcport.value + '" is invalid port number or port range.';
+         alert(msg);
+         return;
+      }
+
+      if ( dstaddr.value != "" ) {
+         if (ipver.options[ipver.selectedIndex].value == '4') {
+            if (isValidIpAddress(dstaddr.value) == false ) {
+               msg = 'Destination address "' + dstaddr.value + '" is invalid IPv4 address.';
+               alert(msg);
+               return;
+            }
+         }
+         else {
+            if (isValidIpAddress6(dstaddr.value) == false ) {
+               msg = 'Destination address "' + dstaddr.value + '" is invalid IPv6 address.';
+               alert(msg);
+               return;
+            }
+         }
+      }
+
+      if ( dstport.value != "" && isValidPort(dstport.value) == false ) {
+         msg = 'Destination port "' + dstport.value + '" is invalid port number or port range.';
+         alert(msg);
+         return;
+      }
+      
+      if ( (srcport.value != "" || dstport.value != "") && 
+           (protocol.selectedIndex == 0 || protocol.selectedIndex == 4) ) {
+         msg = 'TCP or UDP Protocol must be selected together with port number';
+         alert(msg);
+         return;
+      }       
+
+      // wan interfaces
+      if (ifCount == 1) {
+         if (ifChk.checked)
+            okChk = 1;
+      }
+      else {
+         for (i = 0; i < ifCount; i++) 
+            if (ifChk[i].checked)
+               okChk++;
+      }
+      if (!okChk) {
+         alert('At least one configured Bridge interface must be selected.');
+         return;
+      }    
+      loc += '&wanIf=';
+      if (chkAll.checked)
+         loc += 'ALL';
+      else {
+         var first = true;
+         if (ifCount == 1)
+            loc += ifChk.value
+         else {
+            for (i = 0; i < ifCount; i++)
+               if (ifChk[i].checked) {
+                  if (!first)
+                     loc += '|';
+                  loc += ifChk[i].value;
+                  first = false;
+               }
+         }   
+      }
+      
+      // incoming IP filter name
+      loc += '&fltName=' + encodeUrl(txtfltname.value);
+
+      // ip version
+      loc += '&ipver=' + ipver.options[ipver.selectedIndex].value;
+
+      // protocol
+      loc += '&protocol=' + protocol.options[protocol.selectedIndex].value;
+
+      // source address
+      if ( srcaddr.value != "" )
+         loc += '&srcAddr=' + srcaddr.value;
+
+      // source port
+      if ( srcport.value != "" )
+         loc += '&srcPort=' + srcport.value;
+
+      // destination address
+      if ( dstaddr.value != "" )
+         loc += '&dstAddr=' + dstaddr.value;
+
+      // destination port
+      if ( dstport.value != "" )
+         loc += '&dstPort=' + dstport.value;
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function toggle(cb) {
+   var chkCount = 0;
+   with ( document.forms[0] ) {
+      if (ifCount == 1)
+         chkAll.checked = cb.checked;
+      else {      
+         for (i = 0; i < ifCount; i++)
+            if (ifChk[i].checked)
+               chkCount++;
+         if (chkCount == ifCount)
+            chkAll.checked = true;
+         else
+            chkAll.checked = false;
+      }
+   }
+}
+
+function toggleIfs(cb) {
+   var chkStatus = false;
+   with ( document.forms[0] ) {
+      if (chkAll.checked)
+         chkStatus = true;
+      if (ifCount == 1)
+         ifChk.checked = chkStatus;
+      else
+         for (i = 0; i < ifCount; i++)
+            ifChk[i].checked = chkStatus;
+   }
+}
+
+// done hiding -->
+      </script>
+   </head>
+   <body>
+      <blockquote>
+         <form>
+            <b>Add IP Filter -- Incoming</b><br>
+            <br>
+            The screen allows you to create a filter rule to identify incoming IP traffic 
+            by specifying a new filter name and at least one condition below. All of the 
+            specified conditions in this filter rule must be satisfied for the rule to take 
+            effect. Click 'Apply/Save' to save and activate the filter.<br>
+            <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td>Filter Name:</td>
+                  <td><input type='text' size="22" name="txtfltname"></td>
+               </tr>
+               <tr>
+                  <td colspan="2">&nbsp;</td>
+               </tr>
+               <tr><script language="javascript">
+<!-- hide 
+{
+                  document.writeln("<td>IP Version:</td>");
+                  document.writeln("<td><select name='ipver' size='1'>");
+                  document.writeln("      <option value='4'>IPv4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                  if (enblIP6 == '1')
+                     document.writeln("      <option value='6'>IPv6");
+                  document.writeln("    </select></td>");
+}
+// done hiding -->
+               </script></tr>
+               <tr><script language="javascript">
+<!-- hide 
+{
+                  document.writeln("<td>Protocol:</td>");
+                  document.writeln("<td><select name='protocol' size='1'>");
+                  document.writeln("      <option value='4'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                  document.writeln("      <option value='0'>TCP/UDP");
+                  document.writeln("      <option value='1'>TCP");
+                  document.writeln("      <option value='2'>UDP");
+                  document.writeln("      <option value='3'>ICMP");
+                  document.writeln("    </select></td>");
+}
+// done hiding -->
+               </script></tr>
+               <tr>
+                  <td>Source IP address[/prefix length]:</td>
+                  <td><input type='text' size="22" name="srcaddr"></td>
+               </tr>
+               <tr>
+                  <td>Source Port (port or port:port):</td>
+                  <td><input type='text' size="22" name="srcport"></td>
+               </tr>
+               <tr>
+                  <td>Destination IP address[/prefix length]:</td>
+                  <td><input type='text' size="22" name="dstaddr"></td>
+               </tr>
+               <tr>
+                  <td>Destination Port (port or port:port):</td>
+                  <td><input type='text' size="22" name="dstport"></td>
+               </tr>
+            </table>
+            <br>
+            <b>WAN&nbsp;Interfaces&nbsp;(Configured in Routing mode and with firewall enabled) and LAN Interfaces</b>
+            <br>
+            Select one or more WAN/LAN interfaces displayed below to apply this rule.
+            <br>
+            <br>
+            <table>
+               <tr>
+                  <input type='checkbox' name='chkAll' checked onclick='toggleIfs(this)'>&nbsp;&nbsp;Select&nbsp;All</tr>
+               <tr>
+                  <script language="javascript">
+<!-- hide 
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, firewall)%>';
+   var interfaces = interfaceInfo.split('|');
+
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+      document.writeln("<tr> <input type='checkbox' name='ifChk' checked value=" + 
+                        names[1] + '>' + '&nbsp;&nbsp;' + interfaces[i] + "</tr>");
+      ifCount++;
+   }
+}
+// done hiding -->
+</script>
+               </tr>
+            </table>
+            <br><br>
+            <center><input type='button' onClick='btnApply()' value='Apply/Save'></center>
+         </form>
+      </blockquote>
+   </body>
+</html>

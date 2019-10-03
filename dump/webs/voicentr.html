@@ -1,0 +1,619 @@
+<!--
+ Copyright (c) 2008 Broadcom Corporation
+
+ This program is the proprietary software of Broadcom Corporation and/or
+ its licensors, and may only be used, duplicated, modified or distributed
+ pursuant to the terms and conditions of a separate, written license
+ agreement executed between you and Broadcom (an "Authorized License").
+ Except as set forth in an Authorized License, Broadcom grants no license
+ (express or implied), right to use, or waiver of any kind with respect to
+ the Software, and Broadcom expressly reserves all rights in and to the
+ Software and all intellectual property rights therein.  IF YOU HAVE NO
+ AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+ AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+ SOFTWARE.
+
+ Except as expressly set forth in the Authorized License,
+
+ 1.     This program, including its structure, sequence and organization,
+ constitutes the valuable trade secrets of Broadcom, and you shall use all
+ reasonable efforts to protect the confidentiality thereof, and to use this
+ information only in connection with your use of Broadcom integrated circuit
+ products.
+
+ 2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+ "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+ OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+ RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+ IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+ A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+ ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+ THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+
+ 3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+ OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+ INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+ RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+ HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+ EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+ WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+ FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+
+****************************************************************************
+  $Id:
+
+  Filename: voicentr.html
+  Author:
+  Creation Date: 2009
+
+****************************************************************************
+end_copyright_header -->
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+      <link rel="stylesheet" href='colors.css' type='text/css'>
+      <script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+/* The following parameters are mapped in cgi_voice.c. */
+var voiceRunning = '<%ejGetVoice(voiceStatus)%>';
+var ntre  = '<%ejGetVoice(ntrEnabled)%>';
+var ntra  = '<%ejGetVoice(ntrAuto)%>';
+var ntrd = '<%ejGetVoice(ntrDebug)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+/* Flags for visibility settings */
+var enableFlag;
+var autoFlag;
+var debugFlag;
+
+function btnStartSip() {
+   var loc = 'voicentrstart.cmd?';
+   loc += addParamsToQuery( loc, 'ntr' );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+//   alert(code);
+   eval(code);
+}
+
+
+function btnStopSip() {
+   var loc = 'voicentrstop.cmd?';
+   loc += addParamsToQuery( loc, 'ntr' );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+//   alert(code);
+   eval(code);
+}
+
+function btnApplySip() {
+   var loc = 'voicentrapply.cmd?';
+   loc += addParamsToQuery( loc, 'ntr' );
+   
+   //Stripping quotes and spaces
+   loc = loc.replace(/['" ]/g,'');
+
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+//   alert(code);
+   eval(code);
+}
+
+function btnRefresh() {
+   var code = 'location="voicentrrefresh.cmd?voicentrrefresh.cmd?currentview=ntr"'
+   eval(code);
+}
+
+function btnRestore() {
+   var code = 'location="voicentrrestore.cmd?voicentrrestore.cmd?currentview=ntr"'
+   eval(code);
+}
+
+/* This function is called to transfer GUI settings to the IAD */
+function addParamsToQuery( loc_init, current_view) {
+   var loc = loc_init;
+   with ( document.forms[0] ) {
+
+      loc += 'currentview=' + current_view;
+
+      if ( ntrEnbl.checked ) {
+         loc += '&ntrEnabled=on';
+      }
+      else {
+         loc += '&ntrEnabled=off';
+      }
+
+      if ( ntrModeName[0].checked ){
+         loc += '&ntrAuto=on';
+         loc += '&ntrSampleRate=' + ntrSampleRate.value.replace(/['" ]/g,'');
+         loc += '&ntrPllBandwidth=' + ntrPllBandwidth.value.replace(/['" ]/g,'');
+         loc += '&ntrDampingFactor=' + ntrDampingFactor.value.replace(/['" ]/g,'');
+         if ( ntrDebug.checked ) {
+            loc += '&ntrDebug=on';
+         } else {
+            loc += '&ntrDebug=off';
+         }   
+      } else {
+         loc += '&ntrAuto=off';
+         loc += '&ntrManualOffset=' + ntrManualOffset.value.replace(/['" ]/g,'');
+      }   
+      
+
+   }
+   return loc;
+}
+
+/* Sets up how the page is displayed during page load */
+function frmLoad(current_view) {
+   with ( document.forms[0] ) {
+      /* Handle NTR Automatic Mode Enabled Radio Button Group */
+      if ( ntra == "1"){
+         /* Auto Button */
+         autoFlag = 1;
+      } else {
+         /* Manual Button */
+         autoFlag = 0;
+      }
+      
+      /* Handle NTR Enabled Checkbox */
+      if ( ntre == "1" ){
+         enableFlag = 1;
+      } else {
+         enableFlag = 0;
+      }
+      
+      /* Handle NTR Debug Checkbox */
+      if ( ntrd == "1" ){
+         debugFlag = 1;
+      } else {
+         debugFlag = 0;
+      }
+      
+      /* Initialize visibility */
+      setVisibility();      
+      
+      generateNtrInfo();
+      generateManualInfo();
+      generateAutoInfo();
+
+
+      generateButtons();
+      enableButtons();
+      
+      if(enableFlag)
+      {
+         document.getElementById("ntrEnblId").checked = true;
+      } else {
+         document.getElementById("ntrEnblId").checked = false;
+      }
+      
+      if(autoFlag)
+      {
+         document.getElementById("ntrAutoRadioBtn").checked = true;
+      } else {
+         document.getElementById("ntrManualRadioBtn").checked = true;
+      }
+      
+      if(debugFlag)
+      {
+         document.getElementById("ntrDebugId").checked = true;
+
+         var ntras = '<%ejGetVoice(ntrAutoStepsHistory)%>';
+         var ntrao = '<%ejGetVoice(ntrAutoOffsetHistory)%>';
+         var ntrap = '<%ejGetVoice(ntrAutoPpmHistory)%>';
+         var ntrpe = '<%ejGetVoice(ntrAutoPhaseErrorHistory)%>';
+
+         /* Handle History table. The number of objects is decided in the file
+            userspace/private/libs/cms_core/mdm_initvoice.c */
+         var tempao = ntrao.split(',');
+         var tempap = ntrap.split(',');
+         var tempas = ntras.split(',');
+         var temppe = ntrpe.split(',');
+         /* Assume History are the same length (They should be or something is wrong) */
+         generateDebug(tempao.length);
+         for( i=0; i < tempao.length; i++ )
+         {
+            eval("ntrAutoOffset" + i + ".value = tempao[" + i + "]");
+            eval("ntrAutoPpm" + i + ".value = tempap[" + i + "]");
+            eval("ntrAutoSteps" + i + ".value = tempas[" + i + "]");
+            eval("ntrAutoPhaseError" + i + ".value = temppe[" + i + "]");
+         }
+         
+
+      } else {
+         document.getElementById("ntrDebugId").checked = false;
+      }    
+
+      ntrManualOffset.value = '<%ejGetVoice(ntrManualOffset)%>';
+      ntrSampleRate.value = '<%ejGetVoice(ntrSampleRate)%>';
+      ntrPllBandwidth.value = '<%ejGetVoice(ntrPllBandwidth)%>';
+      ntrDampingFactor.value = '<%ejGetVoice(ntrDampingFactor)%>';
+         
+   }
+}
+
+/* Generate NTR Information */
+function generateNtrInfo(){
+   if (document.body.innerHTML) {   
+      var NtrInfoHtmlOutput = "<table><tr>";
+      
+      NtrInfoHtmlOutput += "<td colspan='3'><input type='radio' id='ntrAutoRadioBtn' name='ntrModeName' onClick='ntrAutoClick()'>";
+      NtrInfoHtmlOutput += "&nbsp;&nbsp;Automatically Calculate Offset<\/td>";
+      
+      NtrInfoHtmlOutput += "<\/tr><tr>";
+
+      NtrInfoHtmlOutput += "<td colspan='3'><input type='radio' id='ntrManualRadioBtn' name='ntrModeName' onClick='ntrManClick()'>";
+      NtrInfoHtmlOutput += "&nbsp;&nbsp;Manually Enter Offset<\/td>";
+      
+      NtrInfoHtmlOutput += "<\/tr><\/table>";
+      
+      document.getElementById("ntrInfoPlaceHolder").innerHTML = NtrInfoHtmlOutput;
+      
+   }
+   else {
+      alert("Cannot create NTR Info in this browser.");
+   }
+}
+
+function generateManualInfo(){
+            
+   if (document.body.innerHTML) {   
+      var ManualInfoHtmlOutput = "<br><b>Enter PLL Offset Adjustment (Hz): <\/b> ";
+      
+      ManualInfoHtmlOutput += "<input type='text' name='ntrManualOffset'><br><br>";
+      ManualInfoHtmlOutput += "<table border='1' cellpadding='3' cellspacing='0'><tr>";
+      
+      ManualInfoHtmlOutput += "<td class='hd'><b>PLL Manual Adjustment in PPM<\/b><\/td>";
+      ManualInfoHtmlOutput += "<td align='center'><%ejGetVoice(ntrManualPpm)%> PPM<\/td>";
+      ManualInfoHtmlOutput += "<\/tr><tr>";
+
+      ManualInfoHtmlOutput += "<td class='hd'><b>PLL Manual Adjustment in steps<\/b><\/td>";
+      ManualInfoHtmlOutput += "<td align='center'><%ejGetVoice(ntrManualSteps)%> PLL Steps<\/td>";
+      ManualInfoHtmlOutput += "<\/tr><\/table>";
+      
+      document.getElementById("manualInfoPlaceHolder").innerHTML = ManualInfoHtmlOutput;
+   }
+   else {
+      alert("Cannot create Manual Info in this browser.");
+   }
+}
+
+function generateAutoInfo(){
+   if (document.body.innerHTML) {   
+      var AutoInfoHtmlOutput = "<input type='button' id='RefreshButton' onClick='btnRefresh()' value='Refresh'><br><br>";
+      
+      AutoInfoHtmlOutput += "<b>Note: Local PLL Offset/Adjustment from nominal value.<\/b>";
+      AutoInfoHtmlOutput += "<table border = '1' cellpadding='3' cellspacing='0'>";
+      AutoInfoHtmlOutput += "<tr>";
+      
+      AutoInfoHtmlOutput += "<td class='hd'><b>Most recent PLL Offset in Hz<\/b><\/td>";
+      AutoInfoHtmlOutput += "<td align='center'><%ejGetVoice(ntrAutoOffset)%> Hz<\/td>";
+      AutoInfoHtmlOutput += "<\/tr><tr>";
+      
+      AutoInfoHtmlOutput += "<td class='hd'><b>Most recent PLL Adjustment in PPM<\/b><\/td>";
+      AutoInfoHtmlOutput += "<td align='center'><%ejGetVoice(ntrAutoPpm)%> PPM<\/td>";
+      AutoInfoHtmlOutput += "<\/tr><\/table><br><br>";
+      
+      AutoInfoHtmlOutput += "<b>Note: Vodsl restart or NTR re-enabling is recommended for changes in Sample Rate, Bandwidth, or Damping Factor.<\/b>";
+      AutoInfoHtmlOutput += "<table border = '1' cellpadding='3' cellspacing='0'><tr>";
+      
+      AutoInfoHtmlOutput += "<td class='hd'><b>Enter Sample Rate (ms) (Valid Range: 10 ~ 10000): <\/b><\/td>";
+      AutoInfoHtmlOutput += "<td><input type='text' name='ntrSampleRate'> ms<\/td><\/tr><tr>";
+      
+      AutoInfoHtmlOutput += "<td class='hd'><b>Enter PLL Bandwidth (Hz) (Valid Range: 0 ~ [1 / Sample Rate(secs)] ): <\/b><\/td>";
+      AutoInfoHtmlOutput += "<td><input type='text' name='ntrPllBandwidth'> Hz<\/td>";
+      AutoInfoHtmlOutput += "<\/tr><tr>";
+      
+      AutoInfoHtmlOutput += "<td class='hd'><b>Enter Damping Factor (Valid Range: 0 ~ 1): <\/b><\/td>";
+      AutoInfoHtmlOutput += "<td><input type='text' name='ntrDampingFactor'><\/td>";
+      AutoInfoHtmlOutput += "<\/tr><\/table><br>";
+      
+      AutoInfoHtmlOutput += "<input type='button' id='RestoreButton' onClick='btnRestore()' value='Restore Defaults'> Note: 'Apply' required.";
+      AutoInfoHtmlOutput += "<br><br>";
+      
+      AutoInfoHtmlOutput += "<input type='checkbox' name='ntrDebug' id='ntrDebugId'>";
+      AutoInfoHtmlOutput += "Show NTR Debug Information";
+      
+      document.getElementById("autoInfoPlaceHolder").innerHTML = AutoInfoHtmlOutput;
+   }
+   else {
+      alert("Cannot create Auto Info in this browser.");
+   }            
+}
+
+/* Generate table for history values */
+function generateDebug( size ){
+   if (document.body.innerHTML) {
+      var HistoryHtmlOutput = "<br><table border='1' cellpadding='3' cellspacing='0'><tr>";
+      
+      HistoryHtmlOutput += "<td align='center' class='hd'>History<\/td>";
+      HistoryHtmlOutput += "<td align='center' class='hd'>1 (Most Recent)<\/td>";
+      
+      for( var i=1; i< size ; i++)
+      {
+         HistoryHtmlOutput += "<td align='center' class='hd'>" + (i+1) + "<\/td>";
+      }
+      
+      HistoryHtmlOutput += "<\/tr><tr>";
+
+      HistoryHtmlOutput += "<td align='center' class='hd'>Hz Adjustment<\/td>";
+      for( var i=0; i< size ; i++)
+      {
+         HistoryHtmlOutput += "<td align='center'>" + "<input type='text' name='ntrAutoOffset" + i + "'>" + "<\/td>";
+      }
+      
+      HistoryHtmlOutput += "<\/tr><tr>";
+      
+      HistoryHtmlOutput += "<td align='center' class='hd'>PPM Adjustment<\/td>";
+      for( var i=0; i< size ; i++)
+      {
+         HistoryHtmlOutput += "<td align='center'>" + "<input type='text' name='ntrAutoPpm" + i + "'>" + "<\/td>";
+      }
+      
+      HistoryHtmlOutput += "<\/tr><tr>";
+      
+      HistoryHtmlOutput += "<td align='center' class='hd'>Steps Adjustment<\/td>";
+      for( var i=0; i< size ; i++)
+      {
+         HistoryHtmlOutput += "<td align='center'>" + "<input type='text' name='ntrAutoSteps" + i + "'>" + "<\/td>";
+      }
+      
+      HistoryHtmlOutput += "<\/tr><tr>";
+      
+      HistoryHtmlOutput += "<td align='center' class='hd'>Phase Error<\/td>";
+      for( var i=0; i< size ; i++)
+      {
+         HistoryHtmlOutput += "<td align='center'>" + "<input type='text' name='ntrAutoPhaseError" + i + "'>" + "<\/td>";
+      }
+      
+      HistoryHtmlOutput += "<\/tr><\/table>";
+      
+      
+      var TalliesHtmlOutput = "<br><table border='1' cellpadding='3' cellspacing='0'><tr>";
+      TalliesHtmlOutput += "<td class='hd'>History<\/td>";
+      TalliesHtmlOutput += "<td class='hd'>PCM MIPS Counter<\/td>";
+      TalliesHtmlOutput += "<td class='hd'>PCM NTR Counter<\/td>";
+      TalliesHtmlOutput += "<td class='hd'>DSL MIPS Counter<\/td>";
+      TalliesHtmlOutput += "<td class='hd'>DSL NTR Counter<\/td>";
+      TalliesHtmlOutput += "<\/tr><tr>";
+      
+      TalliesHtmlOutput += "<td class='hd'>Current<\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrPcmMipsCurr)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrPcmNtrCurr)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrDslMipsCurr)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrDslNtrCurr)%><\/td>";
+      TalliesHtmlOutput += "<\/tr><tr>";
+      
+      TalliesHtmlOutput += "<td class='hd'>Previous<\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrPcmMipsPrev)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrPcmNtrPrev)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrDslMipsPrev)%><\/td>";
+      TalliesHtmlOutput += "<td align='center'><%ejGetVoice(ntrDslNtrPrev)%><\/td>";
+      TalliesHtmlOutput += "<\/tr><\/table><br><br>";
+      
+      document.getElementById("ntrDebugPlaceHolder").innerHTML = HistoryHtmlOutput + TalliesHtmlOutput;
+   }
+   else {
+      alert("Cannot create Debug list in this browser.");
+   }
+}
+
+function generateButtons(){
+   if (document.body.innerHTML) {   
+      var ButtonsHtmlOutput = "<center>";
+      ButtonsHtmlOutput += "<table><tr><td>";
+      ButtonsHtmlOutput += "<center><input type='button' id='StartButton' onClick='btnStartSip()' value='Voice Start' disabled=true>";
+      ButtonsHtmlOutput += "<br><br><input type='button' id='StopButton' onClick='btnStopSip()' value='Voice Stop' disabled=true>";
+      ButtonsHtmlOutput += "<br><br><input type='button' id='ApplyButton' onClick='btnApplySip()' value='Apply' disabled=true>";
+      ButtonsHtmlOutput += "<\/center><\/tr><\/td>";
+      ButtonsHtmlOutput += "<\/table>";
+      ButtonsHtmlOutput += "<\/center>";
+      
+      document.getElementById("buttonsPlaceHolder").innerHTML = ButtonsHtmlOutput;
+   }
+   else {
+      alert("Cannot create NTR Buttons in this browser.");
+   }     
+}
+
+/* Executes when the NTR enabled checkbox has been clicked on */
+function setVisibility(){
+   if( enableFlag ) {
+      showNtrInfo(1);
+      if( autoFlag ){
+         showAutoInfo(1);
+         showManualInfo(0);
+      }
+      else{
+         showAutoInfo(0);
+         showManualInfo(1);
+      }
+   }
+   else{
+      showNtrInfo(0);
+      showAutoInfo(0);
+      showManualInfo(0);
+   }
+}
+
+function ntrEnableClick(){
+   if( document.getElementById("ntrEnblId").checked ){
+      enableFlag = 1;
+   } else{
+      enableFlag = 0;
+   }
+   setVisibility();
+}
+/* Executes when the auto radio button has been clicked on */
+function ntrAutoClick(){
+   ntrSetAutoRadio(1);
+   autoFlag = 1;
+   setVisibility();
+}
+
+/* Executes when the manual radio button has been clicked on */
+function ntrManClick(){
+   ntrSetAutoRadio(0);
+   autoFlag = 0;
+   setVisibility();
+}
+
+
+/* Sets the auto radio button as checked, or not checked */
+function ntrSetAutoRadio(val){
+   if (val) {
+      document.getElementById("ntrAutoRadioBtn").checked = true;
+      document.getElementById("ntrManualRadioBtn").checked = false;
+   } else {
+      document.getElementById("ntrAutoRadioBtn").checked = false;
+      document.getElementById("ntrManualRadioBtn").checked = true;
+   }
+}
+
+/* Sets the visibility of all NTR options */
+function showNtrInfo(show) {
+   var status = 'visible';
+   
+   if( show == 0 )
+      status = 'hidden';
+   
+   if (document.getElementById){  // DOM3 = IE5, NS6
+      document.getElementById('ntrInfo').style.visibility = status;
+   }
+   else {
+      if (document.layers == false){ // IE4
+         document.all.ntrInfo.style.visibility = status;
+      }
+   }
+}
+
+/* Sets the visibility of Auto options */
+function showAutoInfo(show) {
+   var status;
+   
+   if( show == 1 ) {
+      status = 'visible';
+      if( debugFlag ){
+         showDebugInfo(1);
+      } else {
+         showDebugInfo(0);
+      }
+   } else {
+      status = 'hidden';
+      showDebugInfo(0);
+   }
+   
+   if (document.getElementById){  // DOM3 = IE5, NS6
+      document.getElementById('autoInfo').style.visibility = status;
+   }
+   else {
+      if (document.layers == false){ // IE4
+         document.all.autoInfo.style.visibility = status;
+      }
+   }
+}
+
+/* Sets the visibility of Manual options */
+function showManualInfo(show) {
+   var status = 'visible';
+   
+   if( show == 0 )
+      status = 'hidden';
+   
+   if (document.getElementById){  // DOM3 = IE5, NS6
+      document.getElementById('manualInfo').style.visibility = status;
+   }
+   else {
+      if (document.layers == false){ // IE4
+         document.all.manualInfo.style.visibility = status;
+      }
+   }
+}
+
+/* Sets the visibility of Debug options */
+function showDebugInfo(show) {
+   var status = 'visible';
+   
+   if( show == 0 )
+      status = 'hidden';
+      
+   if (document.getElementById){  // DOM3 = IE5, NS6
+      document.getElementById('debugInfo').style.visibility = status;
+   }
+   else {
+      if (document.layers == false){ // IE4
+         document.all.debugInfo.style.visibility = status;
+      }
+   }
+}
+
+/* Initializes buttons */
+function enableButtons(){
+
+   var buttonStart = document.getElementById("StartButton");
+   var buttonStop = document.getElementById("StopButton");
+   var buttonApply = document.getElementById("ApplyButton");
+   
+   if ( voiceRunning == 1 ) {
+      buttonStart.disabled = true;
+      buttonStop.disabled = false;
+      buttonApply.disabled = false;
+   } else {
+      buttonStart.disabled = false; 
+      buttonStop.disabled = true;
+      buttonApply.disabled = false;
+   }
+}
+
+</script>
+</head>
+
+<body onLoad="frmLoad('ntr');">
+   <blockquote>
+      <form>
+         <P>
+            <b>Voice -- NTR Configuration</b><br><br>
+            Network Timing Reference (NTR) Synchronization uses a very accurate NTR signal from the network to increase the accuracy of the local clock.<br>
+            The local PCM bus clock will be adjusted to match the NTR clock signals incoming from the DSL PHY.<br><br>
+            You can either let NTR automatically calculate an appropriate feedback offset by synchronizing with the NTR signal, or you can enter a manual offset.<br>
+            Note: All changes can be made without restarting vodsl. However, it is recommended to restart vodsl when going from automatic to manual mode.<br>
+         </P>            
+                     
+         <input type="checkbox" name="ntrEnbl" id="ntrEnblId" onClick="ntrEnableClick()">
+         NTR Synchronization (Enable/Disable NTR)
+         
+         <div id= ntrInfo>
+         <div id= "ntrInfoPlaceHolder"></div>
+         </div>
+         
+         <div id= manualInfo>
+         <div id= "manualInfoPlaceHolder"></div>
+         </div>
+         
+                        
+         <div id= autoInfo>
+         <div id= "autoInfoPlaceHolder"></div>
+         </div>
+         
+         <div id= debugInfo>
+         <div id='ntrDebugPlaceHolder'></div>
+         </div>
+
+         <br><br>
+         
+         <div id= 'buttonsPlaceHolder'></div>
+         
+      </form>
+   </blockquote>
+
+</body>
+</html>
