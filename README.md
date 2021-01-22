@@ -2,6 +2,10 @@
 
 Toda la información resultado de trastear con la consola UART del router Askey RTF3505VW que emplea Movistar
 
+## Update (22/01/2021)
+En su momento hice más trabajo con este router del que pude documentar, pero la pifié. No recuerdo ahora mismo cómo pero dejó de arrancar el router y no había opciones de rescate. Simplemente ahora era un pisapapeles. Con otros dispositivos que tienen memorias SPI sí podía leerlas y cambiar algo, esto era un chip NAND de 48 pines.
+Bueno, pues el momento de retomar esto ha llegado. Ahora tengo un programador con el que puedo leer, escribir y hacer lo que quiera con esos chips NAND, por lo que esperemos que pueda subir algo más de información e intentos de hacer cosas. :D
+
 ## Resumen del estado de cosas actual (03/09/19)
 
 * Hay un acceso directo al sistema principal (chip Broadcom) mediante UART con privilegios de administración
